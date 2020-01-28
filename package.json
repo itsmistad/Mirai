@@ -1,0 +1,28 @@
+{
+  "name": "mirai",
+  "version": "0.0.1",
+  "description": "An intuitive web application for daily organizing.",
+  "main": "src/app.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/itsmistad/Mirai.git"
+  },
+  "author": "itsmistad",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/itsmistad/Mirai/issues"
+  },
+  "homepage": "https://github.com/itsmistad/Mirai#readme",
+  "dependencies": {
+    "@itsmistad/network.js": "^1.0.1",
+    "@itsmistad/notify.js": "^1.0.1",
+    "express": "^4.17.1",
+    "express-session": "^1.17.0"
+  },
+  "devDependencies": {
+    "mocha": "^7.0.1"
+  }
+}
