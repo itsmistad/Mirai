@@ -2,14 +2,14 @@ AWSTemplateFormatVersion: '2010-09-09'
 
 Resources:
   MiraiApplication:
-    MiraiBucket:
-      Type: AWS::S3::Bucket
-      Properties:
-        BucketName: mirai-app
-      Type: AWS::ElasticBeanstalk::Application
-      Properties:
-        ApplicationName: mirai-app
-        Description: AWS Elastic Beanstalk Mirai
+    Type: AWS::ElasticBeanstalk::Application
+    Properties:
+      ApplicationName: mirai-app
+      Description: AWS Elastic Beanstalk Mirai
+  MiraiBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: mirai-app
   MiraiConfigurationTemplate:
     Type: AWS::ElasticBeanstalk::ConfigurationTemplate
     Properties:
