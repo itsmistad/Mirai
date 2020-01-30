@@ -1,0 +1,48 @@
+AWSTemplateFormatVersion: '2010-09-09'
+
+Resources:
+  MiraiApplication:
+    Type: AWS::ElasticBeanstalk::Application
+    Properties:
+      Description: AWS Elastic Beanstalk Mirai
+  MiraiApplicationVersion:
+    Type: AWS::ElasticBeanstalk::ApplicationVersion
+    Properties:
+      ApplicationName:
+        Ref: MiraiApplication
+      Description: AWS ElasticBeanstalk Mirai Version
+      SourceBundle: 
+        S3Bucket: 
+          Fn::Join: 
+            - "-"
+            - 
+              - "elasticbeanstalk-samples"
+              - Ref: "AWS::Region"
+          S3Key: php-newsample-app.zip
+  MiraiConfigurationTemplate:
+    Type: AWS::ElasticBeanstalk::ConfigurationTemplate
+    Properties:
+      ApplicationName:
+        Ref: MiraiApplication
+      Description: AWS ElasticBeanstalk Mirai Configuration Template
+      OptionSettings:
+      - Namespace: aws:autoscaling:asg
+        OptionName: MinSize
+        Value: '2'
+      - Namespace: aws:autoscaling:asg
+        OptionName: MaxSize
+        Value: '6'
+      - Namespace: aws:elasticbeanstalk:environment
+        OptionName: EnvironmentType
+        Value: LoadBalanced
+      SolutionStackName: 64bit Amazon Linux 2018.03 v2.8.15 running PHP 7.2
+  MiraiEnvironment:
+    Type: AWS::ElasticBeanstalk::Environment
+    Properties:
+      ApplicationName:
+        Ref: MiraiApplication
+      Description: AWS ElasticBeanstalk Mirai Environment
+      TemplateName:
+        Ref: MiraiConfigurationTemplate
+      VersionLabel:
+        Ref: MiraiApplicationVersion
