@@ -2,23 +2,14 @@ AWSTemplateFormatVersion: '2010-09-09'
 
 Resources:
   MiraiApplication:
-    Type: AWS::ElasticBeanstalk::Application
-    Properties:
-      Description: AWS Elastic Beanstalk Mirai
-  MiraiApplicationVersion:
-    Type: AWS::ElasticBeanstalk::ApplicationVersion
-    Properties:
-      ApplicationName:
-        Ref: MiraiApplication
-      Description: AWS ElasticBeanstalk Mirai Version
-      SourceBundle: 
-        S3Bucket: 
-          Fn::Join: 
-            - "-"
-            - 
-              - "elasticbeanstalk-samples"
-              - Ref: "AWS::Region"
-          S3Key: php-newsample-app.zip
+    MiraiBucket:
+      Type: AWS::S3::Bucket
+      Properties:
+        BucketName: mirai-app
+      Type: AWS::ElasticBeanstalk::Application
+      Properties:
+        ApplicationName: mirai-app
+        Description: AWS Elastic Beanstalk Mirai
   MiraiConfigurationTemplate:
     Type: AWS::ElasticBeanstalk::ConfigurationTemplate
     Properties:
@@ -35,14 +26,22 @@ Resources:
       - Namespace: aws:elasticbeanstalk:environment
         OptionName: EnvironmentType
         Value: LoadBalanced
-      SolutionStackName: 64bit Amazon Linux 2018.03 v2.8.15 running PHP 7.2
+      SolutionStackName: 64bit Amazon Linux 2018.03 v4.13.0 running Node.js
   MiraiEnvironment:
     Type: AWS::ElasticBeanstalk::Environment
     Properties:
       ApplicationName:
         Ref: MiraiApplication
+      EnvironmentName: mirai-app
       Description: AWS ElasticBeanstalk Mirai Environment
       TemplateName:
         Ref: MiraiConfigurationTemplate
-      VersionLabel:
-        Ref: MiraiApplicationVersion
+Outputs:
+  URL:
+    Description: Mirai's URL
+    Value:
+      Fn::Join:
+        - ""
+        -
+          - "http://"
+          - Fn::GetAtt: MiraiEnvironment.EndpointURL
