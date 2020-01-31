@@ -1,0 +1,49 @@
+language: node_js
+
+node_js:
+  - node
+
+cache: npm
+
+jobs:
+  include:
+    - stage: test
+      script: npm test
+    - stage: deploy stack
+      deploy:
+        provider: cloudformation
+        access_key_id: $AWS_ACCESS_KEY_ID
+        secret_access_key:
+          secure: $AWS_SECRET_ACCESS_KEY
+        template: ./deployments/stack.yaml
+        stack_name: mirai-app
+        edge: true
+    - stage: deploy app
+      script:
+        - cd $TRAVIS_BUILD_DIR
+        - npm install
+        - zip -r ./deployments/deploy.zip *
+      deploy:
+        - provider: elasticbeanstalk
+          access_key_id: $AWS_ACCESS_KEY_ID
+          secret_access_key:
+            secure: $AWS_SECRET_ACCESS_KEY
+          region: us-east-2
+          app: mirai-app
+          env: mirai-app
+          bucket_name: mirai-app
+          zip_file: ./deployments/deploy.zip
+          skip_cleanup: true
+          edge: true
+          on:
+            branch: $TRAVIS_BRANCH
+          
+stages:
+  - test
+  - name: deploy stack
+    if: branch = master
+  - name: deploy app
+    if: branch = master
+
+after_failure:
+  - sleep 5
