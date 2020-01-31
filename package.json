@@ -4,7 +4,9 @@
   "description": "An intuitive web application for daily organizing.",
   "main": "src/app.js",
   "scripts": {
-    "test": "mocha \"src/test/**/*.test.js\""
+    "test": "mocha \"src/test/**/*.test.js\"",
+    "unit test": "mocha \"src/test/unit/*.test.js\"",
+    "int test": "mocha \"src/test/int/*.test.js\""
   },
   "repository": {
     "type": "git",
