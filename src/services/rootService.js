@@ -9,11 +9,13 @@
 
 const LogService = require('./logService');
 const ConfigService = require('./configService');
+const MongoDbPersister = require('./persisters/mongoDbPersister');
 
 class RootService {
     constructor() {
         this.log = new LogService(this);
         this.config = new ConfigService(this);
+        this.persister = new MongoDbPersister(this);
     }
 }
 

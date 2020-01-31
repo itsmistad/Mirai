@@ -1,3 +1,12 @@
 {
-    "whyHelloThere": "Obi Wan Kenobi..."
+    "whyHelloThere": "Obi Wan Kenobi...",
+    "database": {
+        "mongo": {
+            "host": "localhost",
+            "port": "27017",
+            "auth": false,
+            "user": "",
+            "pass": ""
+        }
+    }
 }
