@@ -5,8 +5,8 @@
   "main": "src/app.js",
   "scripts": {
     "test": "mocha \"src/test/**/*.test.js\"",
-    "unit test": "mocha \"src/test/unit/*.test.js\"",
-    "int test": "mocha \"src/test/int/*.test.js\""
+    "unit-test": "mocha \"src/test/unit/**/*.test.js\"",
+    "int-test": "mocha \"src/test/int/**/*.test.js\""
   },
   "repository": {
     "type": "git",

@@ -1,4 +1,4 @@
 #!/bin/bash
 
-npm run unit test
-npm ../src/app.js
+npm run unit-test
+node ../src/app.js
