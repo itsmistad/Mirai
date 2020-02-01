@@ -13,7 +13,9 @@ Live Url | - | -
 
 Here's what it does:
 
-1. 🤯 -- This need to be filled in. Sorry!
+1. Provides a minimalist and intuitive feel to planning out your schedule and day to day life.
+2. Keeps your life organized and easily displayed to stay on task.
+3. Has multiple use functionality! Use it for yourself, your family or your co-workers!
 
 This code is open-source under the [MIT License](https://opensource.org/licenses/MIT).
 
