@@ -36,6 +36,10 @@ Resources:
       Description: AWS ElasticBeanstalk Mirai Environment
       TemplateName:
         Ref: MiraiConfigurationTemplate
+      OptionSettings:
+        - Namespace: aws:autoscaling:launchconfiguration
+          OptionName: InstanceType
+          Value: t2.micro
 Outputs:
   URL:
     Description: Mirai's URL

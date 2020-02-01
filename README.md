@@ -1,13 +1,15 @@
 Mirai
 =====
-**CSCE 4901.070 Team Name:** Alpha
-
-`master`    
-[![Build Status](https://travis-ci.com/itsmistad/Mirai.svg?branch=master)](https://travis-ci.com/itsmistad/Mirai) 
 
 Mirai is an intuitive web application for daily organizing and planning.
 
-You can find `master` live [here](https://mirai.mistad.net/).
+**CSCE 4901.070 Team Name:** Alpha
+
+- | `master` – what's deployed | `develop` – what's code-complete
+--- | --- | ---
+Build | [![Build Status](https://travis-ci.com/itsmistad/Mirai.svg?branch=master)](https://travis-ci.com/itsmistad/Mirai) | [![Build Status](https://travis-ci.com/itsmistad/Mirai.svg?branch=develop)](https://travis-ci.com/itsmistad/Mirai)
+Version | - | 0.0.1
+Live Url | - | -
 
 Here's what it does:
 
@@ -54,10 +56,13 @@ Your local database should now be up-and-running with the following connection s
 From the base directory of the repo, run this to execute all tests:
 > `npm test`
 
-## Building and Running
+## Executing
 
-Navigate to `./scripts/` and execute this script to run any necessary migrations and start a local Mirai instance:
+Navigate to `./scripts/` and execute this script to (1) run any necessary migrations, (2) run all unit tests, and (3) start a local Mirai instance:
 > `./start.sh`
+
+Execute this script to start gulp with the BrowserSync and Sass tasks:
+> `./watch.sh`
 
 Your local instance of Mirai should be running and accessible at the following address:
 `http://localhost:3000/`
