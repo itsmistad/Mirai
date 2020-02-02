@@ -13,9 +13,11 @@ Live Url | - | -
 
 Here's what it does:
 
-1. Provides a minimalist and intuitive feel to planning out your schedule and day to day life.
-2. Keeps your life organized and easily displayed to stay on task.
-3. Has multiple use functionality! Use it for yourself, your family or your co-workers!
+1. Provides a minimalist and intuitive interface to plan out your schedule and day-to-day life.
+2. Keeps your life organized and easily displayed in the form of tasks.
+3. Provides multi-use functionality.
+4. Allows task assigning and allows you to share your progress.
+5. Allows you to assign yourself due dates and set reminders.
 
 This code is open-source under the [MIT License](https://opensource.org/licenses/MIT).
 
