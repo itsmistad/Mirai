@@ -12,9 +12,20 @@ class ConfigService {
     }
 
     load() {
-        this.map = require('../../config/config');
-        for (let key in this.map) {
-            this[key] = this.map[key];
+        const map = require('../../config/config');
+        for (const key in map) {
+            this[key] = map[key];
+        }
+        
+        const pkg = require('../../package');
+        if (this['application'] != null) {
+            this['application']['version'] = pkg['version'];
+        } else {
+            this['application'] = {
+                environment: 'local',
+                travis_build: 0,
+                version: pkg['version']
+            };
         }
     }
 }

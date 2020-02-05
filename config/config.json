@@ -1,5 +1,9 @@
 {
     "whyHelloThere": "Obi Wan Kenobi...",
+    "application": {
+        "environment": "local",
+        "travis_build": 0
+    },
     "database": {
         "mongo": {
             "host": "localhost",
