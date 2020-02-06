@@ -1,0 +1,47 @@
+'use strict';
+
+const chai = require('chai');
+const sinon = require('sinon');
+const sinonChai = require("sinon-chai");
+chai.should();
+chai.use(sinonChai);
+
+describe('mongoDbPersister', function() {
+  const MongoDbPersister = require('../../../../services/persisters/mongoDbPersister');
+  const UnitTest = require('../../unitTest');
+
+  UnitTest.Setup();
+  UnitTest.Root.config = {
+      database: {
+          mongo: {
+              url: 'url',
+              host: 'host',
+              port: 0,
+              user: 'user',
+              pass: 'pass',
+              auth: true
+          }
+      }
+  }
+  const persister = new MongoDbPersister(UnitTest.Root);
+
+  it('should export service', function() {
+    MongoDbPersister.should.be.a("Function");
+  });
+
+  describe('#connect()', function() {
+    it('should attempt to connect to the database"', function(done) {
+        const stub = sinon.stub(persister.mongoClient, 'connect');
+        stub.returns(Promise.resolve({
+            db: () => {},
+            close: () => {}
+        }));
+        persister.connect().then(function() {
+            const mongoConfig = UnitTest.Root.config.database.mongo;
+            stub.should.have.been.calledWith(stub, `mongodb://${mongoConfig.user}:${mongoConfig.pass}@${mongoConfig.host}:${mongoConfig.port}/`);
+        }).catch(err => {
+            done(err);
+        });
+    });
+  });
+});

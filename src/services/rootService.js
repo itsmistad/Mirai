@@ -15,6 +15,7 @@ class RootService {
     constructor() {
         this.log = new LogService(this);
         this.config = new ConfigService(this);
+        this.config.load();
         this.persister = new MongoDbPersister(this);
     }
 }

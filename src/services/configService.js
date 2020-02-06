@@ -8,7 +8,6 @@
 class ConfigService {
     constructor(root) {
         this.root = root;
-        this.load();
     }
 
     load() {
