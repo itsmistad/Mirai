@@ -7,8 +7,7 @@
  */
 
 class LogService {
-    constructor(root) {
-        this.root = root;
+    constructor() {
         this.colors = {
             reset: '\x1b[0m',
             bright: '\x1b[1m',

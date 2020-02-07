@@ -5,6 +5,8 @@ node_js:
 
 cache: npm
 
+services: mongodb
+
 jobs:
   include:
     - stage: test
