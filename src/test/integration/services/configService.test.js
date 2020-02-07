@@ -2,7 +2,7 @@
 
 require('chai').should();
 
-describe('configService', function() {
+describe('[INTEGRATION] configService', function() {
   const ConfigService = require('../../../services/configService');
 
   it('should export service', function() {

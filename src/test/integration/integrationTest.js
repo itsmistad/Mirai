@@ -1,11 +1,13 @@
 'use strict';
 
 const MockRootService = require('../mocks/mockRootService');
+const MongoDbPersister = require('../../services/persisters/mongoDbPersister');
 
-class UnitTest {
+class IntegrationTest {
     static Setup(config) {
         this.Root = new MockRootService();
         this.Root.config = config;
+        this.Root.persister = new MongoDbPersister(this.Root);
     }
 
     static SetConfig(config) {
@@ -17,4 +19,4 @@ class UnitTest {
     }
 }
 
-module.exports = UnitTest;
+module.exports = IntegrationTest;
