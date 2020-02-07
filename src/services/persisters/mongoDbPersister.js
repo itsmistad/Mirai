@@ -53,12 +53,71 @@ class MongoDbPersister {
         });
     }
 
-    save(data) {
-
+    save(collection, data) {
+        return this.connect().then(db => {
+            log.debug(`Saving ${JSON.stringify(data)} to ${collection}`);
+            return db.mirai.collection(collection).insertOne(data)
+            .then(res => {
+                db.done();
+                let returnObj = {
+                    insertedId: res.insertedId,
+                    ok: 1
+                };
+                return returnObj;
+            }).catch(() => log.error('Failed to save item.'));
+        });
     }
 
-    find(data) {
+    find(collection, data) {
+        return this.connect().then(db => {
+            log.debug(`Finding ${JSON.stringify(data)} (one) in ${collection}`);
+            return db.mirai.collection(collection).findOne(data)
+            .then(res => {
+                db.done();
+                return res;
+            }).catch(() => log.error('Failed to find item.'));
+        });
+    }
 
+    findMany(collection, data) {
+        return this.connect().then(db => {
+            log.debug(`Finding ${JSON.stringify(data)} (many) in ${collection}`);
+            return db.mirai.collection(collection).find(data).toArray()
+            .then(res => {
+                db.done();
+                return res;
+            }).catch(() => log.error('Failed to find item.'));
+        });
+    }
+
+    delete(collection, data) {
+        return this.connect().then(db => {
+            log.debug(`Deleting ${JSON.stringify(data)} (one) in ${collection}`);
+            return db.mirai.collection(collection).deleteOne(data)
+            .then(res => {
+                db.done();
+                let returnObj = {
+                    deletedCount: res.deletedCount,
+                    ok: 1
+                };
+                return returnObj;
+            }).catch(() => log.error('Failed to delete item.'));
+        });
+    }
+
+    deleteMany(collection, data) {
+        return this.connect().then(db => {
+            log.debug(`Deleting ${JSON.stringify(data)} (many) in ${collection}`);
+            return db.mirai.collection(collection).deleteMany(data)
+            .then(res => {
+                db.done();
+                let returnObj = {
+                    deletedCount: res.deletedCount,
+                    ok: 1
+                };
+                return returnObj;
+            }).catch(() => log.error('Failed to delete item.'));
+        });
     }
 }
 
