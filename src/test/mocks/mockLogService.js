@@ -2,18 +2,30 @@
 
 class MockLogService {
     constructor() {
+        this.enable = false;
     }
 
-    log() {
+    log(tag, message) {
+        const colors = {
+            reset: '\x1b[0m',
+            bright: '\x1b[1m',
+            underscore: '\x1b[4m',
+            magenta: '\x1b[35m',
+        };
+        if (this.enable)
+            console.log(`${colors.underscore}[${new Date().toISOString()}]${colors.reset} ${colors.bright + colors.magenta}[${tag}]\t${message}${colors.reset}`);
     }
     
-    info() {
+    info(message) {
+        this.log('INFO', message);
     }
 
-    error() {
+    error(message) {
+        this.log('ERROR', message);
     }
     
-    debug() {
+    debug(message) {
+        this.log('DEBUG', message);
     }
 }
 

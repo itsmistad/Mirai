@@ -11,10 +11,9 @@ describe('mongoDbPersister', function() {
   const UnitTest = require('../../unitTest');
 
   UnitTest.Setup();
-  UnitTest.Root.config = {
+  UnitTest.SetConfig({
       database: {
           mongo: {
-              url: 'url',
               host: 'host',
               port: 0,
               user: 'user',
@@ -22,7 +21,7 @@ describe('mongoDbPersister', function() {
               auth: true
           }
       }
-  }
+  });
   const persister = new MongoDbPersister(UnitTest.Root);
 
   it('should export service', function() {
@@ -30,7 +29,7 @@ describe('mongoDbPersister', function() {
   });
 
   describe('#connect()', function() {
-    it('should attempt to connect to the database"', function(done) {
+    it('should attempt to connect to the database', function(done) {
         const stub = sinon.stub(persister.mongoClient, 'connect');
         stub.returns(Promise.resolve({
             db: () => {},
@@ -38,7 +37,8 @@ describe('mongoDbPersister', function() {
         }));
         persister.connect().then(function() {
             const mongoConfig = UnitTest.Root.config.database.mongo;
-            stub.should.have.been.calledWith(stub, `mongodb://${mongoConfig.user}:${mongoConfig.pass}@${mongoConfig.host}:${mongoConfig.port}/`);
+            stub.should.have.been.calledWith(`mongodb://${mongoConfig.user}:${mongoConfig.pass}@${mongoConfig.host}:${mongoConfig.port}/`);
+            done();
         }).catch(err => {
             done(err);
         });
