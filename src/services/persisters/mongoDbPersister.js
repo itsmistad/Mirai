@@ -6,7 +6,6 @@
  */
 
 const mongodb = require('mongodb');
-const MongoClient = mongodb.MongoClient;
 const ObjectId = mongodb.ObjectId;
 let log;
 
@@ -16,6 +15,7 @@ class MongoDbPersister {
         this.config = this.root.config;
         this.databaseConfig = this.config["database"];
         this.mongoConfig = this.databaseConfig["mongo"];
+        this.mongoClient = mongodb.MongoClient;
         log = this.root.log;
     }
 
@@ -31,7 +31,7 @@ class MongoDbPersister {
             `${host}:${port}/`;
 
         log.debug('Connecting to db: ' + url);
-        return MongoClient.connect(url, {useUnifiedTopology: true}).then(db => {
+        return this.mongoClient.connect(url, {useUnifiedTopology: true}).then(db => {
             log.debug('Connected.');
             var dbo = db.db("mirai");
             return {
