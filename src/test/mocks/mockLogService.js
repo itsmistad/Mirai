@@ -14,18 +14,22 @@ class MockLogService {
         };
         if (this.enable)
             console.log(`${colors.underscore}[${new Date().toISOString()}]${colors.reset} ${colors.bright + colors.magenta}[${tag}]\t${message}${colors.reset}`);
+        return message;
     }
     
     info(message) {
         this.log('INFO', message);
+        return message;
     }
 
     error(message) {
         this.log('ERROR', message);
+        return message;
     }
     
     debug(message) {
         this.log('DEBUG', message);
+        return message;
     }
 }
 

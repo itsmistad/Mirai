@@ -6,7 +6,7 @@ const sinonChai = require("sinon-chai");
 chai.should();
 chai.use(sinonChai);
 
-describe('mongoDbPersister', function() {
+describe('[UNIT] mongoDbPersister', function() {
   const MongoDbPersister = require('../../../../services/persisters/mongoDbPersister');
   const UnitTest = require('../../unitTest');
 

@@ -2,7 +2,7 @@
 
 require('chai').should();
 
-describe('rootService', function() {
+describe('[UNIT] rootService', function() {
   const RootService = require('../../../services/rootService');
 
   it('should export service', function() {

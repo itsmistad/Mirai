@@ -3,7 +3,7 @@
 require('chai').should();
 var sinon = require('sinon');
 
-describe('logService', function() {
+describe('[UNIT] logService', function() {
   const LogService = require('../../../services/logService');
   const log = new LogService(null);
   const logStub = sinon.stub(log, 'log').returns(null);

@@ -38,18 +38,22 @@ class LogService {
     log(tag, message, colorTag = '') {
         let resetTag = colorTag !== '' ? this.colors.reset : '';
         console.log(`${this.colors.underscore}[${new Date().toISOString()}]${this.colors.reset} ${colorTag}[${tag}]\t${message}${resetTag}`);
+        return message;
     }
     
     info(message) {
         this.log('INFO', message, this.colors.white + this.colors.bright);
+        return message;
     }
 
     error(message) {
         this.log('ERROR', message, this.colors.red + this.colors.bright);
+        return message;
     }
     
     debug(message) {
         this.log('DEBUG', message, this.colors.yellow + this.colors.bright);
+        return message;
     }
 }
 
