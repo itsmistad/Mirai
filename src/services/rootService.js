@@ -9,6 +9,7 @@
 
 const LogService = require('./logService');
 const ConfigService = require('./configService');
+const EnvironmentService = require('./environmentService');
 const MongoDbPersister = require('./persisters/mongoDbPersister');
 
 class RootService {
@@ -16,6 +17,7 @@ class RootService {
         this.log = new LogService();
         this.config = new ConfigService();
         this.config.load();
+        this.env = new EnvironmentService(this);
         this.persister = new MongoDbPersister(this);
     }
 }
