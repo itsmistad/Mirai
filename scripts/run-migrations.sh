@@ -1,3 +1,3 @@
 #!/bin/bash
 
-# TODO
+node ../src/migrations/migrator.js $1

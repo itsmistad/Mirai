@@ -18,11 +18,16 @@ jobs:
         secret_access_key:
           secure: $AWS_SECRET_ACCESS_KEY
         template: ./deployments/stack.yaml
+        region: $AWS_DEFAULT_REGION
         stack_name: mirai-app
         edge: true
     - stage: deploy app
       script:
         - cd $TRAVIS_BUILD_DIR
+        - aws s3api head-object --bucket mirai-app --key config.json || not_exists=true
+        - if [ $not_exists ]; then echo "$CONFIG" > ./config/config.json; aws s3 cp ./config/config.json s3://mirai-app/config.json/; else aws s3 cp s3://mirai-app/config.json/ ./config/config.json; fi
+        - jq -c '.application.travis_build = $buildNum' --arg buildNum $TRAVIS_BUILD_NUMBER ./config/config.json > ./config/config.json
+        - jq -c '.application.environment = $env' --arg env 'prod' ./config/config.json > ./config/config.json
         - npm install
         - zip -r ./deployments/deploy.zip *
       deploy:
@@ -30,7 +35,7 @@ jobs:
           access_key_id: $AWS_ACCESS_KEY_ID
           secret_access_key:
             secure: $AWS_SECRET_ACCESS_KEY
-          region: us-east-2
+          region: $AWS_DEFAULT_REGION
           app: mirai-app
           env: mirai-app
           bucket_name: mirai-app

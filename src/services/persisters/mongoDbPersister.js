@@ -45,17 +45,18 @@ class MongoDbPersister {
         return this.connect().then(db => {
             log.debug(`Retrieving ${id} from ${collection}`);
             return db.mirai.collection(collection).findOne({
-                '_id': ObjectId(id)
+                _id: ObjectId(id)
             }).then(res => {
                 db.done();
                 return res;
-            }).catch(() => log.error('Failed to get item.'));
+            }).catch(() => log.error(`Failed to get item with "${id}".`));
         });
     }
 
     save(collection, data) {
         return this.connect().then(db => {
-            log.debug(`Saving ${JSON.stringify(data)} to ${collection}`);
+            const str = JSON.stringify(data);
+            log.debug(`Saving ${str} to ${collection}`);
             return db.mirai.collection(collection).insertOne(data)
             .then(res => {
                 db.done();
@@ -64,35 +65,58 @@ class MongoDbPersister {
                     ok: 1
                 };
                 return returnObj;
-            }).catch(() => log.error('Failed to save item.'));
+            }).catch(() => log.error(`Failed to save item: ${str}`));
+        });
+    }
+
+    replace(collection, id, data, upsert) {
+        return this.connect().then(db => {
+            const str = JSON.stringify(data);
+            log.debug(`Saving ${str} to ${collection}`);
+            return db.mirai.collection(collection).replaceOne({
+                _id: ObjectId(id)
+            }, data, {
+                upsert: !upsert ? false : true
+            })
+            .then(res => {
+                db.done();
+                let returnObj = {
+                    modifiedCount: res.modifiedCount,
+                    ok: 1
+                };
+                return returnObj;
+            }).catch(err => log.error(`Failed to replace item "${id}": ${str}`));
         });
     }
 
     find(collection, data) {
         return this.connect().then(db => {
-            log.debug(`Finding ${JSON.stringify(data)} (one) in ${collection}`);
+            const str = JSON.stringify(data);
+            log.debug(`Finding ${str} (one) in ${collection}`);
             return db.mirai.collection(collection).findOne(data)
             .then(res => {
                 db.done();
                 return res;
-            }).catch(() => log.error('Failed to find item.'));
+            }).catch(() => log.error(`Failed to find any item with ${data}.`));
         });
     }
 
     findMany(collection, data) {
         return this.connect().then(db => {
-            log.debug(`Finding ${JSON.stringify(data)} (many) in ${collection}`);
+            const str = JSON.stringify(data);
+            log.debug(`Finding ${str} (many) in ${collection}`);
             return db.mirai.collection(collection).find(data).toArray()
             .then(res => {
                 db.done();
                 return res;
-            }).catch(() => log.error('Failed to find item.'));
+            }).catch(() => log.error(`Failed to find items with ${dstrata}.`));
         });
     }
 
     delete(collection, data) {
         return this.connect().then(db => {
-            log.debug(`Deleting ${JSON.stringify(data)} (one) in ${collection}`);
+            const str = JSON.stringify(data);
+            log.debug(`Deleting ${str} (one) in ${collection}`);
             return db.mirai.collection(collection).deleteOne(data)
             .then(res => {
                 db.done();
@@ -101,13 +125,14 @@ class MongoDbPersister {
                     ok: 1
                 };
                 return returnObj;
-            }).catch(() => log.error('Failed to delete item.'));
+            }).catch(() => log.error(`Failed to delete any item with ${str}.`));
         });
     }
 
     deleteMany(collection, data) {
         return this.connect().then(db => {
-            log.debug(`Deleting ${JSON.stringify(data)} (many) in ${collection}`);
+            const str = JSON.stringify(data);
+            log.debug(`Deleting ${str} (many) in ${collection}`);
             return db.mirai.collection(collection).deleteMany(data)
             .then(res => {
                 db.done();
@@ -116,7 +141,7 @@ class MongoDbPersister {
                     ok: 1
                 };
                 return returnObj;
-            }).catch(() => log.error('Failed to delete item.'));
+            }).catch(() => log.error(`Failed to delete items ${str}.`));
         });
     }
 }

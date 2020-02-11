@@ -12,5 +12,8 @@
             "user": "",
             "pass": ""
         }
+    },
+    "log": {
+        "debug": false
     }
 }

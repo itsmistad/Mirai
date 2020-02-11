@@ -10,8 +10,7 @@ describe('[UNIT] mongoDbPersister', function() {
   const MongoDbPersister = require('../../../../services/persisters/mongoDbPersister');
   const UnitTest = require('../../unitTest');
 
-  UnitTest.Setup();
-  UnitTest.SetConfig({
+  UnitTest.Setup({
       database: {
           mongo: {
               host: 'host',
