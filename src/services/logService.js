@@ -7,7 +7,8 @@
  */
 
 class LogService {
-    constructor() {
+    constructor(root) {
+        this.root = root;
         this.colors = {
             reset: '\x1b[0m',
             bright: '\x1b[1m',
@@ -52,7 +53,8 @@ class LogService {
     }
     
     debug(message) {
-        this.log('DEBUG', message, this.colors.yellow + this.colors.bright);
+        if (this.root.config['log']['debug'])
+            this.log('DEBUG', message, this.colors.yellow + this.colors.bright);
         return message;
     }
 }

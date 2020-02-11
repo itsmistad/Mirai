@@ -13,7 +13,7 @@ const MongoDbPersister = require('./persisters/mongoDbPersister');
 
 class RootService {
     constructor() {
-        this.log = new LogService();
+        this.log = new LogService(this);
         this.config = new ConfigService();
         this.config.load();
         this.persister = new MongoDbPersister(this);
