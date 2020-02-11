@@ -5,7 +5,13 @@ var sinon = require('sinon');
 
 describe('[UNIT] logService', function() {
   const LogService = require('../../../services/logService');
-  const log = new LogService(null);
+  const UnitTest = require('../unitTest');
+  UnitTest.Setup({
+    log: {
+      debug: true
+    }
+  });
+  const log = new LogService(UnitTest.Root);
   const logStub = sinon.stub(log, 'log').returns(null);
 
   it('should export service', function() {
