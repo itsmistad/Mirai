@@ -9,7 +9,7 @@ services: mongodb
 
 jobs:
   include:
-    - stage: migrate
+    - stage: migrate (qa)
       script:
         - cd $TRAVIS_BUILD_DIR/scripts
         - ./config.sh mirai-app-dev
@@ -27,6 +27,11 @@ jobs:
         region: $AWS_DEFAULT_REGION
         stack_name: mirai-app
         edge: true
+    - stage: migrate (prod)
+      script:
+        - cd $TRAVIS_BUILD_DIR/scripts
+        - ./config.sh mirai-app
+        - node ../src/migrations/migrator.js
     - stage: deploy app
       script:
         - cd $TRAVIS_BUILD_DIR/scripts
@@ -53,8 +58,11 @@ jobs:
             branch: $TRAVIS_BRANCH
           
 stages:
+  - migrate (qa)
   - test
   - name: deploy stack
+    if: branch = master
+  - name: migrate (prod)
     if: branch = master
   - name: deploy app
     if: branch = master
