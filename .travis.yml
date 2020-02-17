@@ -9,8 +9,14 @@ services: mongodb
 
 jobs:
   include:
+    - stage: migrate
+      script:
+        - cd $TRAVIS_BUILD_DIR/scripts
+        - ./config.sh mirai-app-dev
+        - node ../src/migrations/migrator.js
     - stage: test
-      script: npm test
+      script: 
+        - npm test
     - stage: deploy stack
       deploy:
         provider: cloudformation
@@ -23,9 +29,8 @@ jobs:
         edge: true
     - stage: deploy app
       script:
-        - cd $TRAVIS_BUILD_DIR
-        - aws s3api head-object --bucket mirai-app --key config.json || not_exists=true
-        - if [ $not_exists ]; then echo "$CONFIG" > ./config/config.json; aws s3 cp ./config/config.json s3://mirai-app/config.json/; else aws s3 cp s3://mirai-app/config.json/ ./config/config.json; fi
+        - cd $TRAVIS_BUILD_DIR/scripts
+        - ./config.sh mirai-app
         - jq -c '.application.travis_build = ($buildNum | tonumber)' --arg buildNum $TRAVIS_BUILD_NUMBER ./config/config.json > ./config/config2.json
         - jq -c '.application.environment = $env' --arg env 'prod' ./config/config.json > ./config/config2.json
         - jq -c '.log.debug = ($flag | test("true"))' --arg flag true ./config/config.json > ./config/config2.json
