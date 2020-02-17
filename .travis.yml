@@ -26,8 +26,10 @@ jobs:
         - cd $TRAVIS_BUILD_DIR
         - aws s3api head-object --bucket mirai-app --key config.json || not_exists=true
         - if [ $not_exists ]; then echo "$CONFIG" > ./config/config.json; aws s3 cp ./config/config.json s3://mirai-app/config.json/; else aws s3 cp s3://mirai-app/config.json/ ./config/config.json; fi
-        - jq -c '.application.travis_build = $buildNum' --arg buildNum $TRAVIS_BUILD_NUMBER ./config/config.json > ./config/config.json
-        - jq -c '.application.environment = $env' --arg env 'prod' ./config/config.json > ./config/config.json
+        - jq -c '.application.travis_build = ($buildNum | tonumber)' --arg buildNum $TRAVIS_BUILD_NUMBER ./config/config.json > ./config/config2.json
+        - jq -c '.application.environment = $env' --arg env 'prod' ./config/config.json > ./config/config2.json
+        - jq -c '.log.debug = ($flag | test("true"))' --arg flag true ./config/config.json > ./config/config2.json
+        - mv ./config/config2.json ./config/config.json
         - npm install
         - zip -r ./deployments/deploy.zip *
       deploy:

@@ -18,7 +18,7 @@ describe('[INTEGRATION] mongoDbPersister', function() {
     }
   });
 
-  const persister = IntegrationTest.Root.persister;
+  const mongo = IntegrationTest.Root.mongo;
 
   function generateRandomName() { 
     let ans = '', arr = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'; 
@@ -30,7 +30,7 @@ describe('[INTEGRATION] mongoDbPersister', function() {
 
   describe('#save()', function() {
     it('New name saved to users database', function(done) {
-        persister.save('users',{name})
+      mongo.save('users',{name})
         .then(res => {
           res.ok.should.equal(1);
           done();
@@ -41,7 +41,7 @@ describe('[INTEGRATION] mongoDbPersister', function() {
   });
   describe('#find()', function() {
       it('New name (one) found in users database', function(done) {
-        persister.find('users',{name})
+        mongo.find('users',{name})
         .then(res => {
           res.name.should.equal(name);
           done();
@@ -52,7 +52,7 @@ describe('[INTEGRATION] mongoDbPersister', function() {
   });
   describe('#findMany()', function() {
     it('New name (many) found in users database', function(done) {
-      persister.findMany('users',{name})
+      mongo.findMany('users',{name})
       .then(res => {
         res.length.should.equal(1);
         res[0].name.should.equal(name);
@@ -64,7 +64,7 @@ describe('[INTEGRATION] mongoDbPersister', function() {
   });
   describe('#delete()', function() {
       it('New name deleted (one) from users database', function(done) {
-        persister.delete('users',{name})
+        mongo.delete('users',{name})
         .then(res => {
             res.ok.should.equal(1);
             done();
@@ -75,7 +75,7 @@ describe('[INTEGRATION] mongoDbPersister', function() {
   });
   describe('#deleteMany()', function() {
     it('New name deleted (many) from users database', function(done) {
-      persister.deleteMany('users',{name})
+      mongo.deleteMany('users',{name})
       .then(res => {
           res.ok.should.equal(1);
           done();

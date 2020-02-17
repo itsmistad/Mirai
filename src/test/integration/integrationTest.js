@@ -2,12 +2,14 @@
 
 const MockRootService = require('../mocks/mockRootService');
 const MongoDbPersister = require('../../services/persisters/mongoDbPersister');
+const ConfigService = require('../../services/config/configService');
 
 class IntegrationTest {
-    static Setup(config) {
+    static Setup() {
         this.Root = new MockRootService();
-        this.Root.config = config;
-        this.Root.persister = new MongoDbPersister(this.Root);
+        this.Root.config = new ConfigService(this.Root);
+        this.Root.config.load();
+        this.Root.mongo = new MongoDbPersister(this.Root);
     }
 
     static SetConfig(config) {

@@ -15,19 +15,19 @@ class Migrator {
     constructor(_root) {
         this.log = _root.log;
     }
-
-    get = (collection, id) => root.persister.get(collection, id);
-    save = (collection, data) => root.persister.save(collection, data);
-    replace = (collection, id, data, upsert) => root.persister.replace(collection, id, data, upsert);
-    find = (collection, data) => root.persister.find(collection, data);
-    findMany = (collection, data) => root.persister.findMany(collection, data);
-    delete = (collection, data) => root.persister.delete(collection, data);
-    deleteMany = (collection, data) => root.persister.deleteMany(collection, data);
+    
+    get = (collection, id) => root.mongo.get(collection, id);
+    save = (collection, data) => root.mongo.save(collection, data);
+    replace = (collection, id, data, upsert) => root.mongo.replace(collection, id, data, upsert);
+    find = (collection, data) => root.mongo.find(collection, data);
+    findMany = (collection, data) => root.mongo.findMany(collection, data);
+    delete = (collection, data) => root.mongo.delete(collection, data);
+    deleteMany = (collection, data) => root.mongo.deleteMany(collection, data);
 }
 
 const migrator = new Migrator(root);
 
-function runMigrations(currentTimestamp, timestampId) {
+async function runMigrations(currentTimestamp, timestampId) {
     let specifiedTimestamp = 0, lastTimestamp = 0;
     if (currentTimestamp == null)
         currentTimestamp = 0;
@@ -72,7 +72,7 @@ function runMigrations(currentTimestamp, timestampId) {
 
         log.info(`${log.colors.yellow}Found ${totalCount} migration script(s) to execute (${upMigrations.length} up, ${downMigrations.length} down, ${migrations.length - totalCount} skipped).`);
         
-        const execute = function (migrations, shouldMigrateDown) {
+        const execute = async function (migrations, shouldMigrateDown) {
             for (let fileName of migrations) {
                 const fileTimestamp = getFileTimestamp(fileName);
                 log.info(`${log.colors.dim + log.colors.magenta} > ${fileName.replace('.js', '')}:`)
@@ -88,13 +88,19 @@ function runMigrations(currentTimestamp, timestampId) {
                     try {
                         if (!shouldMigrateDown) {
                             log.info(`${log.colors.green}\t+ Up ("${js.desc}").`);
-                            js.up(migrator);
+                            if (js.up.constructor.name === 'AsyncFunction')
+                                await js.up(migrator);
+                            else
+                                js.up(migrator);
                             continue;
                         }
 
                         if (shouldMigrateDown && js.down != null) {
                             log.info(`${log.colors.red}\t- Down ("${js.desc}").`);
-                            js.down(migrator);
+                            if (js.down.constructor.name === 'AsyncFunction')
+                                await js.down(migrator);
+                            else
+                                js.down(migrator);
                             continue;
                         }
 
@@ -111,12 +117,12 @@ function runMigrations(currentTimestamp, timestampId) {
         if (totalCount > 0) {
             if (upMigrations.length > 0) {
                 log.info('Executing upward migrations:');
-                execute(upMigrations, false);
+                await execute(upMigrations, false);
             }
             
             if (downMigrations.length > 0) {
                 log.info('Executing downward migrations:');
-                execute(downMigrations, true);
+                await execute(downMigrations, true);
             }
 
             migrator.replace('migrator', timestampId, {

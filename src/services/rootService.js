@@ -8,15 +8,15 @@
  */
 
 const LogService = require('./logService');
-const ConfigService = require('./configService');
+const ConfigService = require('./config/configService');
 const MongoDbPersister = require('./persisters/mongoDbPersister');
 
 class RootService {
     constructor() {
         this.log = new LogService(this);
-        this.config = new ConfigService();
+        this.config = new ConfigService(this);
         this.config.load();
-        this.persister = new MongoDbPersister(this);
+        this.mongo = new MongoDbPersister(this);
     }
 }
 

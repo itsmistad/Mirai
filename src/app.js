@@ -1,20 +1,17 @@
 'use strict';
 
 const RootService = require('./services/rootService');
+const configKeys = require('./services/config/configKeys');
 
 const root = new RootService();
 const log = root.log;
 const config = root.config;
-const persister = root.persister;
+const mongo = root.mongo;
 
 class App {
     static async Start() {
-      log.info('whyHelloThere!');
-      log.info(config['whyHelloThere']); // Crucial Star Wars reference.
-
-      persister.get('users', '5e337f4cc104af2140ffed61')
-        .then(res => log.debug(`Searched for "5e337f4cc104af2140ffed61" and got "${JSON.stringify(res)}"`))
-        .catch(err => log.error(err)); // Example of pulling data from MongoDB.
+      const loggingLevel = await config.get(configKeys.logging.level);
+      log.info(`Current Logging.Level: ${loggingLevel}`);
     }
 }
 
