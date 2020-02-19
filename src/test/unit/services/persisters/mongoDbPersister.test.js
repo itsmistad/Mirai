@@ -21,7 +21,7 @@ describe('[UNIT] mongoDbPersister', function() {
           }
       }
   });
-  const persister = new MongoDbPersister(UnitTest.Root);
+  const mongo = new MongoDbPersister(UnitTest.Root);
 
   it('should export service', function() {
     MongoDbPersister.should.be.a("Function");
@@ -29,12 +29,12 @@ describe('[UNIT] mongoDbPersister', function() {
 
   describe('#connect()', function() {
     it('should attempt to connect to the database', function(done) {
-        const stub = sinon.stub(persister.mongoClient, 'connect');
+        const stub = sinon.stub(mongo.mongoClient, 'connect');
         stub.returns(Promise.resolve({
             db: () => {},
             close: () => {}
         }));
-        persister.connect().then(function() {
+        mongo.connect().then(function() {
             const mongoConfig = UnitTest.Root.config.database.mongo;
             stub.should.have.been.calledWith(`mongodb://${mongoConfig.user}:${mongoConfig.pass}@${mongoConfig.host}:${mongoConfig.port}/`);
             done();

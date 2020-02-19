@@ -1,11 +1,11 @@
-module.exports = new function(m) {
+module.exports = new function() {
     this.desc = 'Creates nothing; this is just a template for migration scripts.';
 
-    this.up = function() {
+    this.up = async function(m) {
         
     }
 
-    this.down = function() {
+    this.down = async function(m) {
         
     }
 }

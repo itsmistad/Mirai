@@ -7,10 +7,24 @@ cache: npm
 
 services: mongodb
 
+env:
+  global:
+    - PATH=$HOME/.local/bin:$PATH
+
+before_install:
+  - pyenv global 3.7.1
+  - pip install -U pip
+  - pip install awscli
+
 jobs:
   include:
     - stage: test
-      script: npm test
+      script: 
+        - cd $TRAVIS_BUILD_DIR/scripts
+        - chmod +x config.sh
+        - ./config.sh mirai-app-dev
+        - node ../src/migrations/migrator.js
+        - npm test
     - stage: deploy stack
       deploy:
         provider: cloudformation
@@ -21,13 +35,21 @@ jobs:
         region: $AWS_DEFAULT_REGION
         stack_name: mirai-app
         edge: true
+    - stage: migrate (prod)
+      script:
+        - cd $TRAVIS_BUILD_DIR/scripts
+        - chmod +x config.sh
+        - ./config.sh mirai-app
+        - node ../src/migrations/migrator.js
     - stage: deploy app
       script:
-        - cd $TRAVIS_BUILD_DIR
-        - aws s3api head-object --bucket mirai-app --key config.json || not_exists=true
-        - if [ $not_exists ]; then echo "$CONFIG" > ./config/config.json; aws s3 cp ./config/config.json s3://mirai-app/config.json/; else aws s3 cp s3://mirai-app/config.json/ ./config/config.json; fi
-        - jq -c '.application.travis_build = $buildNum' --arg buildNum $TRAVIS_BUILD_NUMBER ./config/config.json > ./config/config.json
-        - jq -c '.application.environment = $env' --arg env 'prod' ./config/config.json > ./config/config.json
+        - cd $TRAVIS_BUILD_DIR/scripts
+        - chmod +x config.sh
+        - ./config.sh mirai-app
+        - jq -c '.application.travis_build = ($buildNum | tonumber)' --arg buildNum $TRAVIS_BUILD_NUMBER ./config/config.json > ./config/config2.json
+        - jq -c '.application.environment = $env' --arg env 'prod' ./config/config2.json > ./config/config3.json
+        - jq -c '.log.debug = ($flag | test("true"))' --arg flag true ./config/config3.json > ./config/config4.json
+        - mv ./config/config4.json ./config/config.json
         - npm install
         - zip -r ./deployments/deploy.zip *
       deploy:
@@ -48,6 +70,8 @@ jobs:
 stages:
   - test
   - name: deploy stack
+    if: branch = master
+  - name: migrate (prod)
     if: branch = master
   - name: deploy app
     if: branch = master

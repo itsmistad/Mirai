@@ -41,20 +41,24 @@ class LogService {
         console.log(`${this.colors.underscore}[${new Date().toISOString()}]${this.colors.reset} ${colorTag}[${tag}]\t${message}${resetTag}`);
         return message;
     }
-    
-    info(message) {
-        this.log('INFO', message, this.colors.white + this.colors.bright);
-        return message;
-    }
 
     error(message) {
         this.log('ERROR', message, this.colors.red + this.colors.bright);
+        // Using this.root.config.get(configKeys.logging.level), save to "logs" collection if >= 1
+        return message;
+    }
+    
+    info(message) {
+        this.log('INFO', message, this.colors.white + this.colors.bright);
+        // Using this.root.config.get(configKeys.logging.level), save to "logs" collection if >= 2
         return message;
     }
     
     debug(message) {
-        if (this.root.config['log']['debug'])
+        if (this.root.config['log']['debug']) {
             this.log('DEBUG', message, this.colors.yellow + this.colors.bright);
+            // Using this.root.config.get(configKeys.logging.level), save to "logs" collection if >= 3
+        }
         return message;
     }
 }
