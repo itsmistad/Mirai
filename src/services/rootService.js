@@ -10,6 +10,7 @@
 const LogService = require('./logService');
 const ConfigService = require('./config/configService');
 const MongoDbPersister = require('./persisters/mongoDbPersister');
+const EmailService = require('./emailService');
 
 class RootService {
     constructor() {
@@ -17,6 +18,7 @@ class RootService {
         this.config = new ConfigService(this);
         this.config.load();
         this.mongo = new MongoDbPersister(this);
+        this.email = new EmailService();
     }
 }
 
