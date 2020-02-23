@@ -6,7 +6,8 @@ chai.should();
 describe('[INTEGRATION] mongoDbPersister', function() {
   const IntegrationTest = require('../../integrationTest');
 
-  IntegrationTest.Setup({
+  IntegrationTest.Setup();
+  IntegrationTest.SetConfig({
     database: {
       mongo: {
         host: 'localhost',

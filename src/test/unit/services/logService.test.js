@@ -6,7 +6,8 @@ var sinon = require('sinon');
 describe('[UNIT] logService', function() {
   const LogService = require('../../../services/logService');
   const UnitTest = require('../unitTest');
-  UnitTest.Setup({
+  UnitTest.Setup();
+  UnitTest.SetConfig({
     log: {
       debug: true
     }

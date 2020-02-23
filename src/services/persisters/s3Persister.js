@@ -1,32 +1,45 @@
 'use strict';
 
-const fs = require('fs');
 const AWS = require('aws-sdk');
-
 const bucketName = "mirai-app";
-const MongoDbPersister = require('./persisters/mongoDbPersister');
+let log;
 
-
-class s3Persister {
+class S3Persister {
     constructor(root) {
-        this.mongo = new MongoDbPersister(this);
+        this.root = root;
+        this.s3 = new AWS.S3();
+        log = root.log;
     }
 
-    get(key, body) {
+    /*
+     * contentType is an optional flag that defaults to "utf-8". Another acceptable value is "binary", for example.
+     * This can be changed to other content types per this documentation:
+     * https://nodejs.org/api/buffer.html#buffer_buf_tostring_encoding_start_end
+     */
+    get(key, contentEncoding = 'utf-8') {
+        const params = {
+            Bucket: bucketName,
+            Key: key
+        };
+        var getObjectPromise = this.s3.getObject(params).promise();
+        return getObjectPromise.then(data => {
+            return data.Body.toString(contentEncoding);
+        }).catch(err => log.error(`Failed to retrieve item with key "${key}" from bucket "${bucketName}". Error: ${err}`));
+    }
+
+    save(key, body, contentEncoding = 'utf-8') {
         const params = {
             Bucket: bucketName,
             Key: key,
-            Body: body
+            Body: body,
+            ContentType: 'binary',
+            ContentEncoding: contentEncoding
         };
-        s3.download(params).then(data => { }).catch(err => { });
-    }
-
-    save(key, body) {
-        const params = {
-            Bucket: bucketName,
-            Key: key,
-            Body: body
-        };
-        s3.upload(params).then(data => { }).catch(err => { });
+        var putObjectPromise = this.s3.putObject(params).promise();
+        return putObjectPromise.then(data => {
+            return data;
+        }).catch(err => log.error(`Failed to retrieve item with key "${key}" to bucket "${bucketName}". Error: ${err}`));
     }
 }
+
+module.exports = S3Persister;

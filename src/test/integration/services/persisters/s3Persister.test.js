@@ -4,39 +4,38 @@ const chai = require('chai');
 chai.should();
 
 describe('[INTEGRATION] s3Persister', function() {
-    const IntegrationTest = require('../../integrationTest');
+  const IntegrationTest = require('../../integrationTest');
+  IntegrationTest.Setup();
+  const s3 = IntegrationTest.Root.s3;
 
-    IntegrationTest.Setup({
-        database: {
-        s3: {
-            host: 'localhost',
-            port: '27017',
-            auth: false,
-            user: '',
-            pass: ''
-        }
-        }
+  describe('#save()', function() {
+    // This test is temporarily disabled. Enable it once our code deploys to production and the S3 bucket "mirai-app" exists.
+    it.skip('should save a file to an S3 bucket', function(done) {
+      s3.save('TestFile', {
+        Body: 'Body'
+      }).then(data => {
+        done();
+      }).catch(err => {
+        done(err);
+      });
+      setTimeout(done('Failed to save the test file within 5 seconds. Is our S3 bucket online?'), 4950);
     });
+  });
 
-    const s3 = IntegrationTest.Root.s3;
-
-    function generateRandomName() { 
-        let ans = '', arr = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'; 
-        for (let i = 10; i > 0; i--) 
-        ans += arr[Math.floor(Math.random() * arr.length)]; 
-        return ans; 
-    }
-    const name = generateRandomName();
-
-    describe('#save()', function() {
-        it('New name saved to s3 bucket', function(done) {
-        s3.save('users',{name})
-            .then(res => {
-            res.ok.should.equal(1);
-            done();
-            }).catch(err => {
-            done(err);
-            });
+  describe('#get()', function() {
+    // This test is temporarily disabled. Enable it once our code deploys to production and the S3 bucket "mirai-app" exists.
+    it.skip('should retrieve a file from an S3 bucket', function(done) {
+      s3.get('TestFile').then(data => {
+          console.log('resolved ' + JSON.stringify(data));
+        data.should.deep.equal({
+          res: 'ok'
         });
+        done();
+      }).catch(err => {
+        console.log('rejected ' + err);
+          done(err);
+      });
+      setTimeout(done('Failed to retrieve the test file within 5 seconds. Is our S3 bucket online?'), 4950);
     });
+  });
 });
