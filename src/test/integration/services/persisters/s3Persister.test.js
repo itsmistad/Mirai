@@ -26,14 +26,9 @@ describe('[INTEGRATION] s3Persister', function() {
     // This test is temporarily disabled. Enable it once our code deploys to production and the S3 bucket "mirai-app" exists.
     it.skip('should retrieve a file from an S3 bucket', function(done) {
       s3.get('TestFile').then(data => {
-          console.log('resolved ' + JSON.stringify(data));
-        data.should.deep.equal({
-          res: 'ok'
-        });
         done();
       }).catch(err => {
-        console.log('rejected ' + err);
-          done(err);
+        done(err);
       });
       setTimeout(done('Failed to retrieve the test file within 5 seconds. Is our S3 bucket online?'), 4950);
     });

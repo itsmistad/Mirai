@@ -45,9 +45,7 @@ describe('[UNIT] s3Persister', function() {
       // execute
       s3.get('Key').then(data => {
         // assert
-        data.should.deep.equal({
-          Body: 'Body'
-        });
+        data.should.equal('Body');
         done();
       });
     });
