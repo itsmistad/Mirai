@@ -15,7 +15,7 @@ describe('[INTEGRATION] configService', function() {
     const mongo = IntegrationTest.Root.mongo;
 
     it('should export service', function() {
-        ConfigService.should.be.a("Function");
+        ConfigService.should.be.a('Function');
     });
 
     describe('#load()', function() {
@@ -39,14 +39,14 @@ describe('[INTEGRATION] configService', function() {
             if (result != null) {
                 // If it's present, store the current value and replace it.
                 const previousVal = result.value;
-                let replaceResult = await mongo.replace('config', result._id, {
+                await mongo.replace('config', result._id, {
                     key: configKeys.logging.level.key,
                     value: -1
                 });
 
                 // Get the config value through config.get() and then replace with original value.
                 const configResult = await config.get(configKeys.logging.level);
-                replaceResult = await mongo.replace('config', result._id, {
+                await mongo.replace('config', result._id, {
                     key: configKeys.logging.level.key,
                     value: previousVal
                 });

@@ -6,7 +6,6 @@ const configKeys = require('./services/config/configKeys');
 const root = new RootService();
 const log = root.log;
 const config = root.config;
-const mongo = root.mongo;
 
 class App {
     static async Start() {

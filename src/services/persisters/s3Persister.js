@@ -1,7 +1,7 @@
 'use strict';
 
 const AWS = require('aws-sdk');
-const bucketName = "mirai-app";
+const bucketName = 'mirai-app';
 let log;
 
 class S3Persister {

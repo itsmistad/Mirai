@@ -16,7 +16,7 @@ describe('[UNIT] logService', function() {
     const logStub = sinon.stub(log, 'log').returns(null);
 
     it('should export service', function() {
-        LogService.should.be.a("Function");
+        LogService.should.be.a('Function');
     });
 
     describe('#debug()', function() {

@@ -2,15 +2,13 @@
 
 const chai = require('chai');
 const sinon = require('sinon');
-const sinonChai = require("sinon-chai");
+const sinonChai = require('sinon-chai');
 chai.should();
 chai.use(sinonChai);
 
 describe('[UNIT] s3Persister', function() {
     const S3Persister = require('../../../../services/persisters/s3Persister');
     const UnitTest = require('../../unitTest');
-    const AWS = require('aws-sdk');
-    const bucketName = 'bucketName';
 
     UnitTest.Setup();
     UnitTest.SetConfig({
@@ -28,7 +26,7 @@ describe('[UNIT] s3Persister', function() {
     const s3 = new S3Persister(UnitTest.Root);
 
     it('should export service', function() {
-        S3Persister.should.be.a("Function");
+        S3Persister.should.be.a('Function');
     });
 
     describe('#get()', function() {

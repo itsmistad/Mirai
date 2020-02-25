@@ -8,11 +8,11 @@ module.exports = new function() {
             key: configKeys.logging.level.key,
             value: configKeys.logging.level.defaultValue
         });
-    }
+    };
 
     this.down = async function(m) {
         await m.delete('config', {
             key: configKeys.logging.level.key
         });
-    }
-}
+    };
+};

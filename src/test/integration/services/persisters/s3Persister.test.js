@@ -13,7 +13,7 @@ describe('[INTEGRATION] s3Persister', function() {
         it.skip('should save a file to an S3 bucket', function(done) {
             s3.save('TestFile', {
                 Body: 'Body'
-            }).then(data => {
+            }).then(() => {
                 done();
             }).catch(err => {
                 done(err);
@@ -25,7 +25,7 @@ describe('[INTEGRATION] s3Persister', function() {
     describe('#get()', function() {
         // This test is temporarily disabled. Enable it once our code deploys to production and the S3 bucket "mirai-app" exists.
         it.skip('should retrieve a file from an S3 bucket', function(done) {
-            s3.get('TestFile').then(data => {
+            s3.get('TestFile').then(() => {
                 done();
             }).catch(err => {
                 done(err);

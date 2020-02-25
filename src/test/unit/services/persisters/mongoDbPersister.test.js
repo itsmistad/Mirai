@@ -2,7 +2,7 @@
 
 const chai = require('chai');
 const sinon = require('sinon');
-const sinonChai = require("sinon-chai");
+const sinonChai = require('sinon-chai');
 chai.should();
 chai.use(sinonChai);
 
@@ -26,7 +26,7 @@ describe('[UNIT] mongoDbPersister', function() {
     const mongo = new MongoDbPersister(UnitTest.Root);
 
     it('should export service', function() {
-        MongoDbPersister.should.be.a("Function");
+        MongoDbPersister.should.be.a('Function');
     });
 
     describe('#connect()', function() {

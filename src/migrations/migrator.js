@@ -1,12 +1,10 @@
-`use strict`;
+'use strict';
 
 const RootService = require('../services/rootService');
 const fs = require('fs');
 const path = require('path');
-const mongodb = require('mongodb');
 
 const root = new RootService();
-const ObjectId = mongodb.ObjectId;
 const log = root.log;
 const scriptsPath = path.join(__dirname, 'scripts');
 const args = process.argv.slice(2);
@@ -34,7 +32,7 @@ async function runMigrations(currentTimestamp, timestampId) {
     if (args.length > 0) {
         specifiedTimestamp = parseInt(args[0]);
         if (specifiedTimestamp && specifiedTimestamp !== 'NaN') {
-            log.info(`Timestamp specified as "${specifiedTimestamp}". Migrations after this timestamp will be skipped or rolled back.`)
+            log.info(`Timestamp specified as "${specifiedTimestamp}". Migrations after this timestamp will be skipped or rolled back.`);
         } else specifiedTimestamp = 0;
     } 
 
@@ -65,7 +63,7 @@ async function runMigrations(currentTimestamp, timestampId) {
         if (upMigrations.length > 0)
             lastTimestamp = getFileTimestamp(upMigrations[upMigrations.length - 1]);
         else if (downMigrations.length > 0 && migrations.length > 1) {
-            lastFilename = migrations[migrations.indexOf(downMigrations[downMigrations.length - 1]) - 1];
+            const lastFilename = migrations[migrations.indexOf(downMigrations[downMigrations.length - 1]) - 1];
             lastTimestamp = lastFilename != null ? getFileTimestamp(lastFilename) : 0;
         }
 
@@ -73,8 +71,7 @@ async function runMigrations(currentTimestamp, timestampId) {
         
         const execute = async function (migrations, shouldMigrateDown) {
             for (let fileName of migrations) {
-                const fileTimestamp = getFileTimestamp(fileName);
-                log.info(`${log.colors.dim + log.colors.magenta} > ${fileName.replace('.js', '')}:`)
+                log.info(`${log.colors.dim + log.colors.magenta} > ${fileName.replace('.js', '')}:`);
                 try {
                     const filePath = path.join(scriptsPath, fileName);
                     const js = require(filePath);
@@ -128,8 +125,8 @@ async function runMigrations(currentTimestamp, timestampId) {
                 key: 'currentTimestamp',
                 value: lastTimestamp
             }, true)
-            .then(() => log.info(`${log.colors.green}Done!`))
-            .catch(() => log.error('Failed to store new currentTimestamp to migrator collection.'));
+                .then(() => log.info(`${log.colors.green}Done!`))
+                .catch(() => log.error('Failed to store new currentTimestamp to migrator collection.'));
         }
     } catch (ex) {
         log.error(`Failed to find migrations. Error: ${ex}`);
@@ -137,5 +134,5 @@ async function runMigrations(currentTimestamp, timestampId) {
 }
 
 migrator.find('migrator', {key: 'currentTimestamp'})
-.then(currentTimestampObj => currentTimestampObj.value != null ? runMigrations(currentTimestampObj.value, currentTimestampObj._id) : runMigrations())
-.catch(() => runMigrations());
+    .then(currentTimestampObj => currentTimestampObj.value != null ? runMigrations(currentTimestampObj.value, currentTimestampObj._id) : runMigrations())
+    .catch(() => runMigrations());
