@@ -10,8 +10,8 @@ const mongo = root.mongo;
 
 class App {
     static async Start() {
-      const loggingLevel = await config.get(configKeys.logging.level);
-      log.info(`Current Logging.Level: ${loggingLevel}`);
+        const loggingLevel = await config.get(configKeys.logging.level);
+        log.info(`Current Logging.Level: ${loggingLevel}`);
     }
 }
 

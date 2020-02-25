@@ -3,9 +3,9 @@
 require('chai').should();
 
 describe('[UNIT] rootService', function() {
-  const RootService = require('../../../services/rootService');
+    const RootService = require('../../../services/rootService');
 
-  it('should export service', function() {
-    RootService.should.be.a("Function");
-  });
+    it('should export service', function() {
+        RootService.should.be.a("Function");
+    });
 });
