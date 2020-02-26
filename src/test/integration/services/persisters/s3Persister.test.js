@@ -3,11 +3,14 @@
 const chai = require('chai');
 chai.should();
 
-describe('[INTEGRATION] s3Persister', function() {
-  const IntegrationTest = require('../../integrationTest');
-  IntegrationTest.Setup();
-  const s3 = IntegrationTest.Root.s3;
+const IntegrationTest = require('../../integrationTest');
+let s3;
 
+describe('[INTEGRATION] s3Persister', function() {
+  before(function() {
+    IntegrationTest.Setup();
+    s3 = IntegrationTest.Root.s3;
+  });
   describe('#save()', function() {
     // This test is temporarily disabled. Enable it once our code deploys to production and the S3 bucket "mirai-app" exists.
     it.skip('should save a file to an S3 bucket', function(done) {
