@@ -3,32 +3,32 @@
 const chai = require('chai');
 chai.should();
 
+const IntegrationTest = require('../../integrationTest');
+function generateRandomName() { 
+  let ans = '', arr = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'; 
+  for (let i = 10; i > 0; i--) 
+    ans += arr[Math.floor(Math.random() * arr.length)]; 
+  return ans; 
+}
+const name = generateRandomName();
+let mongo;
+
 describe('[INTEGRATION] mongoDbPersister', function() {
-  const IntegrationTest = require('../../integrationTest');
-
-  IntegrationTest.Setup();
-  IntegrationTest.SetConfig({
-    database: {
-      mongo: {
-        host: 'localhost',
-        port: '27017',
-        auth: false,
-        user: '',
-        pass: ''
+  before(function() {
+    IntegrationTest.Setup();
+    IntegrationTest.SetConfig({
+      database: {
+        mongo: {
+          host: 'localhost',
+          port: '27017',
+          auth: false,
+          user: '',
+          pass: ''
+        }
       }
-    }
+    });
+    mongo = IntegrationTest.Root.mongo;
   });
-
-  const mongo = IntegrationTest.Root.mongo;
-
-  function generateRandomName() { 
-    let ans = '', arr = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'; 
-    for (let i = 10; i > 0; i--) 
-      ans += arr[Math.floor(Math.random() * arr.length)]; 
-    return ans; 
-  }
-  const name = generateRandomName();
-
   describe('#save()', function() {
     it('New name saved to users database', function(done) {
       mongo.save('users',{name})
