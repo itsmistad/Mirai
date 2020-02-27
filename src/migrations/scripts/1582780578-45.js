@@ -1,3 +1,4 @@
+'use strict';
 const configKeys = require('../../services/config/configKeys');
 
 module.exports = new function() {
@@ -24,7 +25,7 @@ module.exports = new function() {
             key: configKeys.mailgun.domain.key,
             value: configKeys.mailgun.domain.defaultValue
         });
-    }
+    };
 
     this.down = async function(m) {
         await m.delete('config', {
@@ -39,5 +40,5 @@ module.exports = new function() {
         await m.delete('config', {
             key: configKeys.mailgun.domain.key
         });
-    }
-}
+    };
+};

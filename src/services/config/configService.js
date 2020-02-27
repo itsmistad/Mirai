@@ -36,9 +36,9 @@ class ConfigService {
                 key: entry.key
             }); 
             return result.value;
-        } catch (ex) {}
-
-        return entry.defaultValue;
+        } catch (ex) {
+            return entry.defaultValue;
+        }
     }
 }
 

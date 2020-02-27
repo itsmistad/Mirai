@@ -1,12 +1,10 @@
-`use strict`;
+'use strict';
 
 const RootService = require('../services/rootService');
 const fs = require('fs');
 const path = require('path');
-const mongodb = require('mongodb');
 
 const root = new RootService();
-const ObjectId = mongodb.ObjectId;
 const log = root.log;
 const scriptsPath = path.join(__dirname, 'scripts');
 const args = process.argv.slice(2);
@@ -34,11 +32,11 @@ async function runMigrations(currentTimestamp, timestampId) {
     if (args.length > 0) {
         specifiedTimestamp = parseInt(args[0]);
         if (specifiedTimestamp && specifiedTimestamp !== 'NaN') {
-            log.info(`Timestamp specified as "${specifiedTimestamp}". Migrations after this timestamp will be skipped or rolled back.`)
+            log.info(`Timestamp specified as "${specifiedTimestamp}". Migrations after this timestamp will be skipped or rolled back.`, true);
         } else specifiedTimestamp = 0;
     } 
 
-    log.info(`${log.colors.dim + log.colors.white}Checking for migration scripts...`);
+    log.info(`${log.colors.dim + log.colors.white}Checking for migration scripts...`, true);
 
     try {
         const files = fs.readdirSync(scriptsPath);
@@ -49,7 +47,7 @@ async function runMigrations(currentTimestamp, timestampId) {
             return !isDir && isMigration;
         }).sort();
 
-        const getFileTimestamp = fileName => parseInt(fileName.split('-')[1].replace('.js', ''));
+        const getFileTimestamp = fileName => parseInt(fileName.split('-')[0].replace('.js', ''));
         const shouldMigrateUp = function(fileName, specifiedTimestamp, currentTimestamp) {
             const fileTimestamp = getFileTimestamp(fileName);
             return (!specifiedTimestamp || fileTimestamp <= specifiedTimestamp) && fileTimestamp > currentTimestamp && fileTimestamp < Math.floor(Date.now() / 1000);
@@ -65,28 +63,27 @@ async function runMigrations(currentTimestamp, timestampId) {
         if (upMigrations.length > 0)
             lastTimestamp = getFileTimestamp(upMigrations[upMigrations.length - 1]);
         else if (downMigrations.length > 0 && migrations.length > 1) {
-            lastFilename = migrations[migrations.indexOf(downMigrations[downMigrations.length - 1]) - 1];
+            const lastFilename = migrations[migrations.indexOf(downMigrations[downMigrations.length - 1]) - 1];
             lastTimestamp = lastFilename != null ? getFileTimestamp(lastFilename) : 0;
         }
 
-        log.info(`${log.colors.yellow}Found ${totalCount} migration script(s) to execute (${upMigrations.length} up, ${downMigrations.length} down, ${migrations.length - totalCount} skipped).`);
+        log.info(`${log.colors.yellow}Found ${totalCount} migration script(s) to execute (${upMigrations.length} up, ${downMigrations.length} down, ${migrations.length - totalCount} skipped).`, true);
         
         const execute = async function (migrations, shouldMigrateDown) {
             for (let fileName of migrations) {
-                const fileTimestamp = getFileTimestamp(fileName);
-                log.info(`${log.colors.dim + log.colors.magenta} > ${fileName.replace('.js', '')}:`)
+                log.info(`${log.colors.dim + log.colors.magenta} > ${fileName.replace('.js', '')}:`, true);
                 try {
                     const filePath = path.join(scriptsPath, fileName);
                     const js = require(filePath);
         
                     if (js.desc == null || js.up == null) {
-                        log.error('\tMigration is missing either "desc" or "up". Skipping...');
+                        log.error('\tMigration is missing either "desc" or "up". Skipping...', true);
                         continue;
                     }
 
                     try {
                         if (!shouldMigrateDown) {
-                            log.info(`${log.colors.green}\t+ Up ("${js.desc}").`);
+                            log.info(`${log.colors.green}\t+ Up ("${js.desc}").`, true);
                             if (js.up.constructor.name === 'AsyncFunction')
                                 await js.up(migrator);
                             else
@@ -95,7 +92,7 @@ async function runMigrations(currentTimestamp, timestampId) {
                         }
 
                         if (shouldMigrateDown && js.down != null) {
-                            log.info(`${log.colors.red}\t- Down ("${js.desc}").`);
+                            log.info(`${log.colors.red}\t- Down ("${js.desc}").`, true);
                             if (js.down.constructor.name === 'AsyncFunction')
                                 await js.down(migrator);
                             else
@@ -103,24 +100,24 @@ async function runMigrations(currentTimestamp, timestampId) {
                             continue;
                         }
 
-                        log.info(`${log.colors.dim + log.colors.white}\tSkipping... ("${js.desc}")`);
+                        log.info(`${log.colors.dim + log.colors.white}\tSkipping... ("${js.desc}")`, true);
                     } catch (ex) {
-                        log.error(`\tSomething went wrong while migrating. Error: ${ex}`);
+                        log.error(`\tSomething went wrong while migrating. Error: ${ex}`, true);
                     }
                 } catch (ex) {
-                    log.error(`\tSomething went wrong while loading. Error: ${ex}`);
+                    log.error(`\tSomething went wrong while loading. Error: ${ex}`, true);
                 }
             }
         };
         
         if (totalCount > 0) {
             if (upMigrations.length > 0) {
-                log.info('Executing upward migrations:');
+                log.info('Executing upward migrations:', true);
                 await execute(upMigrations, false);
             }
             
             if (downMigrations.length > 0) {
-                log.info('Executing downward migrations:');
+                log.info('Executing downward migrations:', true);
                 await execute(downMigrations, true);
             }
 
@@ -128,14 +125,14 @@ async function runMigrations(currentTimestamp, timestampId) {
                 key: 'currentTimestamp',
                 value: lastTimestamp
             }, true)
-            .then(() => log.info(`${log.colors.green}Done!`))
-            .catch(() => log.error('Failed to store new currentTimestamp to migrator collection.'));
+                .then(() => log.info(`${log.colors.green}Done!`, true))
+                .catch(() => log.error('Failed to store new currentTimestamp to migrator collection.', true));
         }
     } catch (ex) {
-        log.error(`Failed to find migrations. Error: ${ex}`);
+        log.error(`Failed to find migrations. Error: ${ex}`, true);
     }
 }
 
 migrator.find('migrator', {key: 'currentTimestamp'})
-.then(currentTimestampObj => currentTimestampObj.value != null ? runMigrations(currentTimestampObj.value, currentTimestampObj._id) : runMigrations())
-.catch(() => runMigrations());
+    .then(currentTimestampObj => currentTimestampObj.value != null ? runMigrations(currentTimestampObj.value, currentTimestampObj._id) : runMigrations())
+    .catch(() => runMigrations());
