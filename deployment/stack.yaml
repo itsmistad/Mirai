@@ -22,7 +22,19 @@ Resources:
       - Namespace: aws:elasticbeanstalk:environment
         OptionName: EnvironmentType
         Value: LoadBalanced
+      - Namespace: aws:autoscaling:launchconfiguration
+        OptionName: IamInstanceProfile
+        Value: aws-elasticbeanstalk-ec2-role
       SolutionStackName: 64bit Amazon Linux 2018.03 v4.13.0 running Node.js
+  MiraiApplicationVersion:
+    Type: AWS::ElasticBeanstalk::ApplicationVersion
+    Properties:
+      Description: 1.0.0
+      ApplicationName: 
+        Ref: MiraiApplication
+      SourceBundle:
+        S3Bucket: elasticbeanstalk-samples-us-east-2
+        S3Key: nodejs-sample-v2.zip
   MiraiEnvironment:
     Type: AWS::ElasticBeanstalk::Environment
     Properties:
@@ -30,6 +42,8 @@ Resources:
         Ref: MiraiApplication
       EnvironmentName: mirai-app-prod
       Description: AWS ElasticBeanstalk Mirai Environment
+      VersionLabel:
+        Ref: MiraiApplicationVersion
       TemplateName:
         Ref: MiraiConfigurationTemplate
       OptionSettings:
