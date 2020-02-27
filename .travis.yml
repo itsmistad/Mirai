@@ -7,10 +7,24 @@ cache: npm
 
 services: mongodb
 
+env:
+  global:
+    - PATH=$HOME/.local/bin:$PATH
+
+before_install:
+  - pyenv global 3.7.1
+  - pip install -U pip
+  - pip install awscli
+
 jobs:
   include:
     - stage: test
-      script: npm test
+      script: 
+        - cd $TRAVIS_BUILD_DIR/scripts
+        - chmod +x config.sh
+        - ./config.sh mirai-app-dev
+        - node ../src/migrations/migrator.js
+        - npm test
     - stage: deploy stack
       deploy:
         provider: cloudformation
@@ -18,11 +32,24 @@ jobs:
         secret_access_key:
           secure: $AWS_SECRET_ACCESS_KEY
         template: ./deployments/stack.yaml
+        region: $AWS_DEFAULT_REGION
         stack_name: mirai-app
         edge: true
+    - stage: migrate (prod)
+      script:
+        - cd $TRAVIS_BUILD_DIR/scripts
+        - chmod +x config.sh
+        - ./config.sh mirai-app
+        - node ../src/migrations/migrator.js
     - stage: deploy app
       script:
-        - cd $TRAVIS_BUILD_DIR
+        - cd $TRAVIS_BUILD_DIR/scripts
+        - chmod +x config.sh
+        - ./config.sh mirai-app
+        - jq -c '.application.travis_build = ($buildNum | tonumber)' --arg buildNum $TRAVIS_BUILD_NUMBER ./config/config.json > ./config/config2.json
+        - jq -c '.application.environment = $env' --arg env 'prod' ./config/config2.json > ./config/config3.json
+        - jq -c '.log.debug = ($flag | test("true"))' --arg flag true ./config/config3.json > ./config/config4.json
+        - mv ./config/config4.json ./config/config.json
         - npm install
         - zip -r ./deployments/deploy.zip *
       deploy:
@@ -30,7 +57,7 @@ jobs:
           access_key_id: $AWS_ACCESS_KEY_ID
           secret_access_key:
             secure: $AWS_SECRET_ACCESS_KEY
-          region: us-east-2
+          region: $AWS_DEFAULT_REGION
           app: mirai-app
           env: mirai-app
           bucket_name: mirai-app
@@ -43,6 +70,8 @@ jobs:
 stages:
   - test
   - name: deploy stack
+    if: branch = master
+  - name: migrate (prod)
     if: branch = master
   - name: deploy app
     if: branch = master

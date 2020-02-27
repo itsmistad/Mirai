@@ -1,5 +1,4 @@
 {
-    "whyHelloThere": "Obi Wan Kenobi...",
     "application": {
         "environment": "local",
         "travis_build": 0
@@ -12,5 +11,8 @@
             "user": "",
             "pass": ""
         }
+    },
+    "log": {
+        "debug": false
     }
 }

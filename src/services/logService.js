@@ -1,5 +1,8 @@
 'use strict';
 
+const configKeys = require('./config/configKeys');
+let mongo, config;
+
 /*
  * This service implements 3 methods for logging: info, error, and debug.
  * Simply call the method with your specified message.
@@ -7,7 +10,9 @@
  */
 
 class LogService {
-    constructor() {
+    constructor(root) {
+        mongo = root.mongo;
+        config = root.config;
         this.colors = {
             reset: '\x1b[0m',
             bright: '\x1b[1m',
@@ -40,20 +45,59 @@ class LogService {
         console.log(`${this.colors.underscore}[${new Date().toISOString()}]${this.colors.reset} ${colorTag}[${tag}]\t${message}${resetTag}`);
         return message;
     }
-    
-    info(message) {
-        this.log('INFO', message, this.colors.white + this.colors.bright);
-        return message;
-    }
 
     error(message) {
-        this.log('ERROR', message, this.colors.red + this.colors.bright);
-        return message;
+        return new Promise(async (resolve, reject) => {
+            try {
+                if (await config.get(configKeys.logging.level) >= 1) {
+                    const obj = {
+                        type: 'ERROR',
+                        message
+                    };
+                    this.log(obj.type, message, this.colors.red + this.colors.bright);
+                    mongo.save('logs', obj);
+                }
+                resolve(message);
+            } catch (ex) {
+                reject(ex);
+            }
+        });
+    }
+    
+    info(message) {
+        return new Promise(async (resolve, reject) => {
+            try {
+                if (await config.get(configKeys.logging.level) >= 2) {
+                    const obj = {
+                        type: 'INFO',
+                        message
+                    };
+                    this.log(obj.type, message, this.colors.white + this.colors.bright);
+                    mongo.save('logs', obj);
+                }
+                resolve(message);
+            } catch (ex) {
+                reject(ex);
+            }
+        });
     }
     
     debug(message) {
-        this.log('DEBUG', message, this.colors.yellow + this.colors.bright);
-        return message;
+        return new Promise(async (resolve, reject) => {
+            try {
+                if (config['log']['debug'] && await config.get(configKeys.logging.level) >= 3) {
+                    const obj = {
+                        type: 'DEBUG',
+                        message
+                    };
+                    this.log(obj.type, message, this.colors.yellow + this.colors.bright);
+                    mongo.save('logs', obj);
+                }
+                resolve(message);
+            } catch (ex) {
+                reject(ex);
+            }
+        });
     }
 }
 

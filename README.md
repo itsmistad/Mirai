@@ -5,11 +5,11 @@ Mirai is an intuitive web application for daily organizing and planning.
 
 **CSCE 4901.070 Team Name:** Alpha
 
-- | `master` – what's deployed | `develop` – what's code-complete
---- | --- | ---
-Build | [![Build Status](https://travis-ci.com/itsmistad/Mirai.svg?branch=master)](https://travis-ci.com/itsmistad/Mirai) | [![Build Status](https://travis-ci.com/itsmistad/Mirai.svg?branch=develop)](https://travis-ci.com/itsmistad/Mirai)
-Version | - | 0.0.1
-Live Url | - | -
+|   |`master` – what's deployed|`develop` – what's code-complete|
+|---|---|---|
+|Build|[![Build Status](https://travis-ci.com/itsmistad/Mirai.svg?branch=master)](https://travis-ci.com/itsmistad/Mirai)|[![Build Status](https://travis-ci.com/itsmistad/Mirai.svg?branch=develop)](https://travis-ci.com/itsmistad/Mirai)|
+|Version|None|0.0.1|
+|Live Url|None|None|
 
 Here's what it does:
 
