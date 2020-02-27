@@ -14,5 +14,4 @@ class App {
     }
 }
 
-
 App.Start(); // Pull the lever, Kronk!
