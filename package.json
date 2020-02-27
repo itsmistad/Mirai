@@ -1,0 +1,45 @@
+{
+  "name": "mirai",
+  "version": "0.1.0",
+  "description": "An intuitive web application for daily organizing.",
+  "main": "src/app.js",
+  "scripts": {
+    "test": "mocha \"src/test/**/*.test.js\" --timeout 5000",
+    "unit-test": "mocha \"src/test/unit/**/*.test.js\"",
+    "int-test": "mocha \"src/test/integration/**/*.test.js\" --timeout 5000"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/itsmistad/Mirai.git"
+  },
+  "author": "itsmistad",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/itsmistad/Mirai/issues"
+  },
+  "homepage": "https://github.com/itsmistad/Mirai#readme",
+  "dependencies": {
+    "@itsmistad/network.js": "^1.0.1",
+    "@itsmistad/notify.js": "^1.0.1",
+    "aws-sdk": "^2.622.0",
+    "express": "^4.17.1",
+    "express-session": "^1.17.0",
+    "hogan-express": "^0.5.2",
+    "mongodb": "^3.5.2",
+    "nodemailer": "^6.4.3",
+    "nodemailer-mailgun-transport": "^2.0.0",
+    "underscore": "^1.9.2"
+  },
+  "devDependencies": {
+    "browser-sync": "^2.26.7",
+    "chai": "^4.2.0",
+    "eslint": "^6.8.0",
+    "gulp": "^4.0.2",
+    "gulp-clean-css": "^4.2.0",
+    "gulp-cli": "^2.2.0",
+    "gulp-sass": "^4.0.2",
+    "mocha": "^7.0.1",
+    "sinon": "^8.1.1",
+    "sinon-chai": "^3.4.0"
+  }
+}

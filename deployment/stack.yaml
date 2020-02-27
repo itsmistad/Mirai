@@ -1,0 +1,51 @@
+AWSTemplateFormatVersion: '2010-09-09'
+
+Resources:
+  MiraiApplication:
+    Type: AWS::ElasticBeanstalk::Application
+    Properties:
+      ApplicationName: mirai-app
+      Description: AWS Elastic Beanstalk Mirai
+  MiraiBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: mirai-app
+  MiraiConfigurationTemplate:
+    Type: AWS::ElasticBeanstalk::ConfigurationTemplate
+    Properties:
+      ApplicationName:
+        Ref: MiraiApplication
+      Description: AWS ElasticBeanstalk Mirai Configuration Template
+      OptionSettings:
+      - Namespace: aws:autoscaling:asg
+        OptionName: MinSize
+        Value: '2'
+      - Namespace: aws:autoscaling:asg
+        OptionName: MaxSize
+        Value: '6'
+      - Namespace: aws:elasticbeanstalk:environment
+        OptionName: EnvironmentType
+        Value: LoadBalanced
+      SolutionStackName: 64bit Amazon Linux 2018.03 v4.13.0 running Node.js
+  MiraiEnvironment:
+    Type: AWS::ElasticBeanstalk::Environment
+    Properties:
+      ApplicationName:
+        Ref: MiraiApplication
+      EnvironmentName: mirai-app
+      Description: AWS ElasticBeanstalk Mirai Environment
+      TemplateName:
+        Ref: MiraiConfigurationTemplate
+      OptionSettings:
+        - Namespace: aws:autoscaling:launchconfiguration
+          OptionName: InstanceType
+          Value: t2.micro
+Outputs:
+  URL:
+    Description: Mirai's URL
+    Value:
+      Fn::Join:
+        - ""
+        -
+          - "http://"
+          - Fn::GetAtt: MiraiEnvironment.EndpointURL
