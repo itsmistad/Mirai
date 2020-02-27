@@ -4,12 +4,8 @@ Resources:
   MiraiApplication:
     Type: AWS::ElasticBeanstalk::Application
     Properties:
-      ApplicationName: mirai-app
+      ApplicationName: mirai-app-prod
       Description: AWS Elastic Beanstalk Mirai
-  MiraiBucket:
-    Type: AWS::S3::Bucket
-    Properties:
-      BucketName: mirai-app
   MiraiConfigurationTemplate:
     Type: AWS::ElasticBeanstalk::ConfigurationTemplate
     Properties:
@@ -32,7 +28,7 @@ Resources:
     Properties:
       ApplicationName:
         Ref: MiraiApplication
-      EnvironmentName: mirai-app
+      EnvironmentName: mirai-app-prod
       Description: AWS ElasticBeanstalk Mirai Environment
       TemplateName:
         Ref: MiraiConfigurationTemplate

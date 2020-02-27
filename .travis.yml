@@ -25,6 +25,23 @@ jobs:
         - ./config.sh mirai-app-dev
         - node ../src/migrations/migrator.js
         - npm test
+    - stage: deploy s3
+      script: 
+        - if [ ! "$TRAVIS_PULL_REQUEST" = "false" ]; then echo "PR. skipping s3 deployment."; fi
+      deploy:
+        provider: cloudformation
+        access_key_id: $AWS_ACCESS_KEY_ID
+        secret_access_key:
+          secure: $AWS_SECRET_ACCESS_KEY
+        template: ./deployment/s3.yaml
+        region: $AWS_DEFAULT_REGION
+        stack_name: mirai-s3-prod
+        edge: true
+      after_deploy:
+        - if aws s3 ls "s3://mirai-app-prod" 2>&1 | grep -q 'NoSuchBucket'
+        - then travis_terminate 1
+        - else travis_terminate 0
+        - fi
     - stage: deploy stack
       script: 
         - if [ ! "$TRAVIS_PULL_REQUEST" = "false" ]; then echo "PR. skipping stack deployment."; fi
@@ -35,7 +52,7 @@ jobs:
           secure: $AWS_SECRET_ACCESS_KEY
         template: ./deployment/stack.yaml
         region: $AWS_DEFAULT_REGION
-        stack_name: mirai-app
+        stack_name: mirai-stack-prod
         edge: true
     - stage: migrate (prod)
       script:
