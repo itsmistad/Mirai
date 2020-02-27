@@ -1,10 +1,137 @@
+/* Imports */
 @import url('https://fonts.googleapis.com/css?family=Montserrat:400,400i,700,700i&display=swap');
+
+/* Variables */
+$font_base_size: 16px;
+
+/*=============================================
+=                  Functions                  =
+=============================================*/
+// Converts a specified amount of pixels (px) to "em" format.
+@function em($px) {
+    @if not unitless($px) {
+        $px: strip-units($px);
+    }
+
+    @return ($px / strip-units($font_base_size)) * 1em;
+}
+
+// Strips units away from a specified decimal value.
+@function strip-units($value) {
+    @return ($value / ($value * 0 + 1));
+}
+
+// Scales a specified amount of pixels (px) by a factor (f).
+@function scale-pixel($px, $f) {
+    @if not unitless($px) {
+        $px: strip-units($px);
+    }
+
+    @return #{$px * $f}px;
+}
+
+/*=============================================
+=                End Functions                =
+=============================================*/
+
+/*=============================================
+=             Screen Size Mixins              =
+=============================================*/
+
+@mixin for-custom-down($custom) {
+    @if unitless($custom) {
+        $custom: #{$custom}px;
+    }
+
+    @media only screen and (max-width: $custom) {
+        @content;
+    }
+}
+
+@mixin for-custom-up($custom) {
+    @if unitless($custom) {
+        $custom: #{$custom}px;
+    }
+
+    @media only screen and (min-width: $custom) {
+        @content;
+    }
+}
+
+
+@mixin for-phone-only {
+    @media only screen and (max-width: 539.9px) {
+        @content;
+    }
+}
+
+@mixin for-small-tablet-up {
+    @media only screen and (min-width: 540px) {
+        @content;
+    }
+}
+
+@mixin for-small-tablet-down {
+    @media only screen and (max-width: 799.9px) {
+        @content;
+    }
+}
+
+@mixin for-large-tablet-up {
+    @media only screen and (min-width: 800px) {
+        @content;
+    }
+}
+
+@mixin for-large-tablet-down {
+    @media only screen and (max-width: 999.9px) {
+        @content;
+    }
+}
+
+@mixin for-laptop-up {
+    @media only screen and (min-width: 1000px) {
+        @content;
+    }
+}
+
+@mixin for-laptop-down {
+    @media only screen and (max-width: 1439.9px) {
+        @content;
+    }
+}
+
+@mixin for-desktop-up {
+    @media only screen and (min-width: 1440px) {
+        @content;
+    }
+}
+
+@mixin for-desktop-down {
+    @media only screen and (max-width: 1920px) {
+        @content;
+    }
+}
+
+@mixin for-ultrawide-only {
+    @media only screen and (min-width: 1920.1px) {
+        @content;
+    }
+}
+/*=============================================
+=                   End Mixins                =
+=============================================*/
 
 html, body {
     height: 100%;
     left: 0;
     top: 0;
     font-family: 'Montserrat', Arial;
+    font-size: $font_base_size;
+
+    @include for-small-tablet-down {
+        font-size: scale-pixel($font_base_size, 0.8);
+    }
 }
 
 body {
@@ -22,4 +149,20 @@ body {
     justify-content: center;
     align-items: center;
     height: 100%;
+
+    &.column {
+        flex-direction: column;
+    }
+}
+
+.bold {
+    font-weight: bold;
+}
+
+.upper {
+    text-transform: uppercase;
+}
+
+.spaced {
+    letter-spacing: 0.2em;
 }
