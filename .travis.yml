@@ -39,14 +39,14 @@ jobs:
         edge: true
     - stage: migrate (prod)
       script:
-        - if [ ! "$TRAVIS_PULL_REQUEST" = "false" ]; then echo "PR. skipping migration."; exit 1; fi
+        - if [ ! "$TRAVIS_PULL_REQUEST" = "false" ]; then echo "PR. skipping migration."; exit 0; fi
         - cd $TRAVIS_BUILD_DIR/scripts
         - chmod +x config.sh
         - ./config.sh mirai-app
         - node ../src/migrations/migrator.js
     - stage: deploy app
       script:
-        - if [ ! "$TRAVIS_PULL_REQUEST" = "false" ]; then echo "PR. skipping app deployment."; exit 1; fi
+        - if [ ! "$TRAVIS_PULL_REQUEST" = "false" ]; then echo "PR. skipping app deployment."; exit 0; fi
         - cd $TRAVIS_BUILD_DIR/scripts
         - chmod +x config.sh
         - ./config.sh mirai-app
