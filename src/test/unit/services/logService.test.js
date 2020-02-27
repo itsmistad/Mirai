@@ -33,63 +33,63 @@ describe('[UNIT] logService', function() {
     describe('#debug()', function() {
         it('should invoke log() with tag "DEBUG"', function(done) {
         // setup
-        UnitTest.SetDbConfig([{
-            key: configKeys.logging.level.key,
-            value: 3
-        }]);
-        // execute
-        log.debug('debug').then(data => {
-            // assert
-            data.should.equal('debug');
-            sinon.assert.calledWith(logStub, 'DEBUG', 'debug');
-            sinon.assert.calledWith(saveStub, 'logs', {
-            type: 'DEBUG',
-            message: 'debug'
-            });
-            done();
-        }).catch(err => done(err));
+            UnitTest.SetDbConfig([{
+                key: configKeys.logging.level.key,
+                value: 3
+            }]);
+            // execute
+            log.debug('debug').then(data => {
+                // assert
+                data.should.equal('debug');
+                sinon.assert.calledWith(logStub, 'DEBUG', 'debug');
+                sinon.assert.calledWith(saveStub, 'logs', {
+                    type: 'DEBUG',
+                    message: 'debug'
+                });
+                done();
+            }).catch(err => done(err));
         });
     });
 
     describe('#info()', function() {
         it('should invoke log() with tag "INFO"', function(done) {
         // setup
-        UnitTest.SetDbConfig([{
-            key: configKeys.logging.level.key,
-            value: 2
-        }]);
-        // execute
-        log.info('info').then(data => {
-            // assert
-            data.should.equal('info');
-            sinon.assert.calledWith(logStub, 'INFO', 'info');
-            sinon.assert.calledWith(saveStub, 'logs', {
-            type: 'INFO',
-            message: 'info'
-            });
-            done();
-        }).catch(err => done(err));
+            UnitTest.SetDbConfig([{
+                key: configKeys.logging.level.key,
+                value: 2
+            }]);
+            // execute
+            log.info('info').then(data => {
+                // assert
+                data.should.equal('info');
+                sinon.assert.calledWith(logStub, 'INFO', 'info');
+                sinon.assert.calledWith(saveStub, 'logs', {
+                    type: 'INFO',
+                    message: 'info'
+                });
+                done();
+            }).catch(err => done(err));
         });
     });
 
     describe('#error()', function() {
         it('should invoke log() with tag "ERROR"', function(done) {
         // setup
-        UnitTest.SetDbConfig([{
-            key: configKeys.logging.level.key,
-            value: 1
-        }]);
-        // execute
-        log.error('error').then(data => {
-            // assert
-            data.should.equal('error');
-            sinon.assert.calledWith(logStub, 'ERROR', 'error');
-            sinon.assert.calledWith(saveStub, 'logs', {
-            type: 'ERROR',
-            message: 'error'
-            });
-            done();
-        }).catch(err => done(err));
+            UnitTest.SetDbConfig([{
+                key: configKeys.logging.level.key,
+                value: 1
+            }]);
+            // execute
+            log.error('error').then(data => {
+                // assert
+                data.should.equal('error');
+                sinon.assert.calledWith(logStub, 'ERROR', 'error');
+                sinon.assert.calledWith(saveStub, 'logs', {
+                    type: 'ERROR',
+                    message: 'error'
+                });
+                done();
+            }).catch(err => done(err));
         });
     });
 });

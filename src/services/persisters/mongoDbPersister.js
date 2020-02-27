@@ -32,7 +32,7 @@ class MongoDbPersister {
         this._log.debug('Connecting to db: ' + url, true);
         return this.mongoClient.connect(url, {useUnifiedTopology: true}).then(db => {
             this._log.debug('Connected.');
-            const dbo = db.db("mirai");
+            const dbo = db.db('mirai');
             return {
                 done: () => db.close(),
                 mirai: dbo
@@ -84,7 +84,7 @@ class MongoDbPersister {
                         ok: 1
                     };
                     return returnObj;
-                }).catch(err => this._log.error(`Failed to replace item "${id}": ${str}`, true));
+                }).catch(() => this._log.error(`Failed to replace item "${id}": ${str}`, true));
         });
     }
 
@@ -108,7 +108,7 @@ class MongoDbPersister {
                 .then(res => {
                     db.done();
                     return res;
-                }).catch(() => this._log.error(`Failed to find items with ${dstrata}.`, true));
+                }).catch(() => this._log.error(`Failed to find items with ${data}.`, true));
         });
     }
 

@@ -16,7 +16,7 @@ describe('[INTEGRATION] s3Persister', function() {
         it.skip('should save a file to an S3 bucket', function(done) {
             s3.save('TestFile', {
                 Body: 'Body'
-            }).then(data => {
+            }).then(() => {
                 done();
             }).catch(err => {
                 done(err);

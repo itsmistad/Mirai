@@ -46,10 +46,11 @@ class LogService {
         return message;
     }
 
-    error(message, skipDbSave) {
-        return new Promise(async (resolve, reject) => {
+    async error(message, skipDbSave) {
+        const loggingLevel = await config.get(configKeys.logging.level);
+        return new Promise((resolve, reject) => {
             try {
-                if (await config.get(configKeys.logging.level) >= 1) {
+                if (loggingLevel >= 1) {
                     const obj = {
                         type: 'ERROR',
                         message
@@ -64,10 +65,11 @@ class LogService {
         });
     }
     
-    info(message, skipDbSave) {
-        return new Promise(async (resolve, reject) => {
+    async info(message, skipDbSave) {
+        const loggingLevel = await config.get(configKeys.logging.level);
+        return new Promise((resolve, reject) => {
             try {
-                if (await config.get(configKeys.logging.level) >= 2) {
+                if (loggingLevel >= 2) {
                     const obj = {
                         type: 'INFO',
                         message
@@ -82,10 +84,11 @@ class LogService {
         });
     }
     
-    debug(message, skipDbSave) {
-        return new Promise(async (resolve, reject) => {
+    async debug(message, skipDbSave) {
+        const loggingLevel = await config.get(configKeys.logging.level);
+        return new Promise((resolve, reject) => {
             try {
-                if (config['log']['debug'] && await config.get(configKeys.logging.level) >= 3) {
+                if (config['log']['debug'] && loggingLevel >= 3) {
                     const obj = {
                         type: 'DEBUG',
                         message

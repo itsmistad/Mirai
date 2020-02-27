@@ -1,9 +1,8 @@
 #!/bin/bash
 
-source ./lint.sh
-
 rm -f eslint.txt tests.txt
 
+RESULT=$(../node_modules/.bin/eslint "../src/**")
 if [[ $RESULT == *"problem"* ]]; then
     echo "$RESULT" > "eslint.txt"
     echo -e "\e[31mLinting failed! See eslint.txt for more information."

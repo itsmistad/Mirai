@@ -17,15 +17,15 @@ describe('[INTEGRATION] mongoDbPersister', function() {
     before(function() {
         IntegrationTest.Setup();
         IntegrationTest.SetJsonConfig({
-        database: {
-            mongo: {
-            host: 'localhost',
-            port: '27017',
-            auth: false,
-            user: '',
-            pass: ''
+            database: {
+                mongo: {
+                    host: 'localhost',
+                    port: '27017',
+                    auth: false,
+                    user: '',
+                    pass: ''
+                }
             }
-        }
         });
         mongo = IntegrationTest.Root.mongo;
     });

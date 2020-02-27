@@ -10,33 +10,35 @@ class EmailService {
         config = root.config;
     }
 
-    createClient() {
-        return new Promise(async (resolve, reject) => {
+    async createClient() {
+        const api_key = await config.get(configKeys.mailgun.api_key);
+        const domain = await config.get(configKeys.mailgun.domain);
+        return new Promise((resolve, reject) => {
             try {
                 // Configure transport options
                 const mailgunOptions = {
                     auth: {
-                        api_key: await config.get(configKeys.mailgun.api_key),
-                        domain: await config.get(configKeys.mailgun.domain), 
+                        api_key,
+                        domain, 
                     }
                 };
                 const transport = mailgunTransport(mailgunOptions);
                 this._emailClient = nodemailer.createTransport(transport);
                 resolve();
             } catch(ex) {
-                reject(eX);
+                reject(ex);
             }
         });
     }
 
-    sendEmail(to, subject, body) {
-        return new Promise(async (resolve, reject) => {
+    async sendEmail(to, subject, body) {
+        const name = await config.get(configKeys.email.name);
+        const address = await config.get(configKeys.email.address);
+        return new Promise((resolve, reject) => {
             if (!this._emailClient) reject('emailClient was never successfully created.');
             try {
-                const emailAddress = await config.get(configKeys.email.address);
-                const emailName = await config.get(configKeys.email.name);
                 this._emailClient.sendMail({
-                    from: `"${emailName}" <${emailAddress}>`,
+                    from: `"${name}" <${address}>`,
                     to,
                     subject,
                     body,

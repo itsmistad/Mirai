@@ -8,8 +8,6 @@ chai.use(sinonChai);
 
 const S3Persister = require('../../../../services/persisters/s3Persister');
 const UnitTest = require('../../unitTest');
-const AWS = require('aws-sdk');
-const bucketName = 'bucketName';
 let s3;
 
 describe('[UNIT] s3Persister', function() {

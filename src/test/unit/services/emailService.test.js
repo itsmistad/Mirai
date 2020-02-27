@@ -2,7 +2,7 @@
 
 const chai = require('chai');
 const sinon = require('sinon');
-const sinonChai = require("sinon-chai");
+const sinonChai = require('sinon-chai');
 chai.should();
 chai.use(sinonChai);
 
@@ -25,7 +25,7 @@ describe('[UNIT] emailService', function() {
     });
 
     it('should export service', function() {
-        EmailService.should.be.a("Function");
+        EmailService.should.be.a('Function');
     });
 
     describe('#sendEmail()', function() {

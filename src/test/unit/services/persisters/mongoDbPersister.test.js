@@ -29,7 +29,7 @@ describe('[UNIT] mongoDbPersister', function() {
     });
 
     it('should export service', function() {
-        MongoDbPersister.should.be.a("Function");
+        MongoDbPersister.should.be.a('Function');
     });
 
     describe('#connect()', function() {

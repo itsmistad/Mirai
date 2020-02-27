@@ -1,7 +1,6 @@
 'use strict';
 
 require('chai').should();
-var sinon = require('sinon');
 
 const EnvironmentService = require('../../../services/environmentService');
 const UnitTest = require('../unitTest');
