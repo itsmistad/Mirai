@@ -14,7 +14,7 @@ describe('[UNIT] environmentService', function() {
   describe('#isProd()', function() {
     it('should return true when environment is "prod"', function() {
       // setup
-      UnitTest.SetConfig({
+      UnitTest.SetJsonConfig({
         application: {
           environment: 'prod'
         }
@@ -32,7 +32,7 @@ describe('[UNIT] environmentService', function() {
   describe('#isLocal()', function() {
     it('should return true when environment is "local"', function() {
       // setup
-      UnitTest.SetConfig({
+      UnitTest.SetJsonConfig({
         application: {
           environment: 'local'
         }
@@ -48,7 +48,7 @@ describe('[UNIT] environmentService', function() {
   describe('#build()', function() {
     it('should return the build when set to "123" in the config', function() {
       // setup
-      UnitTest.SetConfig({
+      UnitTest.SetJsonConfig({
         application: {
           travis_build: 123
         }
@@ -64,7 +64,7 @@ describe('[UNIT] environmentService', function() {
   describe('#version()', function() {
     it('should return the version when set to "0.0.1" in the config', function() {
       // setup
-      UnitTest.SetConfig({
+      UnitTest.SetJsonConfig({
         application: {
           version: '0.0.1'
         }
