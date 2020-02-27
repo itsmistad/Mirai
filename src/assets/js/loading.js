@@ -9,7 +9,12 @@ setTimeout(() => {
 $(function() {
     ready = true;
     if ($('#loading-container').is(':visible')) {
-        $('#loading-container').fadeOut(400);
-        $('body').removeClass('hidden');
+        setTimeout(() => {
+            $('#loading-container').fadeOut(300);
+            setTimeout(() => {
+                $('#loading-img').addClass('hidden');
+                $('body').removeClass('hidden');
+            }, 320);
+        }, 100);
     }
 });

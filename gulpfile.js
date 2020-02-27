@@ -13,8 +13,7 @@ gulp.task('sass', function(done) {
             console.error('\x1b[31m\x1b[1m' + error.messageFormatted + '\x1b[0m');
             done(error); 
         })
-        .pipe(gulp.dest(assets + 'css'))
-        .pipe(browserSync.stream());
+        .pipe(gulp.dest(assets + 'css'));
     done();
 });
 
@@ -26,12 +25,12 @@ gulp.task('serve', gulp.series(['sass'], function() {
         notify: false
     });
 
-    gulp.watch(assets + 'scss/*.scss', gulp.series(['sass']));
-    gulp.watch(assets + 'files/*').on('change', browserSync.reload);
-    gulp.watch(assets + 'css/*.css').on('change', browserSync.reload);
-    gulp.watch(assets + 'js/*.js').on('change', browserSync.reload);
+    gulp.watch(assets + 'scss/**/*.scss', gulp.series(['sass']));
+    gulp.watch(assets + 'files/**/*').on('change', browserSync.reload);
+    gulp.watch(assets + 'css/**/*.css').on('change', browserSync.reload);
+    gulp.watch(assets + 'js/**/*.js').on('change', browserSync.reload);
     gulp.watch(views + '**/*.hjs').on('change', browserSync.reload);
-    gulp.watch(assets + '**/*.html').on('change', browserSync.reload);
+    gulp.watch(views + '**/*.html').on('change', browserSync.reload);
 }));
 
 gulp.task('default', gulp.series(['serve']));

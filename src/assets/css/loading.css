@@ -1,1 +1,1 @@
-body.hidden{overflow:hidden}#loading-container{display:flex;justify-content:center;align-items:center;height:100%;width:100%;top:0;position:fixed;background-color:white;z-index:10000}#loading-container #loading-img.hidden{display:none}
+body.hidden{overflow:hidden}#loading-container{display:flex;justify-content:center;align-items:center;height:100%;width:100%;top:0;position:fixed;background-color:white;z-index:10000}#loading-container #loading-img{transition:all 0.3s cubic-bezier(0.14, 0.78, 0.89, 0.35)}#loading-container #loading-img.hidden{opacity:0}
