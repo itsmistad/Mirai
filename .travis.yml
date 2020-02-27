@@ -91,6 +91,8 @@ stages:
   - test
   - name: deploy s3
     if: branch = master
+  - name: delete stack
+    if: branch = master
   - name: deploy stack
     if: branch = master
   - name: migrate (prod)
