@@ -1,5 +1,8 @@
 'use strict';
 
+const configKeys = require('./config/configKeys');
+let mongo, config;
+
 /*
  * This service implements 3 methods for logging: info, error, and debug.
  * Simply call the method with your specified message.
@@ -8,7 +11,8 @@
 
 class LogService {
     constructor(root) {
-        this.root = root;
+        mongo = root.mongo;
+        config = root.config;
         this.colors = {
             reset: '\x1b[0m',
             bright: '\x1b[1m',
@@ -42,24 +46,58 @@ class LogService {
         return message;
     }
 
-    error(message) {
-        this.log('ERROR', message, this.colors.red + this.colors.bright);
-        // Using this.root.config.get(configKeys.logging.level), save to "logs" collection if >= 1
-        return message;
+    error(message, skipDbSave) {
+        return new Promise(async (resolve, reject) => {
+            try {
+                if (await config.get(configKeys.logging.level) >= 1) {
+                    const obj = {
+                        type: 'ERROR',
+                        message
+                    };
+                    this.log(obj.type, message, this.colors.red + this.colors.bright);
+                    if (!skipDbSave) mongo.save('logs', obj);
+                }
+                resolve(message);
+            } catch (ex) {
+                reject(ex);
+            }
+        });
     }
     
-    info(message) {
-        this.log('INFO', message, this.colors.white + this.colors.bright);
-        // Using this.root.config.get(configKeys.logging.level), save to "logs" collection if >= 2
-        return message;
+    info(message, skipDbSave) {
+        return new Promise(async (resolve, reject) => {
+            try {
+                if (await config.get(configKeys.logging.level) >= 2) {
+                    const obj = {
+                        type: 'INFO',
+                        message
+                    };
+                    this.log(obj.type, message, this.colors.white + this.colors.bright);
+                    if (!skipDbSave) mongo.save('logs', obj);
+                }
+                resolve(message);
+            } catch (ex) {
+                reject(ex);
+            }
+        });
     }
     
-    debug(message) {
-        if (this.root.config['log']['debug']) {
-            this.log('DEBUG', message, this.colors.yellow + this.colors.bright);
-            // Using this.root.config.get(configKeys.logging.level), save to "logs" collection if >= 3
-        }
-        return message;
+    debug(message, skipDbSave) {
+        return new Promise(async (resolve, reject) => {
+            try {
+                if (config['log']['debug'] && await config.get(configKeys.logging.level) >= 3) {
+                    const obj = {
+                        type: 'DEBUG',
+                        message
+                    };
+                    this.log(obj.type, message, this.colors.yellow + this.colors.bright);
+                    if (!skipDbSave) mongo.save('logs', obj);
+                }
+                resolve(message);
+            } catch (ex) {
+                reject(ex);
+            }
+        });
     }
 }
 

@@ -4,15 +4,17 @@ const chai = require('chai');
 chai.should();
 const expect = chai.expect;
 
+const ConfigService = require('../../../../services/config/configService');
+const configKeys = require('../../../../services/config/configKeys');
+const IntegrationTest = require('../../integrationTest');
+let config, mongo;
+
 describe('[INTEGRATION] configService', function() {
-    const ConfigService = require('../../../../services/config/configService');
-    const configKeys = require('../../../../services/config/configKeys');
-    const IntegrationTest = require('../../integrationTest');
-
-    IntegrationTest.Setup();
-
-    const config = IntegrationTest.Root.config;
-    const mongo = IntegrationTest.Root.mongo;
+    before(function() {
+        IntegrationTest.Setup();
+        config = IntegrationTest.Root.config;
+        mongo = IntegrationTest.Root.mongo;
+    });
 
     it('should export service', function() {
         ConfigService.should.be.a('Function');

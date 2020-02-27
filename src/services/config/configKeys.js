@@ -30,6 +30,14 @@ const configKeys = Object.freeze({
     },
     web: {
         port: new ConfigKey('Web.Port', 3000) // Defines the port that the Express.js web service listens to; Any integer
+    },
+    email: {
+        address: new ConfigKey('Email.Address', 'mirai@mistad.net'), // The email address the EmailService will use as the "from"; any string value that works as a validated email address
+        name: new ConfigKey('Email.Name', 'Mirai') // The name the EmailService will use as the "from" name; any string value
+    },
+    mailgun: {
+        api_key: new ConfigKey('Mailgun.ApiKey', ''), // Mirai's API key for Mailgun; any string value
+        domain: new ConfigKey('Mailgun.Domain', '') // Mirai's domain for Mailgun; any string value
     }
 });
 

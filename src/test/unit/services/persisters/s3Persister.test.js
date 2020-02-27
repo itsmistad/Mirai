@@ -6,24 +6,28 @@ const sinonChai = require('sinon-chai');
 chai.should();
 chai.use(sinonChai);
 
+const S3Persister = require('../../../../services/persisters/s3Persister');
+const UnitTest = require('../../unitTest');
+const AWS = require('aws-sdk');
+const bucketName = 'bucketName';
+let s3;
+
 describe('[UNIT] s3Persister', function() {
-    const S3Persister = require('../../../../services/persisters/s3Persister');
-    const UnitTest = require('../../unitTest');
-
-    UnitTest.Setup();
-    UnitTest.SetConfig({
-        database: {
-            mongo: {
-                host: 'host',
-                port: 0,
-                user: 'user',
-                pass: 'pass',
-                auth: true
+    before(function() {
+        UnitTest.Setup();
+        UnitTest.SetJsonConfig({
+            database: {
+                mongo: {
+                    host: 'host',
+                    port: 0,
+                    user: 'user',
+                    pass: 'pass',
+                    auth: true
+                }
             }
-        }
+        });
+        s3 = new S3Persister(UnitTest.Root);
     });
-
-    const s3 = new S3Persister(UnitTest.Root);
 
     it('should export service', function() {
         S3Persister.should.be.a('Function');
