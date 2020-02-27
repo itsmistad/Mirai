@@ -1,10 +1,8 @@
 'use strict';
-const BaseController = require('./baseController');
 const View = require('../views/view');
 
-class HomeController extends BaseController {
+class HomeController {
     constructor() {
-        super();
         this.name = 'Home';
     }
 
