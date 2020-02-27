@@ -41,6 +41,7 @@ Resources:
       ApplicationName:
         Ref: MiraiApplication
       EnvironmentName: mirai-app-prod
+      CNAMEPrefix: mirai-app-prod
       Description: AWS ElasticBeanstalk Mirai Environment
       VersionLabel:
         Ref: MiraiApplicationVersion
