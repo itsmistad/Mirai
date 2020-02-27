@@ -29,9 +29,7 @@ class MongoDbPersister {
             (auth ? `${user}:${pass}@` : '') +
             `${host}:${port}/`;
 
-        this._log.debug('Connecting to db: ' + url, true);
         return this.mongoClient.connect(url, {useUnifiedTopology: true}).then(db => {
-            this._log.debug('Connected.');
             const dbo = db.db('mirai');
             return {
                 done: () => db.close(),
@@ -96,7 +94,7 @@ class MongoDbPersister {
                 .then(res => {
                     db.done();
                     return res;
-                }).catch(() => this._log.error(`Failed to find any item with ${data}.`, true));
+                }).catch(() => this._log.error(`Failed to find any item with ${str}.`, true));
         });
     }
 
@@ -108,7 +106,7 @@ class MongoDbPersister {
                 .then(res => {
                     db.done();
                     return res;
-                }).catch(() => this._log.error(`Failed to find items with ${data}.`, true));
+                }).catch(() => this._log.error(`Failed to find items with ${str}.`, true));
         });
     }
 

@@ -1,18 +1,19 @@
+'use strict';
 const configKeys = require('../../services/config/configKeys');
 
 module.exports = new function() {
-    this.desc = `Inserts ${JSON.stringify(configKeys.logging.level)} into the "config" collection.`;
+    this.desc = `Inserts ${JSON.stringify(configKeys.web.port)} into the "config" collection.`;
 
     this.up = async function(m) {
         await m.save('config', {
-            key: configKeys.logging.level.key,
-            value: configKeys.logging.level.defaultValue
+            key: configKeys.web.port.key,
+            value: configKeys.web.port.defaultValue
         });
     };
 
     this.down = async function(m) {
         await m.delete('config', {
-            key: configKeys.logging.level.key
+            key: configKeys.web.port.key
         });
     };
 };

@@ -104,4 +104,4 @@ dist
 .tern-port
 
 tests.txt
-lint.txt
+eslint.txt

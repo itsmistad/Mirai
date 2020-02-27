@@ -1,3 +1,4 @@
+'use strict';
 const configKeys = require('../../services/config/configKeys');
 
 module.exports = new function() {

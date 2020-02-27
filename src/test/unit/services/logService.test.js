@@ -42,7 +42,7 @@ describe('[UNIT] logService', function() {
                 // assert
                 data.should.equal('debug');
                 sinon.assert.calledWith(logStub, 'DEBUG', 'debug');
-                sinon.assert.calledWith(saveStub, 'logs', {
+                sinon.assert.calledWithMatch(saveStub, 'logs', {
                     type: 'DEBUG',
                     message: 'debug'
                 });
@@ -63,7 +63,7 @@ describe('[UNIT] logService', function() {
                 // assert
                 data.should.equal('info');
                 sinon.assert.calledWith(logStub, 'INFO', 'info');
-                sinon.assert.calledWith(saveStub, 'logs', {
+                sinon.assert.calledWithMatch(saveStub, 'logs', {
                     type: 'INFO',
                     message: 'info'
                 });
@@ -84,7 +84,7 @@ describe('[UNIT] logService', function() {
                 // assert
                 data.should.equal('error');
                 sinon.assert.calledWith(logStub, 'ERROR', 'error');
-                sinon.assert.calledWith(saveStub, 'logs', {
+                sinon.assert.calledWithMatch(saveStub, 'logs', {
                     type: 'ERROR',
                     message: 'error'
                 });

@@ -2,21 +2,33 @@
 
 const express = require('express');
 const configKeys = require('./config/configKeys');
-const path = require('path');
 
-let log, app, config, server;
-
+let log, app, config;
 let routes = [
     ['/', 'homeController']
 ];
 
 function setRoutes() {
+    app.use(express.static(process.cwd() + '/assets'));
+    app.set('view engine', 'hjs');
+    app.set('layout', 'layout');
+    app.set('partials', {
+        loading: 'shared/loading'
+    });
+    app.engine('hjs', require('hogan-express'));
+
     routes.forEach(pair => {
-        const route = pair[0];
-        const controller = pair[1];
-        app.get(route, (req, res) => {
-            res.sendFile(path.join(__dirname, 'views', 'index.html'));
-        });
+        const routePath = pair[0];
+        const controllerName = pair[1];
+        try {
+            const Controller = require(`../controllers/${controllerName}`);
+            app.get(routePath, function(req, res) {
+                new Controller().run(req, res);
+            });
+        }
+        catch (ex) {
+            log.error(`Failed to bind route "${routePath}" to controller "${controllerName}"! Error: ${ex}`);
+        }
     });
 }
 
@@ -33,8 +45,8 @@ class WebService {
         log.info('Starting web service...');
         app = express();
         setRoutes();
-        server = app.listen(port, () => {
-            log.info(`Successfully started web service! Listening on port ${port}.s`);
+        app.listen(port, () => {
+            log.info(`Successfully started web service! Listening on port ${port}.`);
         });
     }
 }

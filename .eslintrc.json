@@ -13,7 +13,18 @@
     "parserOptions": {
         "ecmaVersion": 2018
     },
-    "ignorePatterns": ["*.html", "*.md"],
+    "ignorePatterns": [
+        "*.ico",
+        "*.gif",
+        "*.jpg",
+        "*.png",
+        "*.hjs",
+        "*.css",
+        "*.scss",
+        "*.html",
+        "*.md",
+        "**/assets/js/*.js"
+    ],
     "rules": {
         "indent": [
             "error",
