@@ -26,27 +26,27 @@ jobs:
         - node ../src/migrations/migrator.js
         - npm test
     - stage: deploy stack
+      script: 
+        - if [ "$TRAVIS_PULL_REQUEST" = "true" ]; echo "PR; skipping stack deployment."; fi
       deploy:
         provider: cloudformation
         access_key_id: $AWS_ACCESS_KEY_ID
         secret_access_key:
           secure: $AWS_SECRET_ACCESS_KEY
         template: ./deployment/stack.yaml
-        script: 
-          - if [ "$TRAVIS_PULL_REQUEST" = "true" ]; echo "PR; skipping stack deployment."; fi
         region: $AWS_DEFAULT_REGION
         stack_name: mirai-app
         edge: true
     - stage: migrate (prod)
       script:
-        - if [ "$TRAVIS_PULL_REQUEST" = "true" ]; echo "PR; skipping migration."; fi
+        - if [ "$TRAVIS_PULL_REQUEST" = "true" ]; echo "PR; skipping migration."; exit 1; fi
         - cd $TRAVIS_BUILD_DIR/scripts
         - chmod +x config.sh
         - ./config.sh mirai-app
         - node ../src/migrations/migrator.js
     - stage: deploy app
       script:
-        - if [ "$TRAVIS_PULL_REQUEST" = "true" ]; echo "PR; skipping deploy."; fi
+        - if [ "$TRAVIS_PULL_REQUEST" = "true" ]; echo "PR; skipping app deployment."; exit 1; fi
         - cd $TRAVIS_BUILD_DIR/scripts
         - chmod +x config.sh
         - ./config.sh mirai-app
@@ -68,8 +68,6 @@ jobs:
           zip_file: ./deployments/deploy.zip
           skip_cleanup: true
           edge: true
-          script: 
-            - if [ "$TRAVIS_PULL_REQUEST" = "true" ]; echo "PR; skipping app deployment."; fi
           on:
             branch: $TRAVIS_BRANCH
           
