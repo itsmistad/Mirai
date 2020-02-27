@@ -2,26 +2,35 @@
 
 const gulp = require('gulp');  
 const sass = require('gulp-sass');  
-const cleanCss = require('gulp-clean-css');
 const browserSync = require('browser-sync').create();
-const webroot = 'src/webroot/';
+const assets = 'src/assets/';
+const views = 'src/views/';
 
-gulp.task('sass', function (done) {  
-    gulp.src(webroot + 'scss/*.scss')
-        .pipe(sass({includePaths: [webroot + 'scss'], outputStyle: 'compressed'}))
-        .pipe(gulp.dest(webroot + 'css'))
-        .pipe(browserSync.stream());
+gulp.task('sass', function(done) {  
+    gulp.src(assets + 'scss/*.scss')
+        .pipe(sass({includePaths: [assets + 'scss'], outputStyle: 'compressed'}))
+        .on('error', function(error) {
+            console.error('\x1b[31m\x1b[1m' + error.messageFormatted + '\x1b[0m');
+            done(error); 
+        })
+        .pipe(gulp.dest(assets + 'css'));
     done();
 });
 
-gulp.task('serve', ['sass'], function() {
+gulp.task('serve', gulp.series(['sass'], function() {
     browserSync.init({
-        server: "./"
+        proxy: 'localhost:3000',
+        baseDir: './',
+        open: true,
+        notify: false
     });
 
-    gulp.watch(webroot + 'scss/*.scss', ['sass']);
-    gulp.watch(webroot + 'js/*.js').on('change', browserSync.reload);
-    gulp.watch(webroot + '**/*.html').on('change', browserSync.reload);
-});
+    gulp.watch(assets + 'scss/**/*.scss', gulp.series(['sass']));
+    gulp.watch(assets + 'files/**/*').on('change', browserSync.reload);
+    gulp.watch(assets + 'css/**/*.css').on('change', browserSync.reload);
+    gulp.watch(assets + 'js/**/*.js').on('change', browserSync.reload);
+    gulp.watch(views + '**/*.hjs').on('change', browserSync.reload);
+    gulp.watch(views + '**/*.html').on('change', browserSync.reload);
+}));
 
 gulp.task('default', gulp.series(['serve']));

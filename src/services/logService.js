@@ -40,19 +40,29 @@ class LogService {
         };
     }
 
+    filterColorTags(message) {
+        let result = message;
+        for (const tag in this.colors) {
+            result = result.replace(this.colors[tag], '');
+        }
+        return result;
+    }
+
     log(tag, message, colorTag = '') {
         let resetTag = colorTag !== '' ? this.colors.reset : '';
         console.log(`${this.colors.underscore}[${new Date().toISOString()}]${this.colors.reset} ${colorTag}[${tag}]\t${message}${resetTag}`);
         return message;
     }
 
-    error(message, skipDbSave) {
-        return new Promise(async (resolve, reject) => {
+    async error(message, skipDbSave) {
+        const loggingLevel = !skipDbSave ? await config.get(configKeys.logging.level) : 3;
+        return new Promise((resolve, reject) => {
             try {
-                if (await config.get(configKeys.logging.level) >= 1) {
+                if (loggingLevel >= 1) {
                     const obj = {
+                        time: new Date().toISOString(),
                         type: 'ERROR',
-                        message
+                        message: this.filterColorTags(message)
                     };
                     this.log(obj.type, message, this.colors.red + this.colors.bright);
                     if (!skipDbSave) mongo.save('logs', obj);
@@ -64,13 +74,15 @@ class LogService {
         });
     }
     
-    info(message, skipDbSave) {
-        return new Promise(async (resolve, reject) => {
+    async info(message, skipDbSave) {
+        const loggingLevel = !skipDbSave ? await config.get(configKeys.logging.level) : 3;
+        return new Promise((resolve, reject) => {
             try {
-                if (await config.get(configKeys.logging.level) >= 2) {
+                if (loggingLevel >= 2) {
                     const obj = {
+                        time: new Date().toISOString(),
                         type: 'INFO',
-                        message
+                        message: this.filterColorTags(message)
                     };
                     this.log(obj.type, message, this.colors.white + this.colors.bright);
                     if (!skipDbSave) mongo.save('logs', obj);
@@ -82,13 +94,15 @@ class LogService {
         });
     }
     
-    debug(message, skipDbSave) {
-        return new Promise(async (resolve, reject) => {
+    async debug(message, skipDbSave) {
+        const loggingLevel = !skipDbSave ? await config.get(configKeys.logging.level) : 3;
+        return new Promise((resolve, reject) => {
             try {
-                if (config['log']['debug'] && await config.get(configKeys.logging.level) >= 3) {
+                if (config['log']['debug'] && loggingLevel >= 3) {
                     const obj = {
+                        time: new Date().toISOString(),
                         type: 'DEBUG',
-                        message
+                        message: this.filterColorTags(message)
                     };
                     this.log(obj.type, message, this.colors.yellow + this.colors.bright);
                     if (!skipDbSave) mongo.save('logs', obj);
