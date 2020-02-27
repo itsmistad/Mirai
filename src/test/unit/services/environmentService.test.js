@@ -21,8 +21,6 @@ describe('[UNIT] environmentService', function() {
             const env = new EnvironmentService(UnitTest.Root);
             // execute
             const result = env.isProd;
-            console.log(UnitTest.Root.config['application']['environment']);
-            console.log(UnitTest.Root.config['application']['environment'] === 'prod');
             // assert
             result.should.be.true;
         });
