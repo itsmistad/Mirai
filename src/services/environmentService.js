@@ -1,24 +1,30 @@
 'use strict';
 
 /*
- * This service exposes the ['application'] variables from ConfigService as static properties.
+ * This service exposes the "application" variables through the ConfigService.
  */
+
+let config;
 
 class EnvironmentService {
     constructor(root) {
-        this._env = root["config"]["application"];
+        config = root.config['application'];
     }
+
     get isProd() {
-        return this._env.environment === "prod";
+        return config['environment'] === 'prod';
     }
+
     get isLocal() {
-        return this._env.environment === "local";
+        return config['environment'] === 'local';
     }
+
     get build() {
-        return this._env.travis_build;
+        return config['travis_build'];
     }
+
     get version() {
-        return this._env.version;
+        return config['version'];
     }
 }
 

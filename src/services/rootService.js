@@ -8,7 +8,7 @@
  */
 
 const LogService = require('./logService');
-const ConfigService = require('./configService');
+const ConfigService = require('./config/configService');
 const EnvironmentService = require('./environmentService');
 const MongoDbPersister = require('./persisters/mongoDbPersister');
 const S3Persister = require('./persisters/s3Persister');
