@@ -14,10 +14,5 @@
     },
     "log": {
         "debug": false
-    },
-    "mailgun": {
-        "email_address": "mirai@mistad.net",
-        "api_key": "",
-        "domain": ""
     }
 }

@@ -15,7 +15,7 @@ let s3;
 describe('[UNIT] s3Persister', function() {
   before(function() {
     UnitTest.Setup();
-    UnitTest.SetConfig({
+    UnitTest.SetJsonConfig({
       database: {
           mongo: {
               host: 'host',

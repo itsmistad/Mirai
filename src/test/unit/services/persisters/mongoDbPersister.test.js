@@ -14,7 +14,7 @@ let mongo;
 describe('[UNIT] mongoDbPersister', function() {
   before(function() {
     UnitTest.Setup();
-    UnitTest.SetConfig({
+    UnitTest.SetJsonConfig({
       database: {
         mongo: {
           host: 'host',

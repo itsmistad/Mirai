@@ -14,13 +14,13 @@ const args = process.argv.slice(2);
 class Migrator {
     constructor(_root) {
         this.log = _root.log;
-        this.get = (collection, id) => root.mongo.get(collection, id);
-        this.save = (collection, data) => root.mongo.save(collection, data);
-        this.replace = (collection, id, data, upsert) => root.mongo.replace(collection, id, data, upsert);
-        this.find = (collection, data) => root.mongo.find(collection, data);
-        this.findMany = (collection, data) => root.mongo.findMany(collection, data);
-        this.delete = (collection, data) => root.mongo.delete(collection, data);
-        this.deleteMany = (collection, data) => root.mongo.deleteMany(collection, data);
+        this.get = (collection, id) => _root.mongo.get(collection, id);
+        this.save = (collection, data) => _root.mongo.save(collection, data);
+        this.replace = (collection, id, data, upsert) => _root.mongo.replace(collection, id, data, upsert);
+        this.find = (collection, data) => _root.mongo.find(collection, data);
+        this.findMany = (collection, data) => _root.mongo.findMany(collection, data);
+        this.delete = (collection, data) => _root.mongo.delete(collection, data);
+        this.deleteMany = (collection, data) => _root.mongo.deleteMany(collection, data);
     }
 }
 

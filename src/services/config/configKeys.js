@@ -27,6 +27,14 @@ class ConfigKey {
 const configKeys = Object.freeze({
     logging: {
         level: new ConfigKey('Logging.Level', 2) // Controls what level of logs are stored to the database; 3 = All, 2 = No debugs, 1 = Only errors, 0 = None
+    },
+    email: {
+        address: new ConfigKey('Email.Address', 'mirai@mistad.net'), // The email address the EmailService will use as the "from"; any string value that works as a validated email address
+        name: new ConfigKey('Email.Name', 'Mirai') // The name the EmailService will use as the "from" name; any string value
+    },
+    mailgun: {
+        api_key: new ConfigKey('Mailgun.ApiKey', ''), // Mirai's API key for Mailgun; any string value
+        domain: new ConfigKey('Mailgun.Domain', '') // Mirai's domain for Mailgun; any string value
     }
 });
 

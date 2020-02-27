@@ -6,22 +6,22 @@ const sinonChai = require("sinon-chai");
 chai.should();
 chai.use(sinonChai);
 
+const EmailService = require('../../../services/emailService');
+const configKeys = require('../../../services/config/configKeys');
+const UnitTest = require('../unitTest');
+
+let email, sendMailStub;
+
 describe('[UNIT] emailService', function() {
-  const EmailService = require('../../../services/emailService');
-  const UnitTest = require('../unitTest');
-  const unitTest = new UnitTest({
-    mailgun: {
-      email_address: 'email_address',
-      api_key: 'api_key',
-      domain: 'domain'
-    }
-  });
-  const email = new EmailService(unitTest.root);
-  email.emailClient = {
-    sendMail: () => {}
-  };
-  const sendMailStub = sinon.stub(email.emailClient, 'sendMail').callsFake((options, callback) => {
-    callback(null, 'ok');
+  before(function() {
+    UnitTest.Setup();
+    email = new EmailService(UnitTest.Root);
+    email._emailClient = {
+      sendMail: () => {}
+    };
+    sendMailStub = sinon.stub(email._emailClient, 'sendMail').callsFake((options, callback) => {
+      callback(null, 'ok');
+    });
   });
 
   it('should export service', function() {
@@ -30,10 +30,20 @@ describe('[UNIT] emailService', function() {
 
   describe('#sendEmail()', function() {
     it('should invoke sendMail() with specified options', function(done) {
+      // setup
+      UnitTest.SetDbConfig([{
+        key: configKeys.email.address.key,
+        value: 'email@test.com'
+      }, {
+        key: configKeys.email.name.key,
+        value: 'test'
+      }]);
+      // execute
       email.sendEmail('to', 'subject', 'body').then(res => {
+        // assert
         res.should.equal('ok');
         sendMailStub.should.have.been.calledOnceWith({
-            from: `"Mirai" <${unitTest.root.config['mailgun']['email_address']}>`,
+            from: '"test" <email@test.com>',
             to: 'to',
             subject: 'subject',
             body: 'body'

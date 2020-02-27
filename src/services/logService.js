@@ -46,7 +46,7 @@ class LogService {
         return message;
     }
 
-    error(message) {
+    error(message, skipDbSave) {
         return new Promise(async (resolve, reject) => {
             try {
                 if (await config.get(configKeys.logging.level) >= 1) {
@@ -55,7 +55,7 @@ class LogService {
                         message
                     };
                     this.log(obj.type, message, this.colors.red + this.colors.bright);
-                    mongo.save('logs', obj);
+                    if (!skipDbSave) mongo.save('logs', obj);
                 }
                 resolve(message);
             } catch (ex) {
@@ -64,7 +64,7 @@ class LogService {
         });
     }
     
-    info(message) {
+    info(message, skipDbSave) {
         return new Promise(async (resolve, reject) => {
             try {
                 if (await config.get(configKeys.logging.level) >= 2) {
@@ -73,7 +73,7 @@ class LogService {
                         message
                     };
                     this.log(obj.type, message, this.colors.white + this.colors.bright);
-                    mongo.save('logs', obj);
+                    if (!skipDbSave) mongo.save('logs', obj);
                 }
                 resolve(message);
             } catch (ex) {
@@ -82,7 +82,7 @@ class LogService {
         });
     }
     
-    debug(message) {
+    debug(message, skipDbSave) {
         return new Promise(async (resolve, reject) => {
             try {
                 if (config['log']['debug'] && await config.get(configKeys.logging.level) >= 3) {
@@ -91,7 +91,7 @@ class LogService {
                         message
                     };
                     this.log(obj.type, message, this.colors.yellow + this.colors.bright);
-                    mongo.save('logs', obj);
+                    if (!skipDbSave) mongo.save('logs', obj);
                 }
                 resolve(message);
             } catch (ex) {
