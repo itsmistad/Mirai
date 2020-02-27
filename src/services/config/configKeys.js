@@ -27,6 +27,9 @@ class ConfigKey {
 const configKeys = Object.freeze({
     logging: {
         level: new ConfigKey('Logging.Level', 2) // Controls what level of logs are stored to the database; 3 = All, 2 = No debugs, 1 = Only errors, 0 = None
+    },
+    web: {
+        port: new ConfigKey('Web.Port', 3000) // Defines the port that the Express.js web service listens to; Any integer
     }
 });
 
