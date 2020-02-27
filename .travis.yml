@@ -35,13 +35,12 @@ jobs:
           secure: $AWS_SECRET_ACCESS_KEY
         template: ./deployment/s3.yaml
         region: $AWS_DEFAULT_REGION
-        stack_name: mirai-s3-prod
+        stack_name: mirai-s3-stack-prod
         edge: true
-      after_deploy:
-        - if aws s3 ls "s3://mirai-app-prod" 2>&1 | grep -q 'NoSuchBucket'
-        - then travis_terminate 1
-        - else travis_terminate 0
-        - fi
+    - stage: delete stack
+      script: 
+        - if [ ! "$TRAVIS_PULL_REQUEST" = "false" ]; then echo "PR. skipping stack deletion."; exit 0; fi
+        - aws cloudformation delete-stack --stack-name mirai-app-stack-prod
     - stage: deploy stack
       script: 
         - if [ ! "$TRAVIS_PULL_REQUEST" = "false" ]; then echo "PR. skipping stack deployment."; fi
@@ -52,7 +51,7 @@ jobs:
           secure: $AWS_SECRET_ACCESS_KEY
         template: ./deployment/stack.yaml
         region: $AWS_DEFAULT_REGION
-        stack_name: mirai-stack-prod
+        stack_name: mirai-app-stack-prod
         edge: true
     - stage: migrate (prod)
       script:
@@ -90,6 +89,10 @@ jobs:
           
 stages:
   - test
+  - name: deploy s3
+    if: branch = master
+  - name: delete stack
+    if: branch = master
   - name: deploy stack
     if: branch = master
   - name: migrate (prod)
