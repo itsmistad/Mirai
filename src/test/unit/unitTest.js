@@ -8,11 +8,12 @@ class UnitTest {
         this.Root = new MockRootService();
         this.Root.config = new ConfigService(this);
         this.Root.config.load();
-        this.Root.config.get = async () => {};
     }
 
     static SetConfig(config) {
-        this.Root.config = config;
+        for (const key in config) {
+            this.Root.config[key] = config[key];
+        }
     }
 
     static SetLoggingFlag(flag) {

@@ -6,24 +6,27 @@ const sinonChai = require("sinon-chai");
 chai.should();
 chai.use(sinonChai);
 
+const MongoDbPersister = require('../../../../services/persisters/mongoDbPersister');
+const UnitTest = require('../../unitTest');
+
+let mongo;
+
 describe('[UNIT] mongoDbPersister', function() {
-  const MongoDbPersister = require('../../../../services/persisters/mongoDbPersister');
-  const UnitTest = require('../../unitTest');
-
-  UnitTest.Setup();
-  UnitTest.SetConfig({
-    database: {
-      mongo: {
-        host: 'host',
-        port: '0',
-        auth: true,
-        user: 'user',
-        pass: 'pass'
+  before(function() {
+    UnitTest.Setup();
+    UnitTest.SetConfig({
+      database: {
+        mongo: {
+          host: 'host',
+          port: '0',
+          auth: true,
+          user: 'user',
+          pass: 'pass'
+        }
       }
-    }
+    });
+    mongo = new MongoDbPersister(UnitTest.Root);
   });
-
-  const mongo = new MongoDbPersister(UnitTest.Root);
 
   it('should export service', function() {
     MongoDbPersister.should.be.a("Function");
