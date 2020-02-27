@@ -16,7 +16,7 @@ let mongo;
 describe('[INTEGRATION] mongoDbPersister', function() {
   before(function() {
     IntegrationTest.Setup();
-    IntegrationTest.SetConfig({
+    IntegrationTest.SetJsonConfig({
       database: {
         mongo: {
           host: 'localhost',

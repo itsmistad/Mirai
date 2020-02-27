@@ -14,7 +14,7 @@ class IntegrationTest {
         this.Root.s3 = new S3Persister(this.Root);
     }
 
-    static SetConfig(config) {
+    static SetJsonConfig(config) {
         this.Root.config = config;
     }
 
