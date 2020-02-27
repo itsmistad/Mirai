@@ -16,4 +16,5 @@ if [[ $RESULT == *"failing"* ]]; then
     exit 2
 fi
 
-node ../src/app.js
+cd ../src
+node app.js
