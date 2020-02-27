@@ -10,6 +10,7 @@
 const MockLogService = require('../test/mocks/mockLogService');
 const LogService = require('./logService');
 const ConfigService = require('./config/configService');
+const EnvironmentService = require('./environmentService');
 const MongoDbPersister = require('./persisters/mongoDbPersister');
 const S3Persister = require('./persisters/s3Persister');
 const EmailService = require('./emailService');
@@ -18,6 +19,7 @@ class RootService {
     constructor() {
         this.config = new ConfigService(this);
         this.config.load();
+        this.env = new EnvironmentService(this);
         this.log = new MockLogService(this); // A bit hacky, but it works.
         this.mongo = new MongoDbPersister(this);
         this.log = this.mongo._log = new LogService(this); // A bit hacky, but it works -- part 2.
