@@ -12,8 +12,11 @@ const args = process.argv.slice(2);
 class Migrator {
     constructor(_root) {
         this.log = _root.log;
+        this.env = _root.env;
         this.get = (collection, id) => _root.mongo.get(collection, id);
         this.save = (collection, data) => _root.mongo.save(collection, data);
+        this.update = (collection, query, data, upsert) => _root.mongo.update(collection, query, data, upsert);
+        this.updateMany = (collection, query, data, upsert) => _root.mongo.updateMany(collection, query, data, upsert);
         this.replace = (collection, id, data, upsert) => _root.mongo.replace(collection, id, data, upsert);
         this.find = (collection, data) => _root.mongo.find(collection, data);
         this.findMany = (collection, data) => _root.mongo.findMany(collection, data);
@@ -125,7 +128,10 @@ async function runMigrations(currentTimestamp, timestampId) {
                 key: 'currentTimestamp',
                 value: lastTimestamp
             }, true)
-                .then(() => log.info(`${log.colors.green}Done!`, true))
+                .then(() => {
+                    log.info(`${log.colors.green}Done!`, true);
+                    process.exit(0);
+                })
                 .catch(() => log.error('Failed to store new currentTimestamp to migrator collection.', true));
         }
     } catch (ex) {
