@@ -1,5 +1,6 @@
 'use strict';
 
+const path = require('path');
 const express = require('express');
 const configKeys = require('./config/configKeys');
 
@@ -9,7 +10,8 @@ let routes = [
 ];
 
 function setRoutes() {
-    app.use(express.static(process.cwd() + '/assets'));
+    app.use(express.static(path.join(__dirname, '..', 'assets')));
+    app.set('views', path.join(__dirname, '..', 'views'));
     app.set('view engine', 'hjs');
     app.set('layout', 'layout');
     app.set('partials', {
@@ -39,7 +41,7 @@ class WebService {
     }
 
     async start() {
-        const port = parseInt(await config.get(configKeys.web.port));
+        const port = parseInt(process.env.PORT ? process.env.PORT : await config.get(configKeys.web.port));
         log.debug(`Port retrieved from configuration: ${port}`);
 
         log.info('Starting web service...');

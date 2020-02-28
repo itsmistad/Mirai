@@ -65,11 +65,47 @@ class MongoDbPersister {
                 }).catch(() => this._log.error(`Failed to save item: ${str}`, true));
         });
     }
+    
+    update(collection, query, data, upsert) {
+        return this.connect().then(db => {
+            const str = JSON.stringify(data);
+            this._log.debug(`Updating ${str} to ${collection}`, true);
+            return db.mirai.collection(collection).updateOne(query, data, {
+                upsert: !upsert ? false : true
+            })
+                .then(res => {
+                    db.done();
+                    let returnObj = {
+                        modifiedCount: res.modifiedCount,
+                        ok: 1
+                    };
+                    return returnObj;
+                }).catch((ex) => this._log.error(`Failed to update item: ${ex}`, true));
+        });
+    }
+    
+    updateMany(collection, query, data, upsert) {
+        return this.connect().then(db => {
+            const str = JSON.stringify(data);
+            this._log.debug(`Updating ${str} to ${collection}`, true);
+            return db.mirai.collection(collection).updateMany(query, data, {
+                upsert: !upsert ? false : true
+            })
+                .then(res => {
+                    db.done();
+                    let returnObj = {
+                        modifiedCount: res.modifiedCount,
+                        ok: 1
+                    };
+                    return returnObj;
+                }).catch(() => this._log.error(`Failed to update item: ${str}`, true));
+        });
+    }
 
     replace(collection, id, data, upsert) {
         return this.connect().then(db => {
             const str = JSON.stringify(data);
-            this._log.debug(`Saving ${str} to ${collection}`, true);
+            this._log.debug(`Replacing ${str} in ${collection}`, true);
             return db.mirai.collection(collection).replaceOne({
                 _id: ObjectId(id)
             }, data, {
