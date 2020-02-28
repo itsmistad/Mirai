@@ -39,11 +39,6 @@ jobs:
         edge: true
       after_deploy:
         - aws cloudformation wait stack-create-complete --stack-name mirai-s3-stack-prod
-    - stage: delete stack
-      script: 
-        - if [ ! "$TRAVIS_PULL_REQUEST" = "false" ]; then echo "PR. skipping stack deletion."; exit 0; fi
-        - aws cloudformation delete-stack --stack-name mirai-app-stack-prod
-        - aws cloudformation wait stack-delete-complete --stack-name mirai-app-stack-prod
     - stage: deploy stack
       script: 
         - if [ ! "$TRAVIS_PULL_REQUEST" = "false" ]; then echo "PR. skipping stack deployment."; fi
@@ -94,8 +89,6 @@ jobs:
 stages:
   - test
   - name: deploy s3
-    if: branch = master
-  - name: delete stack
     if: branch = master
   - name: deploy stack
     if: branch = master
