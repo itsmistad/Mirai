@@ -69,12 +69,12 @@ jobs:
         - cd $TRAVIS_BUILD_DIR/scripts
         - chmod +x config.sh
         - ./config.sh mirai-app-prod
-        - jq -c '.application.travis_build = ($buildNum | tonumber)' --arg buildNum $TRAVIS_BUILD_NUMBER ./config/config.json > ./config/config2.json
-        - jq -c '.application.environment = $env' --arg env 'prod' ./config/config2.json > ./config/config3.json
-        - jq -c '.log.debug = ($flag | test("true"))' --arg flag true ./config/config3.json > ./config/config4.json
-        - mv ./config/config4.json ./config/config.json
+        - jq -c '.application.travis_build = ($buildNum | tonumber)' --arg buildNum $TRAVIS_BUILD_NUMBER ../config/config.json > ../config/config2.json
+        - jq -c '.application.environment = $env' --arg env 'prod' ../config/config2.json > ../config/config3.json
+        - jq -c '.log.debug = ($flag | test("true"))' --arg flag true ../config/config3.json > ../config/config4.json
+        - mv ../config/config4.json ../config/config.json
         - npm install
-        - zip -r ./deployments/deploy.zip *
+        - zip -r ../deployments/deploy.zip *
       deploy:
         - provider: elasticbeanstalk
           access_key_id: $AWS_ACCESS_KEY_ID
