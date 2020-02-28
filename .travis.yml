@@ -82,8 +82,8 @@ jobs:
           secret_access_key:
             secure: $AWS_SECRET_ACCESS_KEY
           region: $AWS_DEFAULT_REGION
-          app: mirai-app
-          env: mirai-app
+          app: mirai-app-prod
+          env: mirai-app-prod
           bucket_name: mirai-app-prod
           zip_file: ./deployment/deploy.zip
           skip_cleanup: true
