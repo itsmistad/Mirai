@@ -74,7 +74,8 @@ jobs:
         - jq -c '.log.debug = ($flag | test("true"))' --arg flag true ../config/config3.json > ../config/config4.json
         - mv ../config/config4.json ../config/config.json
         - npm install
-        - zip -r ../deployments/deploy.zip *
+        - cd ..
+        - zip -r ./deployment/deploy.zip *
       deploy:
         - provider: elasticbeanstalk
           access_key_id: $AWS_ACCESS_KEY_ID
@@ -84,7 +85,7 @@ jobs:
           app: mirai-app
           env: mirai-app
           bucket_name: mirai-app-prod
-          zip_file: ./deployments/deploy.zip
+          zip_file: ./deployment/deploy.zip
           skip_cleanup: true
           edge: true
           on:
