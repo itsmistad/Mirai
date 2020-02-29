@@ -70,7 +70,7 @@ jobs:
         - mv ../config/config4.json ../config/config.json
         - npm install
         - cd ..
-        - zip -r ./deployment/deploy.zip *
+        - zip -r ./deployment/deploy.zip .
       deploy:
         - provider: elasticbeanstalk
           access_key_id: $AWS_ACCESS_KEY_ID
