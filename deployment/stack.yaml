@@ -25,17 +25,6 @@ Resources:
       - Namespace: aws:autoscaling:launchconfiguration
         OptionName: IamInstanceProfile
         Value: aws-elasticbeanstalk-ec2-role # This role is one you must create in IAM (and it must have the following policies attached: AWSElasticBeanstalkWebTier, AWSElasticBeanstalkMulticontainerDocker, and AWSElasticBeanstalkWorkerTier).
-# Start of SSL section
-      - Namespace: aws:elbv2:listener:default
-        OptionName: ListenerEnabled
-        Value: true
-      - Namespace: aws:elbv2:listener:443
-        OptionName: Protocol
-        Value: HTTPS
-      - Namespace: aws:elbv2:listener:443
-        OptionName: SSLCertificateArns
-        Value: arn:aws:acm:us-east-2:495818031619:certificate/0d2adc3a-6c53-4262-ba15-efa0051bbb1a
-# End of SSL section
       SolutionStackName: 64bit Amazon Linux 2018.03 v4.13.0 running Node.js
   MiraiApplicationVersion:
     Type: AWS::ElasticBeanstalk::ApplicationVersion
