@@ -1,12 +1,12 @@
 'use strict';
-const View = require('../views/view');
+const View = require('../views/shared/view');
 
 class HomeController {
     constructor() {
         this.name = 'Home';
     }
 
-    run(req, res) {
+    run(route, req, res) {
         var v = new View(res, 'home');
         v.render({
             title: 'Home'

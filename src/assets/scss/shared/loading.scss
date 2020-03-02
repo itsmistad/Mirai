@@ -1,12 +1,6 @@
 $topLayer: 10000;
 
-body {
-    &.hidden {
-        overflow: hidden;
-    }
-}
-
-#loading-container {
+#loading__container {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -17,10 +11,7 @@ body {
     background-color: white;
     z-index: $topLayer;
 
-    #loading-img {
+    #loading__img {
         transition: all 0.3s cubic-bezier(.14, .78, .89, .35);
-        &.hidden {
-            opacity: 0;
-        }
     }
 }
