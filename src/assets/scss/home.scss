@@ -1,0 +1,35 @@
+@import "shared/vars";
+@import "shared/util";
+
+#home__welcome {
+    flex: 4;
+
+    @include for-large-tablet-down {
+        flex: unset;
+    }
+}
+
+#home__floating-banner {
+    flex: 1.2;
+    background-color: $color_background;
+    margin: 40px 40px;
+    padding: 30px 20px;
+    border-radius: 10px;
+    transition: $smooth_transition;
+    @include embossed;
+
+    .inner {
+        margin: 20px 20px;
+        padding: 30px 20px;
+        border-radius: 10px;
+        @include embossed;
+    }
+
+    @include for-laptop-down {
+        flex: 2;
+    }
+
+    @include for-large-tablet-down {
+        flex: unset;
+    }
+}

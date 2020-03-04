@@ -11,6 +11,7 @@ Mirai is an intuitive web application for daily organizing and planning.
 |Version|0.1.3c|0.1.3c|
 |Live Url|http://mirai.mistad.net/|N/A|
 
+
 Here's what it does:
 
 1. Provides a minimalist and intuitive interface to plan out your schedule and day-to-day life.
