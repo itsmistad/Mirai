@@ -7,7 +7,7 @@ const assets = 'src/assets/';
 const views = 'src/views/';
 
 gulp.task('sass', function(done) {  
-    gulp.src(assets + 'scss/*.scss')
+    gulp.src(assets + 'scss/**/*.scss')
         .pipe(sass({includePaths: [assets + 'scss'], outputStyle: 'compressed'}))
         .on('error', function(error) {
             console.error('\x1b[31m\x1b[1m' + error.messageFormatted + '\x1b[0m');
@@ -19,10 +19,14 @@ gulp.task('sass', function(done) {
 
 gulp.task('serve', gulp.series(['sass'], function() {
     browserSync.init({
-        proxy: 'localhost:3000',
+        proxy: {
+            target: 'localhost:3000'
+        },
         baseDir: './',
         open: true,
-        notify: false
+        notify: false,
+        watch: true,
+        reloadDebounce: 500
     });
 
     gulp.watch(assets + 'scss/**/*.scss', gulp.series(['sass']));
