@@ -1,4 +1,4 @@
-$topLayer: 10000;
+@import "vars";
 
 #loading__container {
     display: flex;
@@ -7,11 +7,13 @@ $topLayer: 10000;
     height: 100%;
     width: 100%;
     top: 0;
+    left: 0;
     position: fixed;
-    background-color: white;
-    z-index: $topLayer;
+    background-color: $color_background;
+    z-index: $layer_loading_screen;
+    transition: all $transition_smooth_slower;
 
     #loading__img {
-        transition: all 0.3s cubic-bezier(.14, .78, .89, .35);
+        transition: all $transition_smooth;
     }
 }
