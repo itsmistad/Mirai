@@ -10,15 +10,20 @@
  */
 
 // ------------------- Tags -------------------
-html, body {
-    height: 100%;
+html {
+    position: absolute;
     left: 0;
     top: 0;
-    transition: 0.2s;
+    height: 100%;
+    width: 100%;
+    overflow-x: hidden;
 }
 
 body {
-    min-height: 100%;
+    position: relative;
+    min-height: 100vh;
+    min-width: 100%;
+    overflow-x: hidden;
     margin: 0 !important;
     padding: 0 !important;
     background-color: $color_background;
@@ -77,8 +82,13 @@ h1 {
 
 a {
     color: $color_links;
+    transition: all $transition_smooth;
+    font-weight: bold;
+    cursor: pointer;
+
     &:hover {
         color: $color_highlighted;
+        text-shadow: -1px 1px 0 #ccc;
     }
 }
 
@@ -98,8 +108,9 @@ button {
     background-color: $color_links;
     font-weight: bold;
     cursor: pointer;
-    transition: 0.2s;
+    transition: all $transition_smooth;
     font-size: em(20px);
+    @include disable-selection;
 
     &.small {
         padding: 0.6em 1.5em;
@@ -120,8 +131,21 @@ button {
         transform: translateY(4px);
     }
 
-    &.disabled {
-        background-color: lightgray;
+    &.outline {
+        background-color: $color_background !important;
+        color: $color_body;
+        border: solid 3px $color_links;
+        &:hover {
+            background-color: $color_background !important;
+            border: solid 3px $color_highlighted;
+        }
+        &:active {
+            transform: translateY(4px);
+        }
+    }
+
+    &[disabled] {
+        background-color: darkgray;
         cursor: default;
         &:hover {
             box-shadow: unset;
@@ -162,7 +186,7 @@ div.textbox {
         outline: none;
         background-color: $color_background;
         font-size: em(18px);
-        transition: all $smooth_transition;
+        transition: all $transition_smooth;
         cursor: pointer;
 
         &:valid + label::after {
@@ -254,14 +278,14 @@ div.textbox {
             height: 100%;
             width: 100%;
             transform: translateX(-100%);
-            transition: all $smooth_transition;
+            transition: all $transition_smooth;
         }
     
         span {
             position: absolute;
             bottom: 5px;
             left: 0px;
-            transition: all $smooth_transition;
+            transition: all $transition_smooth;
         }
     }
 }
@@ -282,9 +306,10 @@ div.switch {
         align-items: center;
         color: $color_header;
         font-weight: bold;
-        transition: background-color $smooth_transition;
+        transition: background-color $transition_smooth;
         cursor: pointer;
         @include disable-selection;
+        text-align: left;
         
         span {
             position: relative;
@@ -302,7 +327,7 @@ div.switch {
                 width: 1.6em;
                 left: 0.2em;
                 bottom: .21em;
-                transition: transform $smooth_transition;
+                transition: transform $transition_smooth;
                 background-color: white;
                 border-radius: 50%;
             }
@@ -343,30 +368,32 @@ div.checkbox {
         display: flex;
         margin-top: .8em;
         align-items: center;
-        color: $color_body;
+        color: $color_header;
         font-weight: bold;
-        transition: $smooth_transition;
+        transition: $transition_smooth;
         cursor: pointer;
         @include disable-selection;
+        text-align: left;
     }
     
     input[type='checkbox'] + label > span {
         display: flex;
         align-items: center;
-        margin: 0 1.4em 0 0.9em;
-        width: 1.4em;
-        height: 1.4em;
+        margin-left: 0.9em;
+        margin-right: 1.4em;
+        min-width: 1.4em;
+        min-height: 1.4em;
         background: transparent;
         border: 2px solid $color_body;
         border-radius: 2px;
         cursor: pointer;  
-        transition: all $smooth_transition;
+        transition: all $transition_smooth;
     }
     
     input[type='checkbox']:checked + label > span {
         border: 2px solid $color_links;
         background-color: $color_links;
-        animation: shrink-bounce $smooth_transition;
+        animation: shrink-bounce $transition_smooth;
     }
     
     input[type='checkbox']:checked + label > span:before {
@@ -378,7 +405,7 @@ div.checkbox {
         border-bottom: 3px solid transparent;
         transform: rotate(45deg);
         transform-origin: 0% 100%;
-        animation: checkbox-check 125ms $smooth_transition forwards;
+        animation: checkbox-check 125ms $transition_smooth forwards;
     }
     
     @keyframes shrink-bounce {
@@ -435,7 +462,7 @@ div.textarea {
         outline: none;
         background-color: $color_background;
         cursor: pointer;
-        transition: all $smooth_transition;
+        transition: all $transition_smooth;
         font-size: em(18px);
 
         &:valid + label::after {
@@ -525,14 +552,14 @@ div.textarea {
             height: 100%;
             width: 100%;
             transform: translateX(-100%);
-            transition: all $smooth_transition;
+            transition: all $transition_smooth;
         }
     
         span {
             position: absolute;
             bottom: 5px;
             left: 0px;
-            transition: all $smooth_transition;
+            transition: all $transition_smooth;
         }
     }
 }
@@ -571,81 +598,167 @@ div.textarea {
     transition: 0.6s;
 }
 
-// ----------------- Classes ------------------
+// ----------------- Shared Classes ------------------
+// These are classes you can tag onto (almost) any element to modify its behavior.
 
-.bold {
+.banner {
+    background-color: $color_background;
+    margin: 15px 15px;
+    padding: 20px 20px;
+    border-radius: 10px;
+    transition: $transition_smooth;
+    @include embossed;
+}
+
+.bold { // Bolds any child text or text directly within.
     font-weight: bold;
 }
 
-.column {
+.column { // Columnizes the children of the container.
     display: flex;
     flex-direction: column;
+    &.left { // Left aligns the children.
+        align-items: flex-start;
+    }
+
+    &.right { // Right aligns the children.
+        align-items: flex-end;
+    }
+
+    &.stretch { // Stretches the container to the full width of the parent container.
+        align-self: stretch;
+    }
 }
 
-.column-reverse {
+.column-reverse { // Columnizes the children of the container in reverse-order.
     display: flex;
     flex-direction: column-reverse;
+    align-items: flex-start;
+    align-self: stretch;
+    &.left { // Left aligns the children.
+        align-items: flex-start;
+    }
+
+    &.right { // Right aligns the children.
+        align-items: flex-end;
+    }
+
+    &.stretch { // Stretches the container to the full width of the parent container.
+        align-self: stretch;
+    }
+
 }
 
-.full-center {
+.full-center { // Fully center aligns the children of a container.
     display: flex;
     justify-content: center;
     align-items: center;
 } 
 
-.full-frame {
+.full-frame { // Stretches a container to the full width and height of its parent.
     width: 100%;
     height: 100%;
 }
 
-.full-view-height {
+.full-hidden { // Fully hides a container and its children.
+    display: none;
+}
+
+.full-view-height { // Stretches a container to the full view height of the device.
     height: 100vh;
 }
 
-.full-width {
+.full-width { // Stretches a container to the full width of its parent.
     width: 100%;
 }
 
-.hidden {
+.hidden { // Pseudo-hides a container and its children. The container is still in view and can grab focus!! It is just not visible to the user.
     opacity: 0;
 }
 
-.lower {
+.logo {
+    color: $color_accent;
+    font-size: em(80px);
+    margin-top: 0;
+    margin-bottom: 0.5em;
+    transition: $transition_smooth_slower;
+    text-shadow: 0 0 6px $color_light_accent;
+    cursor: pointer;
+    @include disable-selection;
+
+    .no-margin {
+        margin: 0;
+    }
+}
+
+.lower { // Forces any child text or text directly within to lowercase.
     text-transform: lowercase;
 }
 
-.row {
+.row { // Rowizes the children of the container.
     display: flex;
     flex-direction: row;
 
-    &.stack-when-tight {
+    &.left { // Left aligns the children.
+        justify-content: flex-start;
+    }
+
+    &.right { // Right aligns the children.
+        justify-content: flex-end;
+    }
+
+    &.stack-when-large-tablet { // Columnizes the children of the container when the screen width reaches "large-tablet-down"
         @include for-large-tablet-down {
             flex-direction: column;
         }
     }
+
+    &.stack-when-laptop { // Columnizes the children of the container when the screen width reaches "laptop-down"
+        @include for-laptop-down {
+            flex-direction: column;
+        }
+    }
+
+    &.stretch { // Stretches the container to the full width of the parent container.
+        justify-self: stretch;
+    }
 }
 
-.row-reverse {
+.row-reverse { // Rowizes the children of the container in reverse-order.
     display: flex;
     flex-direction: row-reverse;
+    justify-content: flex-start;
+    justify-self: stretch;
+
+    &.left { // Left aligns the children.
+        justify-content: flex-start;
+    }
+
+    &.right { // Right aligns the children.
+        justify-content: flex-end;
+    }
+
+    &.stretch { // Stretches the container to the full width of the parent container.
+        justify-self: stretch;
+    }
 }
 
-.spaced {
-    letter-spacing: 0.15em;
+.spaced { // Adds spacing between each letter of the child text and text directly within.
+    letter-spacing: 0.08em;
 }
 
-.text-center {
+.text-center { // Center aligns any child text and text directly within.
     text-align: center;
 }
 
-.text-left {
+.text-left { // Left aligns any child text and text directly within.
     text-align: left;
 }
 
-.text-right {
+.text-right { // Right aligns any child text and text directly within.
     text-align: right;
 }
 
-.upper {
+.upper { // Forces any child text or text directly within to uppercase.
     text-transform: uppercase;
 }

@@ -16,14 +16,35 @@ let loadingSelector;
  */
 // Starts the transition to a white screen.
 function startLoaderTransition(callback) {
-    $(loadingSelector).fadeIn(150);
-    setTimeout(() => callback(), 350);
+    $(loadingSelector).fadeTo(150, 1);
+    setTimeout(() => callback(), 200);
 }
 
 // Transitions smoothly to a white screen before redirecting to the specified url.
 function redirect(url) {
-    startLoaderTransition(() => window.location.replace(url));
+    startLoaderTransition(() => window.location.href = url);
 }
+
+function storeScrollPosition() {
+    if (localStorage) {
+        const varName = 'previousScrollPosition';
+        localStorage.setItem(varName, $(document).scrollTop());
+    }
+}
+
+function restoreScrollPosition() {
+    if (localStorage) {
+        const varName = 'previousScrollPosition';
+        const pos = localStorage.getItem(varName);
+        if (pos) {
+            $(document).scrollTop(pos);
+            localStorage.removeItem(varName);
+        }
+    }
+}
+
+$(window).on('beforeunload', storeScrollPosition);
+$(window).on('load', restoreScrollPosition);
 
 /*
  * On-Ready

@@ -9,7 +9,8 @@ class HomeController {
     run(route, req, res) {
         var v = new View(res, 'home');
         v.render({
-            title: 'Home'
+            title: 'Home',
+            slogan: 'This is our slogan.'
         });
     }
 }

@@ -19,17 +19,34 @@ let selectors = {
 loadingSelector = selectors.loading.container;
 
 /*
- * Mirai's Theme Colors
+ * Mirai's Theme Variables
  */
+const layer = {
+    loadingScreen: 10000
+};
+
 const color = {
     lightAccent: '#ddd0f1',
-    darkAccent: '#b9a3db',
+    accent: '#A589D1',
+    darkAccent: '#8664BA',
     header: '#1e1b1e',
     body: '#2B2B2B',
     links: '#68adef',
     highlighted: '#2191fb',
-    background: '#EFF3FA',
+    background: '#F2F3F4',
+    success: '#27BA56',
     error: '#ba274a'
+};
+
+const font = {
+    header: "'Montserrat', Arial",
+    body: "'Roboto', 'Courier New'",
+    quote: "'Courier New'"
+};
+
+const transition = {
+    smooth: "200ms cubic-bezier(.4,.0,.23,1)",
+    smoothSlower: "350ms cubic-bezier(.4,.0,.6,1)"
 };
 
 /*
@@ -42,14 +59,22 @@ const color = {
  */
 let classes = {
     bold: 'bold',
+    column: 'column',
+    columnReverse: 'column-reverse',
     fullCenter: 'full-center',
     fullFrame: 'full-frame',
+    fullHidden: 'full-hidden',
     fullViewHeight: 'full-view-height',
     fullWidth: 'full-width',
     hidden: 'hidden',
     hideScroll: 'hide-scroll',
+    left: 'left',
     lower: 'lower',
+    right: 'right',
+    row: 'row',
+    rowReverse: 'row-reverse',
     spaced: 'spaced',
+    stretch: 'stretch',
     textCenter: 'text-center',
     textLeft: 'text-left',
     textRight: 'text-right',
@@ -58,7 +83,7 @@ let classes = {
 
 // Toggles the scrollbar for a specified JQuery element.
 function toggleScrollBar($e) {
-    $e.toggleClass('hide-scroll');
+    $e.toggleClass(classes.hideScroll);
 }
 
 $(function() {
@@ -70,9 +95,24 @@ $(function() {
     textBoxes.change(function() {
         $(this).attr('value', $(this).val());
     });
+    if (window.location.href.includes('3001')) {
+        setInterval(() => {
+            $('input[type="text"], input[type="email"], textarea').each(function() {
+                if ($(this).attr('value') !== $(this).val())
+                    $(this).attr('value', $(this).val());
+            });
+        }, 250);
+    }
     textBoxes.each(function() {
         if ($(this).prop('required')) {
             $(this).siblings('label').append(`<span style="position:absolute;right:0;left:unset;color:${color.error}">*</span>`);
         }
     });
+    $('a').click(function(e) {
+        e.preventDefault();
+        redirect($(this).attr('href'));
+        return false;
+    });
+
+    $("html").scrollTop($(window).scrollTop());
 });

@@ -10,11 +10,13 @@ $(function() {
     ready = true;
     if ($(selectors.loading.container).is(':visible')) {
         setTimeout(() => {
-            $(selectors.loading.container).fadeOut(300);
             setTimeout(() => {
                 $(selectors.loading.img).addClass(classes.hidden);
-                $('body').removeClass(classes.hidden);
-            }, 320);
+            }, 200);
+            setTimeout(() => {
+                $(selectors.loading.container).hide();
+            }, 360);
+            $(selectors.loading.container).addClass(classes.hidden);
         }, 100);
     }
 });
