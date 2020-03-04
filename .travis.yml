@@ -31,8 +31,7 @@ jobs:
       deploy:
         provider: cloudformation
         access_key_id: $AWS_ACCESS_KEY_ID
-        secret_access_key:
-          secure: $AWS_SECRET_ACCESS_KEY_ENC
+        secret_access_key: $AWS_SECRET_ACCESS_KEY
         template: ./deployment/s3.yaml
         region: $AWS_DEFAULT_REGION
         stack_name: mirai-s3-stack-prod
@@ -45,8 +44,7 @@ jobs:
       deploy:
         provider: cloudformation
         access_key_id: $AWS_ACCESS_KEY_ID
-        secret_access_key:
-          secure: $AWS_SECRET_ACCESS_KEY_ENC
+        secret_access_key: $AWS_SECRET_ACCESS_KEY
         template: ./deployment/stack.yaml
         region: $AWS_DEFAULT_REGION
         stack_name: mirai-app-stack-prod
@@ -74,8 +72,7 @@ jobs:
       deploy:
         - provider: elasticbeanstalk
           access_key_id: $AWS_ACCESS_KEY_ID
-          secret_access_key:
-            secure: $AWS_SECRET_ACCESS_KEY_ENC
+          secret_access_key: $AWS_SECRET_ACCESS_KEY
           region: $AWS_DEFAULT_REGION
           app: mirai-app-prod
           env: mirai-app-prod
