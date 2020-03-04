@@ -1,0 +1,651 @@
+/* Imports */
+@import url('https://fonts.googleapis.com/css?family=Montserrat:400,400i,700,700i&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Roboto:400,400i,700,700i&display=swap');
+@import "util";
+@import "vars";
+
+/*
+ * Any new class added to this section must have
+ * its selector defined in src/assets/js/theme.js!
+ */
+
+// ------------------- Tags -------------------
+html, body {
+    height: 100%;
+    left: 0;
+    top: 0;
+    transition: 0.2s;
+}
+
+body {
+    min-height: 100%;
+    margin: 0 !important;
+    padding: 0 !important;
+    background-color: $color_background;
+    font-family: $font_body;
+    font-size: $font_base_size;
+
+    &.hidden {
+        overflow: hidden;
+    }
+
+    @include for-small-tablet-down {
+        @media only screen and (-webkit-min-device-pixel-ratio: 3.5) {
+            font-size: scale-pixel($font_base_size, 0.6);
+        }
+        @media only screen and (-webkit-min-device-pixel-ratio: 2) and (-webkit-max-device-pixel-ratio: 3.49) {
+            font-size: scale-pixel($font_base_size, 0.8);
+        }
+        @media only screen and (-webkit-max-device-pixel-ratio: 1.99) {
+        }
+    }
+}
+
+hr {
+    color: #bbb;
+}
+
+h6, h5, h4, h3, h2, h1 {
+    color: $color_header;
+    font-family: $font_header;
+    margin: 0 0 0.8em 0;
+}
+
+h6 {
+    font-size: em(12px);
+}
+
+h5 {
+    font-size: em(16px);
+}
+
+h4 {
+    font-size: em(18px);
+}
+
+h3 {
+    font-size: em(22px);
+}
+
+h2 {
+    font-size: em(32px);
+}
+
+h1 {
+    font-size: em(48px);
+}
+
+a {
+    color: $color_links;
+    &:hover {
+        color: $color_highlighted;
+    }
+}
+
+p, span, div, label, input {
+    color: $color_body;
+}
+
+button {
+    margin: 4px 0 10px;
+    color: whitesmoke;
+    font-family: $font_header;
+    overflow: hidden;
+    padding: 1em 2.4em;
+    outline: none;
+    border: none;
+    border-radius: 6px;
+    background-color: $color_links;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.2s;
+    font-size: em(20px);
+
+    &.small {
+        padding: 0.6em 1.5em;
+        font-size: em(14px);
+    }
+
+    &.medium {
+        padding: 0.8em 1.8em;
+        font-size: em(16px);
+    }
+
+    &:hover {
+        background-color: $color_highlighted;
+        box-shadow: -3px 3px lightgray;
+    }
+
+    &:active {
+        transform: translateY(4px);
+    }
+
+    &.disabled {
+        background-color: lightgray;
+        cursor: default;
+        &:hover {
+            box-shadow: unset;
+        }
+        &:active {
+            transform: unset;
+        }
+    }
+}
+
+blockquote {
+    border-left: 2px solid #aaa;
+    padding: .4em 1.2em;
+    background-color: rgba(0,0,0,0.05);
+    color: $color_body;
+    font-family: $font_quote;
+    margin-left: 0;
+}
+
+textarea {
+    resize: none;
+}
+
+div.textbox {
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    padding: 0 0 1.4em;
+
+    input[type='text'],
+    input[type='email'] {
+        font-family: $font_header;
+        color: $color_body;
+        width: calc(100% - .8em);
+        height: calc(100% - .6em);
+        padding: 0.3em 0.4em;
+        border: none;
+        outline: none;
+        background-color: $color_background;
+        font-size: em(18px);
+        transition: all $smooth_transition;
+        cursor: pointer;
+
+        &:valid + label::after {
+            transform: translateX(0%);
+            border-bottom: 3px solid $color_success;
+        }
+        
+        &:valid + label span {
+            transform: translateY(150%);
+            font-size: em(14px);
+            color: $color_success;
+        }
+
+        &:invalid + label::after {
+            transform: translateX(0%);
+            border-bottom: 3px solid $color_error;
+        }
+        
+        &:invalid + label span {
+            transform: translateY(150%);
+            font-size: em(14px);
+            color: $color_error;
+        }
+    
+    }
+    
+    input[value=''] {
+        &:valid + label span,
+        &:invalid + label span {
+            transform: unset;
+            font-size: unset;
+            color: unset;
+        }
+
+        &:valid + label::after,
+        &:invalid + label::after {
+            border-bottom: unset;
+            transform: translateX(-100%);
+        }
+    }
+    
+    input[type='text'],
+    input[type='email'] {
+        &:hover {
+            background-color: rgba(0,0,0,0.05);
+        }
+
+        &:focus {
+            cursor: text;
+        }
+
+        &:hover + label span {
+            color: $color_links;
+        }
+
+        &:hover + label::after {
+            border-bottom: 3px solid $color_links;
+            transform: translateX(0%);
+        }
+        
+        &:focus + label span {
+            transform: translateY(170%);
+            font-size: em(14px);
+            color: $color_highlighted;
+        }
+
+        &:focus + label::after {
+            transform: translateX(0%);
+            border-bottom: 3px solid $color_highlighted;
+        }
+    }
+    
+    label {
+        position: absolute;
+        text-align: left;
+        bottom: 1.4em;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        border-bottom: 1px solid black;
+        font-family: $font_header;
+    
+        &::after {
+            content: "";
+            position: absolute;
+            left: 0px;
+            bottom: -1px;
+            height: 100%;
+            width: 100%;
+            transform: translateX(-100%);
+            transition: all $smooth_transition;
+        }
+    
+        span {
+            position: absolute;
+            bottom: 5px;
+            left: 0px;
+            transition: all $smooth_transition;
+        }
+    }
+}
+
+div.switch {
+    position: relative;
+    overflow: hidden;
+    font-family: $font_header;
+    
+    input[type='checkbox'] {
+        display: none;
+    }
+
+    input[type='checkbox'] + label {
+        position: relative;
+        display: flex;
+        margin-top: .8em;
+        align-items: center;
+        color: $color_header;
+        font-weight: bold;
+        transition: background-color $smooth_transition;
+        cursor: pointer;
+        @include disable-selection;
+        
+        span {
+            position: relative;
+            cursor: pointer;
+            background-color: $color_body;
+            border-radius: 2em;
+            width: 3.5em;
+            height: 2em;
+            margin-right: 0.5em;
+
+            &:before {
+                position: absolute;
+                content: "";
+                height: 1.6em;
+                width: 1.6em;
+                left: 0.2em;
+                bottom: .21em;
+                transition: transform $smooth_transition;
+                background-color: white;
+                border-radius: 50%;
+            }
+        }
+    }
+
+    input[type='checkbox']:checked + label > span {
+        background-color: $color_success;
+    }
+
+    input[type='checkbox']:focus + label > span {
+        box-shadow: 0 0 1px $color_links;
+    }
+
+    input[type='checkbox']:checked + label > span:before {
+        transform: translateX(1.5em);
+    }
+}
+
+div.checkbox {
+    font-family: $font_header;
+
+    &.separated {
+        width: 100%;
+
+        input[type='checkbox'] + label {
+            justify-content: space-between;
+            width: 100%;
+        }
+    }
+
+    input[type='checkbox'] {
+        display: none;
+    }
+
+    input[type='checkbox'] + label {
+        position: relative;
+        display: flex;
+        margin-top: .8em;
+        align-items: center;
+        color: $color_body;
+        font-weight: bold;
+        transition: $smooth_transition;
+        cursor: pointer;
+        @include disable-selection;
+    }
+    
+    input[type='checkbox'] + label > span {
+        display: flex;
+        align-items: center;
+        margin: 0 1.4em 0 0.9em;
+        width: 1.4em;
+        height: 1.4em;
+        background: transparent;
+        border: 2px solid $color_body;
+        border-radius: 2px;
+        cursor: pointer;  
+        transition: all $smooth_transition;
+    }
+    
+    input[type='checkbox']:checked + label > span {
+        border: 2px solid $color_links;
+        background-color: $color_links;
+        animation: shrink-bounce $smooth_transition;
+    }
+    
+    input[type='checkbox']:checked + label > span:before {
+        content: "";
+        position: absolute;
+        top: 0.3em;
+        left: 1.15em;
+        border-right: 3px solid transparent;
+        border-bottom: 3px solid transparent;
+        transform: rotate(45deg);
+        transform-origin: 0% 100%;
+        animation: checkbox-check 125ms $smooth_transition forwards;
+    }
+    
+    @keyframes shrink-bounce {
+        0% {
+            transform: scale(1);
+        }
+        33% {    
+            transform: scale(.85);
+        }
+        100% {
+            transform: scale(1);    
+        }
+    }
+    
+    @keyframes checkbox-check {
+        0% {
+            width: 0;
+            height: 0;
+            border-color: white;
+            transform: translate3d(0,0,0) rotate(45deg);
+        }
+        33% {
+            width: .2em;
+            height: .4em;
+            transform: translate3d(0,0,0) rotate(45deg);
+        }
+        100% {    
+            width: .2em;
+            height: 1em;    
+            border-color: white;
+            transform: translate3d(0,-.5em,0) rotate(45deg);
+        }
+    }
+}
+
+div.textarea {
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    margin-top: .4em;
+    min-height: 4em;
+    padding: 0 0 1.4em;
+
+    textarea {
+        left: 0;
+        top: 0;
+        font-family: $font_header;
+        min-height: 4em;
+        color: $color_body;
+        width: calc(100% - .8em);
+        height: calc(100% - .6em);
+        padding: 0.3em 0.4em;
+        border: none;
+        outline: none;
+        background-color: $color_background;
+        cursor: pointer;
+        transition: all $smooth_transition;
+        font-size: em(18px);
+
+        &:valid + label::after {
+            transform: translateX(0%);
+            border-bottom: 3px solid $color_highlighted;
+        }
+        
+        &:valid + label span {
+            transform: translateY(150%);
+            color: $color_highlighted;
+            font-size: em(14px);
+        }
+
+        &:invalid + label::after {
+            transform: translateX(0%);
+            border-bottom: 3px solid $color_error;
+        }
+        
+        &:invalid + label span {
+            transform: translateY(150%);
+            color: $color_error;
+            font-size: em(14px);
+        }
+    }
+    
+    textarea[value=''] {
+        &:valid + label span,
+        &:invalid + label span {
+            transform: unset;
+            font-size: unset;
+            color: unset;
+        }
+
+        &:valid + label::after,
+        &:invalid + label::after {
+            border-bottom: unset;
+            transform: translateX(-100%);
+        }
+    }
+    
+    textarea {
+        &:hover {
+            background-color: rgba(0,0,0,0.05);
+        }
+
+        &:focus {
+            cursor: text;
+        }
+
+        &:hover + label span {
+            color: $color_links !important;
+        }
+
+        &:hover + label::after {
+            border-bottom: 3px solid $color_links !important;
+            transform: translateX(0%) !important;
+        }
+        
+        &:focus + label span {
+            transform: translateY(170%) !important;
+            color: $color_highlighted !important;
+            font-size: em(14px) !important;
+        }
+
+        &:focus + label::after {
+            transform: translateX(0%) !important;
+            border-bottom: 3px solid $color_highlighted !important;
+        }
+    }
+    
+    label {
+        font-family: $font_header;
+        position: absolute;
+        text-align: left;
+        bottom: 1.4em;
+        left: 0%;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        border-bottom: 1px solid black;
+    
+        &::after {
+            content: "";
+            position: absolute;
+            left: 0px;
+            bottom: -1px;
+            height: 100%;
+            width: 100%;
+            transform: translateX(-100%);
+            transition: all $smooth_transition;
+        }
+    
+        span {
+            position: absolute;
+            bottom: 5px;
+            left: 0px;
+            transition: all $smooth_transition;
+        }
+    }
+}
+// ------------------- Ids --------------------
+
+#layout__main {
+    display: flex;
+    flex-direction: column;
+}
+
+.hide-scroll {
+    &::-webkit-scrollbar-track {
+        display:none;
+    }
+    &::-webkit-scrollbar-thumb {
+        display:none;
+    }
+}
+
+::-webkit-scrollbar {
+    width: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: #eee;
+}
+  
+::-webkit-scrollbar-thumb {
+    background: #ccc;
+    transition: 0.6s;
+    border-radius: 2px;
+}
+  
+::-webkit-scrollbar-thumb:hover {
+    background: #888;
+    transition: 0.6s;
+}
+
+// ----------------- Classes ------------------
+
+.bold {
+    font-weight: bold;
+}
+
+.column {
+    display: flex;
+    flex-direction: column;
+}
+
+.column-reverse {
+    display: flex;
+    flex-direction: column-reverse;
+}
+
+.full-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+} 
+
+.full-frame {
+    width: 100%;
+    height: 100%;
+}
+
+.full-view-height {
+    height: 100vh;
+}
+
+.full-width {
+    width: 100%;
+}
+
+.hidden {
+    opacity: 0;
+}
+
+.lower {
+    text-transform: lowercase;
+}
+
+.row {
+    display: flex;
+    flex-direction: row;
+
+    &.stack-when-tight {
+        @include for-large-tablet-down {
+            flex-direction: column;
+        }
+    }
+}
+
+.row-reverse {
+    display: flex;
+    flex-direction: row-reverse;
+}
+
+.spaced {
+    letter-spacing: 0.15em;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.text-left {
+    text-align: left;
+}
+
+.text-right {
+    text-align: right;
+}
+
+.upper {
+    text-transform: uppercase;
+}
