@@ -75,7 +75,7 @@ jobs:
         - provider: elasticbeanstalk
           access_key_id: $AWS_ACCESS_KEY_ID
           secret_access_key:
-            secure: $AWS_SECRET_ACCESS_KEY
+            secure: AWS_SECRET_ACCESS_KEY_ENC
           region: $AWS_DEFAULT_REGION
           app: mirai-app-prod
           env: mirai-app-prod
