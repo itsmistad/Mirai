@@ -1,0 +1,121 @@
+@import "shared/vars";
+@import "shared/util";
+
+#home__page {
+    z-index: $layer_page_foreground;
+}
+
+#home__background {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-image: radial-gradient(circle at top left, $color_light_accent 0%, $color_background 40%, $color_background 100%);
+    z-index: $layer_page_background;
+}
+
+#home__blob {
+    position: absolute;
+    top: 0;
+    left: 0;
+    transform: rotate(22deg) translate(3em, -18em);
+    animation: shrink-grow 12s infinite ease-in-out;
+    
+    @keyframes shrink-grow {
+        0% {
+            transform: rotate(20deg) translate(3em, -18em) scale(1);
+        }
+        50% {    
+            transform: rotate(25deg) translate(3em, -18em) scale(1.08);
+        }
+        100% {
+            transform: rotate(20deg) translate(3em, -18em) scale(1);
+        }
+    }
+}
+
+#home__wave1 {
+    position: absolute;
+    top: 0;
+    left: 0;
+    transform: scale(1.1) translate(-8em, -8em) rotate(118deg);
+    animation: shrink-grow3 8s infinite ease-in-out;
+    
+    @keyframes shrink-grow3 {
+        0% {
+            transform: scale(1.1) translate(-4em, -12em) rotate(118deg);
+        }
+        50% {    
+            transform: scale(1.18) translate(-4em, -12em) rotate(123deg);
+        }
+        100% {
+            transform: scale(1.1) translate(-4em, -12em) rotate(118deg);
+        }
+    }
+}
+
+#home__wave2 {
+    position: absolute;
+    top: 0;
+    left: 0;
+    transform: scale(1.3) translate(-5em, -5em) rotate(140deg);
+    animation: shrink-grow2 15s infinite ease-in-out;
+    
+    @keyframes shrink-grow2 {
+        0% {
+            transform: scale(1.3) translate(-5em, -5em) rotate(140deg);
+        }
+        50% {    
+            transform: scale(1.26) translate(-5em, -5em) rotate(138deg);
+        }
+        100% {
+            transform: scale(1.3) translate(-5em, -5em) rotate(140deg);
+        }
+    }
+}
+
+#home__main {
+    @include for-large-tablet-down {
+        #home__slogan {
+            margin-top: 1em;
+        }
+    }
+
+    #home__welcome {
+        flex-direction: row;
+        @include for-large-tablet-down {
+            flex-direction: column;
+            flex: unset;
+        }
+    
+        #home__banner-img {
+            transition: $transition_smooth_slower;
+            cursor: pointer;
+    
+            @include for-small-tablet-down {
+                width: 100%;
+            }
+        }
+    
+        #home__superscript {
+            position: absolute;
+            transform: translate(-.8em, -.7em);
+            @include disable-selection;
+            margin: 0;
+            color: $color_body;
+        }
+    
+        #home__tryit {
+            background-color: $color_accent;
+            &:hover {
+                background-color: $color_dark_accent;
+            }
+        }
+    
+        #home__github {
+            border: solid 3px $color_accent;
+            &:hover {
+                border: solid 3px $color_dark_accent;
+            }
+        }
+    }
+}

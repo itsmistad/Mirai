@@ -1,6 +1,3 @@
-/* Imports */
-@import url('https://fonts.googleapis.com/css?family=Montserrat:400,400i,700,700i&display=swap');
-
 /* Variables */
 $font_base_size: 16px;
 
@@ -31,16 +28,12 @@ $font_base_size: 16px;
 }
 
 /*=============================================
-=                End Functions                =
-=============================================*/
-
-/*=============================================
-=             Screen Size Mixins              =
+=                   Mixins                    =
 =============================================*/
 
 @mixin for-custom-down($custom) {
     @if unitless($custom) {
-        $custom: #{$custom}px;
+        $custom: #{$custom}px; 
     }
 
     @media only screen and (max-width: $custom) {
@@ -60,31 +53,31 @@ $font_base_size: 16px;
 
 
 @mixin for-phone-only {
-    @media only screen and (max-width: 539.9px) {
+    @media only screen and (max-width: 539.9px), only screen and (max-device-width: 539.9px) {
         @content;
     }
 }
 
 @mixin for-small-tablet-up {
-    @media only screen and (min-width: 540px) {
+    @media only screen and (min-width: 540px), only screen and (min-device-width: 540px) {
         @content;
     }
 }
 
 @mixin for-small-tablet-down {
-    @media only screen and (max-width: 799.9px) {
+    @media only screen and (max-width: 799.9px), only screen and (max-device-width: 799.9px) {
         @content;
     }
 }
 
 @mixin for-large-tablet-up {
-    @media only screen and (min-width: 800px) {
+    @media only screen and (min-width: 800px), only screen and (min-device-width: 800px) {
         @content;
     }
 }
 
 @mixin for-large-tablet-down {
-    @media only screen and (max-width: 999.9px) {
+    @media only screen and (max-width: 999.9px), only screen and (max-device-width: 999.9px) {
         @content;
     }
 }
@@ -118,51 +111,26 @@ $font_base_size: 16px;
         @content;
     }
 }
+
+@mixin embossed($offset: 6px, $blur: 10px) {
+    box-shadow: #{$offset} #{$offset} $blur rgba(0,0,0,0.2),
+        -#{$offset} -#{$offset} $blur rgba(255,255,255,1);
+}
+
+@mixin engraved($offset: 6px, $blur: 14px) {
+    box-shadow: inset #{$offset} #{$offset} #{$blur} rgba(0,0,0,0.2),
+        inset -#{$offset} -#{$offset} #{$blur} rgba(255,255,255,1);
+}
+
+@mixin disable-selection {
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none;   /* Safari */
+    -khtml-user-select: none;    /* Konqueror HTML */
+    -moz-user-select: none;      /* Firefox */
+    -ms-user-select: none;       /* Internet Explorer/Edge */
+    user-select: none;           /* Non-prefixed version, currently supported by Chrome and Opera */
+}
+
 /*=============================================
 =                   End Mixins                =
 =============================================*/
-
-html, body {
-    height: 100%;
-    left: 0;
-    top: 0;
-    font-family: 'Montserrat', Arial;
-    font-size: $font_base_size;
-
-    @include for-small-tablet-down {
-        font-size: scale-pixel($font_base_size, 0.8);
-    }
-}
-
-body {
-    min-height: 100%;
-    margin: 0 !important;
-    padding: 0 !important;
-}
-
-#content {
-    height: 100%;
-}
-
-.center {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
-
-    &.column {
-        flex-direction: column;
-    }
-}
-
-.bold {
-    font-weight: bold;
-}
-
-.upper {
-    text-transform: uppercase;
-}
-
-.spaced {
-    letter-spacing: 0.2em;
-}
