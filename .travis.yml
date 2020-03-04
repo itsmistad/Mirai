@@ -32,7 +32,7 @@ jobs:
         provider: cloudformation
         access_key_id: $AWS_ACCESS_KEY_ID
         secret_access_key:
-          secure: $AWS_SECRET_ACCESS_KEY
+          secure: $AWS_SECRET_ACCESS_KEY_ENC
         template: ./deployment/s3.yaml
         region: $AWS_DEFAULT_REGION
         stack_name: mirai-s3-stack-prod
@@ -46,7 +46,7 @@ jobs:
         provider: cloudformation
         access_key_id: $AWS_ACCESS_KEY_ID
         secret_access_key:
-          secure: $AWS_SECRET_ACCESS_KEY
+          secure: $AWS_SECRET_ACCESS_KEY_ENC
         template: ./deployment/stack.yaml
         region: $AWS_DEFAULT_REGION
         stack_name: mirai-app-stack-prod
@@ -75,7 +75,7 @@ jobs:
         - provider: elasticbeanstalk
           access_key_id: $AWS_ACCESS_KEY_ID
           secret_access_key:
-            secure: "r7dFwka1u8ggj/QtEsK2vKJJcc72euTAY7WCBjEVvFTyQb0M41LTWytRLnef5NRAJc+2vhxo/Wuxr32Jt6Ur9DFB2OiWGlx2VeebCFEl3B2F0iBU9h/3uQ53AjzpvBhUapreG70IrQ3AbmU0tH3O7sMHYtMP2tTQiEhoMm1JDfoVNjswzWWd0qnpDGSFHfEjtvx2VFBoLgqCSNwKT16aaSmealIxcvUQRXchKw5jn7uSH51d46Z+flT0uVwdtF1nxZIrA/mSRCE+ffqoltzURU6jbA16JVsrlaAmfdZ+nRQwbimuWKvKNTRZ4nUkXXqyEqRsvnK3pbWw3X+K2yEGJDqJBAiVz595SpBdsPiQsiYCK/4lgx5yCmGicYpj9ujkW6tB2rALJcvKu5u+CGTYfDix5oVgCDTMxinkm6rZvXz7TfWzCBeAexlHIK1SiQ1dt00cFjx3TyfI/Z8PQ6d4zMkvlgoOcdph7E3NtLhVoXFrau+h9EsLFuz+7mLb66XKzfgcMtBVJ3MYwvAF+rD9TkoIqbb3rvc5ZZMqB0F8tEBtFyIaOjTgTJ7GdcVDfAAuG9Uy1pezZlS3FXcFrVY0V/acfj6qHsvaElc7YvErIR9uFqxCYNS2Np/9bZdxyv50iNx/BRUReVGKQZUyQysiqBZmBxK5s0Fd9R/4phhQbbA="
+            secure: $AWS_SECRET_ACCESS_KEY_ENC
           region: $AWS_DEFAULT_REGION
           app: mirai-app-prod
           env: mirai-app-prod
