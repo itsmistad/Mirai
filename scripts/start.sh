@@ -16,5 +16,11 @@ if [[ $RESULT == *"failing"* ]]; then
     exit 2
 fi
 
+export SKIP_BROWSER_SYNC=1
+
+../node_modules/.bin/gulp
+
+export SKIP_BROWSER_SYNC=0
+
 cd ../src
 node app.js
