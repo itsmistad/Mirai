@@ -665,7 +665,7 @@ div.textarea {
 }
 
 .full-view-height { // Stretches a container to the full view height of the device.
-    height: 100vh;
+    min-height: 100vh;
 }
 
 .full-width { // Stretches a container to the full width of its parent.
