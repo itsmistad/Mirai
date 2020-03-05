@@ -23,6 +23,7 @@
     "@itsmistad/network.js": "^1.0.1",
     "@itsmistad/notify.js": "^1.0.1",
     "aws-sdk": "^2.622.0",
+    "deasync": "^0.1.19",
     "express": "^4.17.1",
     "express-session": "^1.17.0",
     "hogan-express": "^0.5.2",
