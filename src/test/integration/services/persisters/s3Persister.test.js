@@ -9,7 +9,7 @@ let s3;
 describe('[INTEGRATION] s3Persister', function() {
     before(function() {
         IntegrationTest.Setup();
-        s3 = IntegrationTest.Root.s3;
+        s3 = IntegrationTest.Root._s3;
     });
     describe('#save()', function() {
         // This test is temporarily disabled. Enable it once our code deploys to production and the S3 bucket "mirai-app" exists.

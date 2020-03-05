@@ -2,9 +2,19 @@
 
 const gulp = require('gulp');  
 const sass = require('gulp-sass');  
+const version = require('gulp-version-number');
 const browserSync = require('browser-sync').create();
 const assets = 'src/assets/';
 const views = 'src/views/';
+
+const versionConfig = {
+    value: '%MDS%',
+    append: {
+        key: '_v',
+        cover: 1,
+        to: ['css', 'js', 'ico', 'png', 'jpg', 'svg'],
+    },
+};
 
 gulp.task('sass', function(done) {  
     gulp.src(assets + 'scss/**/*.scss')
@@ -14,6 +24,9 @@ gulp.task('sass', function(done) {
             done(error); 
         })
         .pipe(gulp.dest(assets + 'css'));
+    gulp.src(views + '**/*.hjs')
+        .pipe(version(versionConfig))
+        .pipe(gulp.dest(views));
     done();
 });
 

@@ -6,8 +6,7 @@ let log;
 
 class S3Persister {
     constructor(root) {
-        this.root = root;
-        this.s3 = new AWS.S3();
+        this._s3 = new AWS.S3();
         log = root.log;
     }
 
@@ -21,7 +20,7 @@ class S3Persister {
             Bucket: bucketName,
             Key: key
         };
-        var getObjectPromise = this.s3.getObject(params).promise();
+        var getObjectPromise = this._s3.getObject(params).promise();
         return getObjectPromise.then(data => {
             return data.Body.toString(contentEncoding);
         }).catch(err => log.error(`Failed to retrieve item with key "${key}" from bucket "${bucketName}". Error: ${err}`));
@@ -35,7 +34,7 @@ class S3Persister {
             ContentType: 'binary',
             ContentEncoding: contentEncoding
         };
-        var putObjectPromise = this.s3.putObject(params).promise();
+        var putObjectPromise = this._s3.putObject(params).promise();
         return putObjectPromise.then(data => {
             return data;
         }).catch(err => log.error(`Failed to retrieve item with key "${key}" to bucket "${bucketName}". Error: ${err}`));

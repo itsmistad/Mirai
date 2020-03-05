@@ -38,6 +38,9 @@ const configKeys = Object.freeze({
     mailgun: {
         api_key: new ConfigKey('Mailgun.ApiKey', ''), // Mirai's API key for Mailgun; any string value
         domain: new ConfigKey('Mailgun.Domain', '') // Mirai's domain for Mailgun; any string value
+    },
+    theme: {
+        slogan: new ConfigKey('Theme.Slogan', 'Plan it your way.') // The html for the "slogan" partial; any string value
     }
 });
 

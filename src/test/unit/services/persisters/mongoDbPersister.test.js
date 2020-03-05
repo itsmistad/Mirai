@@ -34,7 +34,7 @@ describe('[UNIT] mongoDbPersister', function() {
 
     describe('#connect()', function() {
         it('should attempt to connect to the database', function(done) {
-            const stub = sinon.stub(mongo.mongoClient, 'connect');
+            const stub = sinon.stub(mongo._mongoClient, 'connect');
             stub.returns(Promise.resolve({
                 db: () => {},
                 close: () => {}
