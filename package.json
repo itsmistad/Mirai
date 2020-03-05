@@ -1,6 +1,6 @@
 {
   "name": "mirai",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "An intuitive web application for daily organizing.",
   "main": "src/app.js",
   "scripts": {
@@ -23,6 +23,7 @@
     "@itsmistad/network.js": "^1.0.1",
     "@itsmistad/notify.js": "^1.0.1",
     "aws-sdk": "^2.622.0",
+    "deasync": "^0.1.19",
     "express": "^4.17.1",
     "express-session": "^1.17.0",
     "hogan-express": "^0.5.2",
@@ -39,6 +40,8 @@
     "gulp": "^4.0.2",
     "gulp-clean-css": "^4.2.0",
     "gulp-cli": "^2.2.0",
+    "gulp-rev-all": "^2.0.2",
+    "gulp-rev-rewrite": "^3.0.2",
     "gulp-sass": "^4.0.2",
     "mocha": "^7.0.1",
     "sinon": "^8.1.1",

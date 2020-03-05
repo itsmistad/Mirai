@@ -72,6 +72,7 @@ jobs:
         - mv ../config/config4.json ../config/config.json
         - npm install
         - cd ..
+        - ./node_modules/.bin/gulp
         - zip -r ./deployment/deploy.zip .
       deploy:
         - provider: elasticbeanstalk

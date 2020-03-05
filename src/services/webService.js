@@ -3,6 +3,7 @@
 const path = require('path');
 const express = require('express');
 const configKeys = require('./config/configKeys');
+const AsyncHelper = require('../helpers/asyncHelper');
 
 let log, app, config, root, controllers = [];
 let routes = [
@@ -11,10 +12,10 @@ let routes = [
 ];
 
 function setRoutes() {
-    app.use('/js', express.static(path.join(__dirname, '..', 'assets', 'js')));
-    app.use('/css', express.static(path.join(__dirname, '..', 'assets', 'css')));
-    app.use('/assets', express.static(path.join(__dirname, '..', 'assets', 'files')));
-    app.set('views', path.join(__dirname, '..', 'views'));
+    app.use('/js', express.static(path.join(__dirname, '..', 'dist/assets/js')));
+    app.use('/css', express.static(path.join(__dirname, '..', 'dist/assets/css')));
+    app.use('/files', express.static(path.join(__dirname, '..', 'dist/assets/files')));
+    app.set('views', path.join(__dirname, '..', 'dist/views'));
     app.set('view engine', 'hjs');
     app.set('layout', 'shared/layout');
     app.set('partials', {
@@ -40,12 +41,14 @@ function setRoutes() {
             switch (requestType) {
             case 'POST':
                 app.post(routePath, function(req, res) {
-                    controller.run(route, req, res);
+                    const run = AsyncHelper.synchronize(controller.run);
+                    run(route, req, res);
                 });
                 break;
             case 'GET':
                 app.get(routePath, function(req, res) {
-                    controller.run(route, req, res);
+                    const run = AsyncHelper.synchronize(controller.run);
+                    run(route, req, res);
                 });
                 break;
             }
