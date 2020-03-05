@@ -1,13 +1,13 @@
 <div id="home__background">
-    <img id="home__blob" src="/assets/svg/blob.svg">
-    <img id="home__wave1" src="/assets/svg/wave1.svg">
-    <img id="home__wave2" src="/assets/svg/wave2.svg">
+    <img id="home__blob" src="/files/svg/blob.svg">
+    <img id="home__wave1" src="/files/svg/wave1.svg">
+    <img id="home__wave2" src="/files/svg/wave2.svg">
 </div>
 <div id="home__page" class="column">
     <div class="row stack-when-laptop" style="justify-content:space-between">
         <div id="home__main" class="column full-view-height full-center full-width">
             <div id="home__welcome" class="full-center">
-                <a id="home__banner-anchor" href="https://www.freepik.com/free-photos-vectors/business"><img id="home__banner-img" src="/assets/svg/thinking.svg" alt="Girl thinking of what to plan" style="filter: drop-shadow( 3px 3px 2px rgba(0, 0, 0, .7));"></a>
+                <a id="home__banner-anchor" href="https://www.freepik.com/free-photos-vectors/business"><img id="home__banner-img" src="/files/svg/thinking.svg" alt="Girl thinking of what to plan" style="filter: drop-shadow( 3px 3px 2px rgba(0, 0, 0, .7));"></a>
                 <div class="column">
                     <span>
                         <h3 id="home__superscript">Plan with</h3>
@@ -79,9 +79,9 @@
 </div>
 
 {{#yield-styles}}
-    <link rel='stylesheet' href='/css/home.css?_v=6add3dfad2eaf115a6017dc38213d6d3' />
+    <link rel='stylesheet' href='/css/home.css' />
 {{/yield-styles}}
  
 {{#yield-scripts}}
-    <script type="text/javascript" src="/js/home.js?_v=6add3dfad2eaf115a6017dc38213d6d3"></script>
+    <script type="text/javascript" src="/js/home.js"></script>
 {{/yield-scripts}}

@@ -12,10 +12,10 @@ let routes = [
 ];
 
 function setRoutes() {
-    app.use('/js', express.static(path.join(__dirname, '..', 'assets', 'js')));
-    app.use('/css', express.static(path.join(__dirname, '..', 'assets', 'css')));
-    app.use('/assets', express.static(path.join(__dirname, '..', 'assets', 'files')));
-    app.set('views', path.join(__dirname, '..', 'views'));
+    app.use('/js', express.static(path.join(__dirname, '..', 'dist/assets/js')));
+    app.use('/css', express.static(path.join(__dirname, '..', 'dist/assets/css')));
+    app.use('/files', express.static(path.join(__dirname, '..', 'dist/assets/files')));
+    app.set('views', path.join(__dirname, '..', 'dist/views'));
     app.set('view engine', 'hjs');
     app.set('layout', 'shared/layout');
     app.set('partials', {

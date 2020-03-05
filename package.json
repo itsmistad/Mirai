@@ -1,6 +1,6 @@
 {
   "name": "mirai",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "An intuitive web application for daily organizing.",
   "main": "src/app.js",
   "scripts": {
@@ -40,8 +40,9 @@
     "gulp": "^4.0.2",
     "gulp-clean-css": "^4.2.0",
     "gulp-cli": "^2.2.0",
+    "gulp-rev-all": "^2.0.2",
+    "gulp-rev-rewrite": "^3.0.2",
     "gulp-sass": "^4.0.2",
-    "gulp-version-number": "^0.2.4",
     "mocha": "^7.0.1",
     "sinon": "^8.1.1",
     "sinon-chai": "^3.4.0"
