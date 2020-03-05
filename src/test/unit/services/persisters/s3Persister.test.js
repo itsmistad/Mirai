@@ -34,7 +34,7 @@ describe('[UNIT] s3Persister', function() {
     describe('#get()', function() {
         it('should attempt to retrieve a file from an S3 bucket', function(done) {
             // setup
-            const stub = sinon.stub(s3.s3, 'getObject');
+            const stub = sinon.stub(s3._s3, 'getObject');
             const resultingPromise = Promise.resolve({
                 Body: 'Body'
             });
@@ -54,7 +54,7 @@ describe('[UNIT] s3Persister', function() {
     describe('#save()', function() {
         it('should attempt to save a file to an S3 bucket', function(done) {
             // setup
-            const stub = sinon.stub(s3.s3, 'putObject');
+            const stub = sinon.stub(s3._s3, 'putObject');
             const resultingPromise = Promise.resolve({
                 res: 'ok'
             });
