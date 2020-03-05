@@ -88,4 +88,4 @@ if (config.application.environment === 'local') {
     }
 }
 else if (config.application.environment === 'prod')
-    gulp.task('default', gulp.series(['rev', 'replace']));
+    gulp.task('default', gulp.series(['rev', 'rewrite']));
