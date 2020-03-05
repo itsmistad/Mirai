@@ -40,6 +40,7 @@
     "gulp-clean-css": "^4.2.0",
     "gulp-cli": "^2.2.0",
     "gulp-sass": "^4.0.2",
+    "gulp-version-number": "^0.2.4",
     "mocha": "^7.0.1",
     "sinon": "^8.1.1",
     "sinon-chai": "^3.4.0"
