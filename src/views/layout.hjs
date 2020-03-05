@@ -17,5 +17,6 @@
     <script type='text/javascript' src='/js/util.js'></script>
     <script type='text/javascript' src='/js/theme.js'></script>
     <script type='text/javascript' src='/js/loading.js'></script>
+    <script type="application/javascript" src="/js/initializeServiceWorker.js"></script>
     {{{ yield-scripts }}}
 </html>
