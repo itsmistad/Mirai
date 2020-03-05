@@ -79,9 +79,9 @@
 </div>
 
 {{#yield-styles}}
-    <link rel='stylesheet' href='/css/home.css?_v=6add3dfad2eaf115a6017dc38213d6d3' />
+    <link rel='stylesheet' href='/css/home.css' />
 {{/yield-styles}}
  
 {{#yield-scripts}}
-    <script type="text/javascript" src="/js/home.js?_v=6add3dfad2eaf115a6017dc38213d6d3"></script>
+    <script type="text/javascript" src="/js/home.js"></script>
 {{/yield-scripts}}

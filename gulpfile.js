@@ -2,19 +2,13 @@
 
 const gulp = require('gulp');  
 const sass = require('gulp-sass');  
-const version = require('gulp-version-number');
+const revAll = require('gulp-rev-all');
+const revReplace = require('gulp-rev-replace');
 const browserSync = require('browser-sync').create();
 const assets = 'src/assets/';
+const distAssets = 'src/dist/';
 const views = 'src/views/';
-
-const versionConfig = {
-    value: '%MDS%',
-    append: {
-        key: '_v',
-        cover: 1,
-        to: ['css', 'js', 'ico', 'png', 'jpg', 'svg'],
-    },
-};
+const distViews = 'src/views/';
 
 gulp.task('sass', function(done) {  
     gulp.src(assets + 'scss/**/*.scss')
@@ -24,13 +18,29 @@ gulp.task('sass', function(done) {
             done(error); 
         })
         .pipe(gulp.dest(assets + 'css'));
-    gulp.src(views + '**/*.hjs')
-        .pipe(version(versionConfig))
-        .pipe(gulp.dest(views));
     done();
 });
 
-gulp.task('serve', gulp.series(['sass'], function() {
+gulp.task('rev', function() {
+    gulp.src(assets + '**/*')
+        .pipe(revAll.revision({
+            includeFilesInManifest: [
+                '.css', '.js', '.ico', '.png', '.jpg', '.svg', '.gif', '.json',
+                '.ttf', '.woff', '.eot'
+            ]
+        }))
+        .pipe(gulp.dest(distAssets))
+        .pipe(revAll.manifestFile())
+        .pipe(gulp.dest(distAssets + 'manifest/'));
+});
+
+gulp.task('replace', function() {
+    return gulp.src(views + '**/*.hjs')
+        .pipe(revReplace({manifest: distAssets + 'manifest/rev-manifest.json'}))
+        .pipe(gulp.dest(distViews));
+});
+
+gulp.task('serve', gulp.series(['sass', 'rev', 'replace'], function() {
     browserSync.init({
         proxy: {
             target: 'localhost:3000'
