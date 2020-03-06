@@ -14,7 +14,7 @@ This is what would usually be an .html file, but in our case it's an .hjs file.
 ## Creating and using a partial
 
 Partials are shared .hjs templates that any .hjs template can access. The only rules are as follows:
-> 1. You cannot have circular dependencies
+> 1. You cannot have circular dependencies.
 > 2. You cannot layer partials.
 > 3. You cannot define [pre-render stylesheets](https://github.com/itsmistad/Mirai/tree/develop/src/views#adding-pre-render-stylesheets) or [post-render scripts](https://github.com/itsmistad/Mirai/tree/develop/src/views#adding-post-render-scripts) in a partial.
 
