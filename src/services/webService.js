@@ -3,7 +3,6 @@
 const path = require('path');
 const express = require('express');
 const configKeys = require('./config/configKeys');
-const AsyncHelper = require('../helpers/asyncHelper');
 
 let log, app, config, root, controllers = [];
 let routes = [
@@ -41,14 +40,12 @@ function setRoutes() {
             switch (requestType) {
             case 'POST':
                 app.post(routePath, function(req, res) {
-                    const run = AsyncHelper.synchronize(controller.run);
-                    run(route, req, res);
+                    controller.run(route, req, res);
                 });
                 break;
             case 'GET':
                 app.get(routePath, function(req, res) {
-                    const run = AsyncHelper.synchronize(controller.run);
-                    run(route, req, res);
+                    controller.run(route, req, res);
                 });
                 break;
             }
