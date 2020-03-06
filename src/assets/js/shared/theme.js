@@ -1,6 +1,7 @@
 /*
  * Mirai's Theme Selectors
  */
+let selector = {
     layout: {
         header: '#layout__header',
         main: '#layout__main',
