@@ -11,10 +11,11 @@ class HomeController {
     }
 
     async run(route, req, res) {
-        var v = new View(res, 'home');
+        const v = new View(res, 'home');
+        const slogan = await config.get(configKeys.theme.slogan);
         v.render({
             title: 'Home',
-            slogan: await config.get(configKeys.theme.slogan)
+            slogan
         });
     }
 }
