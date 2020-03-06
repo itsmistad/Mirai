@@ -563,6 +563,7 @@ div.textarea {
         }
     }
 }
+
 // ------------------- Ids --------------------
 
 #layout__main {
@@ -748,7 +749,7 @@ div.textarea {
 }
 
 .text-center { // Center aligns any child text and text directly within.
-    text-align: center;
+    text-align: center; 
 }
 
 .text-left { // Left aligns any child text and text directly within.
@@ -761,4 +762,14 @@ div.textarea {
 
 .upper { // Forces any child text or text directly within to uppercase.
     text-transform: uppercase;
+}
+
+// ----------------- Global Classes ------------------
+// These are classes you should not use regularly.
+
+.required {
+    position: absolute !important;
+    right: 0 !important;
+    left: unset !important;
+    color: $color_error !important;
 }

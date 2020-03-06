@@ -63,7 +63,7 @@ $(function() {
             }
         };
         for (const h in hooks.scroll) {
-            h.callback(event);
+            h.callback.call(h.$, event);
         }
     });
     doc.on('resize', function() {
@@ -75,7 +75,7 @@ $(function() {
             }
         };
         for (const h in hooks.resize) {
-            h.callback(event);
+            h.callback.call(h.$, event);
         }
     });
 });
