@@ -56,6 +56,10 @@ function setRoutes() {
     });
 }
 
+function hookServices() {
+    // Insert any networking services here (push notifications, socket.io, etc.).
+}
+
 class WebService {
     constructor(_root) {
         log = _root.log;
@@ -70,6 +74,7 @@ class WebService {
         log.info('Starting web service...');
         app = express();
         setRoutes();
+        hookServices();
         app.listen(port, () => {
             log.info(`Successfully started web service! Listening on port ${port}.`);
         });

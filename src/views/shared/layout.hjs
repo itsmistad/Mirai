@@ -12,7 +12,7 @@
         {{{ yield-styles }}}
     </head>
     <body>
-        {{> loading }}
+        {{{> loading }}}
         <header id="layout__header">
             {{{> header }}}
         </header>

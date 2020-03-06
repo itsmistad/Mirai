@@ -1,15 +1,19 @@
 'use strict';
 
 const gulp = require('gulp');  
+const fs = require('fs');
 const sass = require('gulp-sass');  
 const revAll = require('gulp-rev-all');
 const revRewrite = require('gulp-rev-rewrite');
+const rimraf = require('rimraf');
+const recursive = require('recursive-readdir');
 const browserSync = require('browser-sync').create();
 const config = require('./config/config');
 const assets = 'src/assets/';
 const distAssets = 'src/dist/assets/';
 const views = 'src/views/';
 const distViews = 'src/dist/views/';
+const manifest = 'src/dist/manifest/rev-manifest.json';
 
 gulp.task('sass', function(done) {  
     gulp.src(assets + 'scss/**/*.scss')
@@ -23,7 +27,29 @@ gulp.task('sass', function(done) {
 });
 
 gulp.task('rev', function(done) {
-    gulp.src(assets + '**/*')
+    if (fs.existsSync(manifest)) {
+        const previousRevisions = require('./' + manifest);
+        const manifestFiles = [];
+        for (let r in previousRevisions) {
+            const filePath = (distAssets + previousRevisions[r]).replace('/', '\\'); 
+            manifestFiles.push(filePath);
+        }
+        recursive(distAssets, manifestFiles, (err, files) => {
+            if (err) {
+                console.log(err);
+            }
+        
+            files.forEach(file => {
+                try {
+                    fs.unlinkSync(file);
+                    console.log('Removed old file: ' + file);
+                } catch (ex) {
+                    console.log(ex);
+                }
+            });
+        });
+    }
+    return gulp.src(assets + '**/*')
         .pipe(revAll.revision({
             includeFilesInManifest: [
                 '.css', '.js', '.ico', '.png', '.jpg', '.svg', '.gif', '.json',
@@ -42,22 +68,29 @@ gulp.task('rev', function(done) {
             done(error); 
         })
         .pipe(gulp.dest('src/dist/manifest'))
-        .on('end', () => {
+        .on('end', function() {
+            console.log('Recompiled distributables and updated manifest.');
             done();
         });
 });
 
 gulp.task('rewrite', function(done) {
-    gulp.src(views + '**/*.hjs')
-        .pipe(revRewrite({manifest: gulp.src('src/dist/manifest/rev-manifest.json') }))
+    return gulp.src(views + '**/*.hjs')
+        .pipe(revRewrite({manifest: gulp.src(manifest) }))
         .on('error', function(error) {
             console.error('\x1b[31m\x1b[1m' + error + '\x1b[0m');
             done(error); 
         })
         .pipe(gulp.dest(distViews))
         .on('end', () => {
+            console.log('Updated references in .hjs files.');
             done();
         });
+});
+
+gulp.task('reload', function(done) {
+    browserSync.reload();
+    done();
 });
 
 gulp.task('serve', gulp.series(['sass', 'rev', 'rewrite'], function() {
@@ -72,15 +105,19 @@ gulp.task('serve', gulp.series(['sass', 'rev', 'rewrite'], function() {
         reloadDebounce: 500
     });
 
-    gulp.watch(assets + 'scss/**/*.scss', gulp.series(['sass', 'rev', 'rewrite']));
-    gulp.watch(assets + 'files/**/*').on('change', browserSync.reload);
-    gulp.watch(assets + 'css/**/*.css').on('change', browserSync.reload);
-    gulp.watch(assets + 'js/**/*.js').on('change', browserSync.reload);
-    gulp.watch(views + '**/*.hjs').on('change', browserSync.reload);
-    gulp.watch(views + '**/*.html').on('change', browserSync.reload);
+    const delay = 250;
+    gulp.watch(assets + 'scss/**/*.scss', { delay }, gulp.series(['sass', 'rev', 'rewrite', 'reload']));
+    gulp.watch(assets + 'css/**/*.css', { delay }, gulp.series(['rev', 'rewrite', 'reload']));
+    gulp.watch(assets + 'files/**/*', { delay }, gulp.series(['rev', 'rewrite', 'reload']));
+    gulp.watch(assets + 'js/**/*.js', { delay }, gulp.series(['rev', 'rewrite', 'reload']));
+    gulp.watch(views + '**/*.hjs', { delay }, gulp.series(['rev', 'rewrite', 'reload']));
 }));
 
 if (config.application.environment === 'local') {
+    if (fs.existsSync('src/dist')) {
+        rimraf.sync('src/dist');
+        console.log('Removed existing distributables.');
+    }
     if (!process.env.SKIP_BROWSER_SYNC) {
         gulp.task('default', gulp.series(['serve']));
     } else {

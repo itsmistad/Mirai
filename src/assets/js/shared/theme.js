@@ -1,7 +1,7 @@
 /*
  * Mirai's Theme Selectors
  */
-let selectors = {
+let selector = {
     layout: {
         header: '#layout__header',
         main: '#layout__main',
@@ -16,7 +16,7 @@ let selectors = {
         lowerContent: '#home__lower-content'
     }
 };
-loadingSelector = selectors.loading.container;
+loadingSelector = selector.loading.container;
 
 /*
  * Mirai's Theme Variables
@@ -71,6 +71,7 @@ let classes = {
     left: 'left',
     lower: 'lower',
     right: 'right',
+    required: 'required',
     row: 'row',
     rowReverse: 'row-reverse',
     spaced: 'spaced',
@@ -88,31 +89,40 @@ function toggleScrollBar($e) {
 
 $(function() {
     const textBoxes = $('input[type="text"], input[type="email"], textarea');
+
+    // Initialized the value attribute if it's missing for each textbox.
     textBoxes.each(function() {
         if (!$(this).attr('value'))
             $(this).attr('value', '');
     });
+
+    // Updates the avlue attribute for each textbox on-change.
     textBoxes.change(function() {
         $(this).attr('value', $(this).val());
     });
+
+    // Adds an asterick next to any textbox that is marked as required.
+    textBoxes.each(function() {
+        if ($(this).prop('required')) {
+            $(this).siblings('label').append(`<span class="${classes.required}">*</span>`);
+        }
+    });
+
+    // If the page is loaded from browserSync, track changes to textbox values over-the-network.
     if (window.location.href.includes('3001')) {
         setInterval(() => {
-            $('input[type="text"], input[type="email"], textarea').each(function() {
+            const textBoxes = $('input[type="text"], input[type="email"], textarea');
+            textBoxes.each(function() {
                 if ($(this).attr('value') !== $(this).val())
                     $(this).attr('value', $(this).val());
             });
         }, 250);
     }
-    textBoxes.each(function() {
-        if ($(this).prop('required')) {
-            $(this).siblings('label').append(`<span style="position:absolute;right:0;left:unset;color:${color.error}">*</span>`);
-        }
-    });
+
+    // Prevents anchor elements from immediately redirecting. Replaces the behavior with a smooth transition.
     $('a').click(function(e) {
         e.preventDefault();
         redirect($(this).attr('href'));
         return false;
     });
-
-    $("html").scrollTop($(window).scrollTop());
 });
