@@ -1,15 +1,15 @@
 Controllers
 ===
 
-As a part of the MVC implementation, Mirai uses controllers to handle the pre-compilation and rending of the view on the client's browser. Controllers use `Express` to route requests and execute accordingly.
+As a part of the MVC implementation, Mirai uses controllers to handle the pre-compilation and rendering of the view on the client's browser. Controllers use `Express` to route requests and execute accordingly.
 
-## Creating a controller
+## Creating a controller for a view
 
 If you haven't [created a view yet](https://github.com/itsmistad/Mirai/tree/develop/src/views#creating-a-view), do that first before creating your controller.
 
 1. In `src/controllers/`, create the directory path that reflects the one you created for your view.
 2. Create `<name>Controller.js` where `<name>` is the name of your view without ".hjs".
-3. Insert the following snippet, replacing "<Page>" and "<page>" (capitalization matters!) with the name of your view without ".hjs":
+3. Insert the following snippet, replacing `<Page>` and `<page>` (capitalization matters!) with the name of your view without ".hjs":
 
 > ```js
 > 'use strict';
@@ -22,7 +22,7 @@ If you haven't [created a view yet](https://github.com/itsmistad/Mirai/tree/deve
 >     }
 > 
 >     async run(route, req, res) {
->         const v = new View(res, '<page>');
+>         const v = new View(res, 'path/to/<page>');
 >         v.render({
 >             title: '<Page>'
 >         });
@@ -36,10 +36,10 @@ If you haven't [created a view yet](https://github.com/itsmistad/Mirai/tree/deve
 5. Add an entry for your controller using the provided template (in this case, use `'GET'`):
 
 > ```js
-> ['/path/to/page/', '<page>Controller', 'GET' or 'POST']
+> ['/path/to/page', '/path/to/<page>Controller', 'GET' or 'POST']
 > ```
 
-6. Be sure that the first string of your entry is the path to the directory that holds the view and not the path to the view itself. `/path/to/page/` vs `/path/to/page/page.hjs`
+6. Be sure that the first string of your entry is the path to the page you want to render. For example, `https://mirai.mistad.net/user/preferences` would have a path `/user/preferences`.
 
 Congratulations, your page will now render at the expected path!
 
@@ -53,26 +53,43 @@ Often times, we'll need to pass data from the server to the client before the vi
 
 Your view will now render with the value of your controller variable.
 
-## Adding additional routes to the same controller
+## Creating a controller for POST requests
 
-When we need a controller to handle multiple request paths, we'll need to map multiple routes to the same controller. However, it's recommended that you never have multiple views per controller. Follow these steps to add an additional route:
+When we need to handle POST requests to a set of paths with the same base directory, we'll need to create a "base" controller. For example, `/user/create` and `/user/delete` would be a part of the `/user/userController.js`. Follow these steps to add a POST request route:
 
-1. In [webService.js](https://github.com/itsmistad/Mirai/blob/develop/src/services/webService.js), search for `let routes = [`.
-2. Add another entry with the same template, but modify the first string to whatever path you want. If my original was `/path/to/page/`, you could do `/path/to/page/create`, for example.
-3. In your controller, use a switch-case to split behavior based on the `route`:
+1. In `src/controllers/`, create or navigate to the directory path for your POST request.
+2. Create `<name>Controller.js` where `<name>` is the name of the directory file the controller is in.
+3. Insert the following snippet, replacing `<Post>` and `<post>` (capitalization matters!) with the name of your directory like in step 2:
+
+> ```js
+> 'use strict';
+> 
+> class <Post>Controller {
+>     constructor(root) {
+>         this.name = '<post>';
+>     }
+> 
+>     async run(route, req, res) {
+>     }
+> }
+> 
+> module.exports = <Post>Controller;
+> ```
+
+4. In [webService.js](https://github.com/itsmistad/Mirai/blob/develop/src/services/webService.js), search for `let routes = [`.
+5. Add another entry with the same template. For example, you could do `/user/create` or `/user/delete` for the route. Also, ensure your request type is `'POST'`.
+6. In your controller, use a switch-case to split behavior based on the `route`:
 
 > ```js
 >     async run(route, req, res) {
->         const v = new View(res, '<page>');
 >         switch (route) {
->         case '/path/to/page':
->             v.render({
->                 title: '<Page>'
->             });
->             break;
->         case '/path/to/page/create':
+>         case 'create':
 >             // Do something.
 >             res.send('Hello world!');
+>             break;
+>         case 'delete':
+>             // Do something else.
+>             res.send('Hello world 2.0!');
 >             break;
 >         }
 >     }
