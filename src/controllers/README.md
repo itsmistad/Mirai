@@ -5,7 +5,7 @@ As a part of the MVC implementation, Mirai uses controllers to handle the pre-co
 
 ## Creating a controller
 
-If you haven't [created a view yet](), do that first before creating your controller.
+If you haven't [created a view yet](https://github.com/itsmistad/Mirai/tree/develop/src/views#creating-a-view), do that first before creating your controller.
 
 1. In `src/controllers/`, create the directory path that reflects the one you created for your view.
 2. Create `<name>Controller.js` where `<name>` is the name of your view without ".hjs".

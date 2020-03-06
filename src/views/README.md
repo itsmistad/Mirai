@@ -9,14 +9,14 @@ This is what would usually be an .html file, but in our case it's an .hjs file.
 
 1. In `src/views/`, create an .hjs file in the path of your choice. For example, I would create the .hjs file for `https://mirai.mistad.net/user/preferences` at `src/views/user/preferences.hjs`.
 2. Place any valid HTML markup in this file.
-3. Insert any [partials]() or [controller variables]().
+3. Insert any [partials](https://github.com/itsmistad/Mirai/tree/develop/src/views#creating-and-using-a-partial) or [controller variables](https://github.com/itsmistad/Mirai/tree/develop/src/controllers#creating-and-using-controller-variables).
 
 ## Creating and using a partial
 
 Partials are shared .hjs templates that any .hjs template can access. The only rules are as follows:
 > 1. You cannot have circular dependencies
 > 2. You cannot layer partials.
-> 3. You cannot define [pre-render stylesheets]() or [post-render scripts]() in a partial.
+> 3. You cannot define [pre-render stylesheets](https://github.com/itsmistad/Mirai/tree/develop/src/views#adding-pre-render-stylesheets) or [post-render scripts](https://github.com/itsmistad/Mirai/tree/develop/src/views#adding-post-render-scripts) in a partial.
 
 To create a partial, follow these steps:
 
