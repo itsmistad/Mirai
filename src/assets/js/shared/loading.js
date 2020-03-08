@@ -1,3 +1,9 @@
+/*
+ * loading.js
+ * 
+ * This script contains a handler that fades in the interface when the document is ready.
+ */
+
 let ready;
 
 setTimeout(() => {
