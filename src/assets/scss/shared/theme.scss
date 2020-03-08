@@ -738,7 +738,7 @@ div.textarea {
     &.right { // Right aligns the children.
         justify-content: flex-end;
     }
-
+ 
     &.stretch { // Stretches the container to the full width of the parent container.
         justify-self: stretch;
     }
@@ -764,12 +764,25 @@ div.textarea {
     text-transform: uppercase;
 }
 
-// ----------------- Global Classes ------------------
-// These are classes you should not use regularly.
+// ----------------- Global Selectors ------------------
+// These are classes you should not use to modify your elements.
 
 .required {
     position: absolute !important;
     right: 0 !important;
     left: unset !important;
     color: $color_error !important;
+}
+
+.notify-popup {
+    .subheader, .header {
+        font-family: 'Montserrat', Arial;
+    }
+    .body {
+        text-align: center;
+    }
+}
+
+#notify-queue {
+    z-index: $layer_notify_queue;
 }

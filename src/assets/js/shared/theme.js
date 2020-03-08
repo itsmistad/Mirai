@@ -1,4 +1,11 @@
 /*
+ * theme.js
+ * 
+ * This script contains a collection of all the Mirai-specific variables and functions
+ * that are used by the application for the theme of the website.
+ */
+
+/*
  * Mirai's Theme Selectors
  */
 let selector = {
@@ -82,6 +89,9 @@ let classes = {
     upper: 'upper'
 };
 
+/*
+ * Mirai's Theme Functions
+ */
 // Toggles the scrollbar for a specified JQuery element.
 function toggleScrollBar($e) {
     $e.toggleClass(classes.hideScroll);
@@ -100,7 +110,7 @@ $(function() {
     textBoxes.change(function() {
         $(this).attr('value', $(this).val());
     });
-
+ 
     // Adds an asterick next to any textbox that is marked as required.
     textBoxes.each(function() {
         if ($(this).prop('required')) {
@@ -126,3 +136,5 @@ $(function() {
         return false;
     });
 });
+
+notify.initSound('default', '/files/notify.mp3');

@@ -28,6 +28,7 @@
         "*.ttf",
         "*.woff",
         "*.json",
+        "*.mp3",
         "**/assets/js/**/*.js"
     ],
     "rules": {
