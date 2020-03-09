@@ -32,7 +32,7 @@ gulp.task('rev', function(done) {
         const manifestFiles = [];
         for (let r in previousRevisions) {
             const filePath = (distAssets + previousRevisions[r]).replace('/', '\\'); 
-            manifestFiles.push(filePath);
+            manifestFiles.push(filePath.replace('/', '\\'));
         }
         recursive(distAssets, manifestFiles, (err, files) => {
             if (err) {
@@ -52,10 +52,10 @@ gulp.task('rev', function(done) {
     return gulp.src(assets + '**/*')
         .pipe(revAll.revision({
             includeFilesInManifest: [
-                '.css', '.js', '.ico', '.png', '.jpg', '.svg', '.gif', '.json',
+                '.css', '.js', '.png', '.jpg', '.svg', '.gif', '.json',
                 '.ttf', '.woff', '.eot'
             ],
-            dontRenameFile: [/^\/favicon.ico$/g]
+            dontRenameFile: [/favicon.ico/g]
         }))
         .on('error', function(error) {
             console.error('\x1b[31m\x1b[1m' + error + '\x1b[0m');

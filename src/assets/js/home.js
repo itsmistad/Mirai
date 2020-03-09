@@ -11,4 +11,13 @@ $(function() {
     $('#home__github').click(function() {
         redirect('https://github.com/itsmistad/Mirai');
     });
+    $('#home__tryit').click(function() {
+        notify.me({
+            header: 'Oh, hi!',
+            subheader: 'You clicked a button',
+            body: 'Well done!',
+            fadeInDuration: 200,
+            fadeOutDuration: 300,
+        });
+    });
 });
