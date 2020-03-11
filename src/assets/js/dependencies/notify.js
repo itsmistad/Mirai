@@ -4,11 +4,11 @@
  * This script contains a handler for both push notifications and on-screen notifications.
  */
 
-var notify = new function() {
+const notify = new function() {
 
-    var obj = {}, stack = [], audio = [], stackQueue = [], centerQueue = [];
-    var idPrefix = 'notify-popup-';
-    var popupElement = options =>
+    let obj = {}, stack = [], audio = [], stackQueue = [], centerQueue = [];
+    let idPrefix = 'notify-popup-';
+    let popupElement = options =>
         `<div id="${options.id}" class="${options.class}" style="display:none;">
     <div class="close">X</div>
     <div class="header">${options.header}</div>
@@ -17,9 +17,9 @@ var notify = new function() {
     <div class="buttons"></div>
 </div>
 `;
-    var defaultNotificationLayer = 2000;
-    var defaultOverlayLayer = 1999;
-    var defaultOptions = {
+    let defaultNotificationLayer = 2000;
+    let defaultOverlayLayer = 1999;
+    let defaultOptions = {
         // These shouldn't be touched... usually
         targetSelector: 'body', // What element selector to use when adding the notification using the "targetMethod"
         targetMethod: 'append', // How to add the notification to the "targetSelector" ('prepend', 'append', 'before', and 'after')
@@ -63,27 +63,30 @@ var notify = new function() {
 
     // Enables or disables the notification background overlay.
     obj.overlay = (enable, delay, opacity) => {
-        var overlayId = 'notify-overlay';
-        var currentOverlay = $('body').find('#' + overlayId);
+        let overlayId = 'notify-overlay';
+        const target = fullscreenElement || $(obj.mergedOptions.targetSelector);
+        let currentOverlay = $('#' + overlayId);
+        console.log(target)
+        console.log(currentOverlay)
         if (currentOverlay.length && !enable) {
-            if (!delay) delay = defaultOptions.fadeOutDuration;
+            if (!delay) delay = obj.mergedOptions.fadeOutDuration;
             currentOverlay.fadeOut(delay, () => {
                 currentOverlay.remove();
             });
         } else if (!currentOverlay.length && enable) {
-            $('body').append(`<div id="${overlayId}" style="display:none;"></div>`);
+            target.append(`<div id="${overlayId}" style="display:none;"></div>`);
             currentOverlay = $('#' + overlayId);
             if (!opacity) opacity = 0.3;
             currentOverlay.css({
-                position: 'absolute',
-                left: '0',
-                top: '0 ',
-                height: $(document).height() + 'px',
-                width: $(window).width() + 'px',
+                position: 'fixed',
+                left: '-1000%',
+                top: '-1000%',
+                height: '3000%',
+                width: '3000%',
                 'background-color': `rgba(0,0,0,${opacity})`,
                 'z-index': defaultOverlayLayer
             });
-            if (!delay) delay = defaultOptions.fadeInDuration;
+            if (!delay) delay = obj.mergedOptions.fadeInDuration;
             currentOverlay.fadeIn(delay);
         }
     };
@@ -99,21 +102,22 @@ var notify = new function() {
      * ignoreFunctions is for network use only. Setting this to true will ignore any JS functions passed from the network (prevents JS injection).
      */
     obj.me = (options, callback, ignoreFunctions) => {
-        var idSuffix = Math.ceil(Math.random() * 99999);
-        var mergedOptions = { ...defaultOptions, ...options };
+        let idSuffix = Math.ceil(Math.random() * 99999);
+        let mergedOptions = { ...defaultOptions, ...options };
         for (const [key, value] of Object.entries(defaultOptions)) {
             // If the new option is null/undefined or if the new option is not the same type as the default, override with the default.
             if (mergedOptions[key] == null || typeof mergedOptions[key] !== typeof defaultOptions[key])
                 mergedOptions[key] = defaultOptions[key];
         }
 
-        var id = idPrefix + idSuffix;
+        let id = idPrefix + idSuffix;
         if (mergedOptions.queue) {
             mergedOptions.targetSelector = '#notify-queue';
             mergedOptions.targetMethod = 'prepend';
             mergedOptions.class = mergedOptions.class + ' corner';
         }
-        var target = $(mergedOptions.targetSelector);
+        obj.mergedOptions = mergedOptions;
+        let target = fullscreenElement && mergedOptions.targetSelector !== '#notifiy-queue' ? fullscreenElement : $(mergedOptions.targetSelector);
 
         if (mergedOptions.queue && stack.filter(_ => _.targetSelector === '#notify-queue').length >= mergedOptions.maxInQueue){
             stackQueue.push({
@@ -123,14 +127,14 @@ var notify = new function() {
         }
 
         if (target.length) {
-            var elementOptions = {
+            let elementOptions = {
                 id,
                 class: mergedOptions.class,
                 header: mergedOptions.header,
                 subheader: mergedOptions.subheader,
                 body: mergedOptions.body
             };
-            var element = popupElement(elementOptions);
+            let element = popupElement(elementOptions);
             switch (mergedOptions.targetMethod) {
                 case 'prepend':
                     target.prepend(element);
@@ -147,23 +151,23 @@ var notify = new function() {
                     break;
             }
 
-            var ret = new function () {
-                var result = {};
+            let ret = new function () {
+                let result = {};
 
                 result.id = id;
                 result.$ = $('#' + id);
                 result.options = mergedOptions;
                 result.close = () => {
-                    var stackItem;
+                    let stackItem;
                     if (mergedOptions.timeoutHandle)
                         clearTimeout(mergedOptions.timeoutHandle);
                     if (!ignoreFunctions)
                         mergedOptions.onStartClose();
                     if (mergedOptions.queue && stack.length) {
                         stackItem = stack.findIndex(_ => _.notification.id === result.id);
-                        var wait = true;
-                        for (var item of stack.filter(_ => _.targetSelector === '#notify-queue')) {
-                            var n = item.notification;
+                        let wait = true;
+                        for (let item of stack.filter(_ => _.targetSelector === '#notify-queue')) {
+                            let n = item.notification;
                             if (n.id === result.id) {
                                 wait = false;
                                 stack.splice(stackItem ? stackItem : 0, 1);
@@ -172,9 +176,9 @@ var notify = new function() {
                                 n._triggerStackSlide(result.$.outerHeight(true));
                             }
                         }
-                        var first = stack.find(_ => _.targetSelector === '#notify-queue' && _.notification.options.timeout > 0);
+                        let first = stack.find(_ => _.targetSelector === '#notify-queue' && _.notification.options.timeout > 0);
                         if (first) {
-                            var firstNotification = first.notification;
+                            let firstNotification = first.notification;
                             firstNotification.options.timeoutHandle = setTimeout(firstNotification.close, firstNotification.options.timeout);
                         }
                     } else if (!mergedOptions.queue) {
@@ -188,7 +192,7 @@ var notify = new function() {
                         if (!ignoreFunctions)
                             mergedOptions.onClose();
                         if (mergedOptions.queue && stackQueue.length > 0) {
-                            var notification = stackQueue.pop();
+                            let notification = stackQueue.pop();
                             obj.me(notification.options, notification.callback, notification.ignoreFunctions);
                         }
                     });
@@ -199,7 +203,7 @@ var notify = new function() {
                 result._totalDistance = 0;
                 result._triggerStackSlide = targetDistance => {
                     result._totalDistance += targetDistance;
-                    var translation = result._totalDistance;
+                    let translation = result._totalDistance;
                     if (result._currentAnimation)
                         result._currentAnimation.stop();
                     result._currentAnimation = $({ translation: result._currentDistance });
@@ -231,7 +235,7 @@ var notify = new function() {
                     notification: ret
                 });
 
-            var jQ = ret.$;
+            let jQ = ret.$;
             jQ.css('z-index', mergedOptions.layer);
             if (elementOptions.header === '')
                 jQ.find('.header').hide();
@@ -240,10 +244,10 @@ var notify = new function() {
             if (elementOptions.body === '')
                 jQ.find('.body').hide();
 
-            var buttonsElement = jQ.find('.buttons');
+            let buttonsElement = jQ.find('.buttons');
             if (buttonsElement.length) {
                 mergedOptions.buttons.forEach(_ => {
-                    var buttonId = idPrefix + 'button-' + Math.ceil(Math.random() * 99999);
+                    let buttonId = idPrefix + 'button-' + Math.ceil(Math.random() * 99999);
                     buttonsElement.append(`<button id="${buttonId}" class="${_.class}">${_.text}</button>`);
                     $('#' + buttonId).click(function () {
                         if (!ignoreFunctions)
@@ -260,7 +264,7 @@ var notify = new function() {
             });
 
             if (mergedOptions.sound) {
-                var sound = audio.find(_ => _.name === mergedOptions.sound).audio.play();
+                let sound = audio.find(_ => _.name === mergedOptions.sound).audio.play();
                 if (sound !== undefined) {
                     sound.then(_ => {
                         // Do... nothing?

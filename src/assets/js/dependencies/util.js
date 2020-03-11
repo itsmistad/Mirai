@@ -7,9 +7,14 @@
  */
 let hooks = {
     scroll: [],
-    resize: []
+    resize: [],
+    afterResize: []
 };
-let loadingSelector;
+let mouse = {
+    x: 0,
+    y: 0
+};
+let loadingSelector, fullscreenElement;
 
 /*
  * Global Functions
@@ -23,6 +28,70 @@ function startLoaderTransition(callback) {
 // Transitions smoothly to a white screen before redirecting to the specified url.
 function redirect(url) {
     startLoaderTransition(() => window.location.href = url);
+}
+
+// Sets a cookie for a specified number of days.
+function setCookie(name, value, days) {
+    var expires = "";
+    if (days) {
+        var date = new Date();
+        date.setTime(date.getTime() + (days*24*60*60*1000));
+        expires = "; expires=" + date.toUTCString();
+    }
+    document.cookie = name + "=" + (encodeURIComponent(value) || "")  + expires + "; path=/";
+}
+
+// Gets a cookie by name.
+function getCookie(name) {
+    var nameEQ = name + "=";
+    var ca = document.cookie.split(';');
+    for(var i=0;i < ca.length;i++) {
+        var c = ca[i];
+        while (c.charAt(0)==' ') c = c.substring(1,c.length);
+        if (c.indexOf(nameEQ) == 0) return decodeURIComponent(c.substring(nameEQ.length,c.length));
+    }
+    return null;
+}
+
+// Compeletly erases a cookie.
+function eraseCookie(name) {   
+    document.cookie = name+'=; Max-Age=-99999999;';  
+}
+
+function setFullscreenElement($e) {
+    if (
+        document.fullscreenElement ||
+        document.webkitFullscreenElement ||
+        document.mozFullScreenElement ||
+        document.msFullscreenElement
+    ) {
+        if (document.exitFullscreen) {
+          document.exitFullscreen();
+        } else if (document.mozCancelFullScreen) {
+          document.mozCancelFullScreen();
+        } else if (document.webkitExitFullscreen) {
+          document.webkitExitFullscreen();
+        } else if (document.msExitFullscreen) {
+          document.msExitFullscreen();
+        }
+        fullscreenElement = null;
+    } else {
+        element = $e.get(0);
+        if (element.requestFullscreen) {
+          element.requestFullscreen();
+        } else if (element.mozRequestFullScreen) {
+          element.mozRequestFullScreen();
+        } else if (element.webkitRequestFullscreen) {
+          element.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT);
+        } else if (element.msRequestFullscreen) {
+          element.msRequestFullscreen();
+        }
+        fullscreenElement = $e;
+    }
+}
+
+function toType(obj) {
+    return ({}).toString.call(obj).match(/\s([a-zA-Z]+)/)[1].toLowerCase()
 }
 
 function storeScrollPosition() {
@@ -66,17 +135,37 @@ $(function() {
             h.callback.call(h.$, event);
         }
     });
-    doc.on('resize', function() {
+    let resizeTimeout, currentlyResizing, lastWidth = $(window).width;
+    setInterval(() => {
         const w = $(window);
-        const event = {
-            size: {
-                width: w.width(),
-                height: h.height(),
+        const width = w.width();
+        if (width !== lastWidth) {
+            lastWidth = width;
+            clearTimeout(resizeTimeout);
+            currentlyResizing = true;
+            const event = {
+                size: {
+                    width: width,
+                    height: w.height(),
+                }
+            };
+            for (let h in hooks.resize) {
+                h.callback.call(h.$, event);
             }
-        };
-        for (const h in hooks.resize) {
-            h.callback.call(h.$, event);
+            if (currentlyResizing)
+                resizeTimeout = setTimeout(() => {
+                    currentlyResizing = false;
+                    if (hooks.afterResize.length)
+                        for (let h of hooks.afterResize) {
+                            if (h.callback)
+                                h.callback.call(h.$, event);
+                        }
+                }, 1000);
         }
+    }, 100);
+    doc.on('mousemove', function (e) {
+        mouse.x = e.pageX;
+        mouse.y = e.pageY;
     });
 });
 
@@ -101,5 +190,62 @@ jQuery.fn.extend({
                     callback
                 });
         });
+    },
+    afterResize: function(callback) {
+        return this.each(function() {
+            if (!hooks.afterResize.find(_ => _.$.id == this.id))
+                hooks.afterResize.push({
+                    $: this,
+                    callback
+                });
+        });
+    },
+    rightClick: function(callback) {
+        return this.each(function() {
+            $(this).contextmenu(function(e) {
+                const event = {
+                    mouse: {
+                        x: mouse.x,
+                        y: mouse.y
+                    },
+                    target: e.target
+                };
+                callback(event);
+                e.preventDefault();
+            });
+        });
+    },
+    leftClick: function(callback) {
+        return this.each(function() {
+            $(this).click(function(e) {
+                const event = {
+                    mouse: {
+                        x: mouse.x,
+                        y: mouse.y
+                    },
+                    target: e.target
+                };
+                callback(event);
+            });
+        });
+    },
+    inclusiveEquals: function($target) { // Returns true if either the source or target is a direct, complete subset of the other. Basically, this is a way of doing "$(A) === $(B)" _for the most part_. 
+        const $source = $(this);
+        let sourceArray = $source.toArray();
+        let targetArray = $target.toArray();
+        let count = 0;
+        if (sourceArray.length === 0 || targetArray.length === 0)
+            return false;
+        if (sourceArray.length > targetArray) {
+            sourceArray = $target.toArray();
+            targetArray = $source.toArray();
+        }
+        for (const e of sourceArray) {
+            if (targetArray.includes(e)) {
+                count++;
+                continue;
+            }
+        }
+        return (count === sourceArray.length);
     }
 });
