@@ -11,7 +11,7 @@
                 <div class="column">
                     <span>
                         <h3 id="home__superscript">Plan with</h3>
-                        <h1 id="home__mirai" class="logo">Mirai</h1>
+                        <h1 id="home__mirai" class="logo home">Mirai</h1>
                     </span>
                     <button id="home__tryit" class="medium">Try it for free</button>
                     <button id="home__github" class="medium outline">See the code</button>

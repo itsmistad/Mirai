@@ -13,15 +13,15 @@
         {{{ yield-styles }}}
     </head>
     <body>
-        {{{> loading }}}
+        {{> loading }}
         <header id="layout__header">
-            {{{> header }}}
+            {{> header }}
         </header>
         <main id="layout__main">
             {{{ yield }}}
         </main>
         <footer id="layout__footer">
-            {{{> footer }}}
+            {{> footer }}
         </footer>
         <!-- Corner Notification Queue -->
         <div id="notify-queue"></div>

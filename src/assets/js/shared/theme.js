@@ -98,6 +98,16 @@ function toggleScrollBar($e) {
 }
 
 $(function() {
+    $('#header__button-logo').click(function(e) {
+        redirect('/');
+        e.preventDefault();
+        return;
+    });
+    $('#footer__button-github').click(function(e) {
+        e.preventDefault();
+        redirect('https://github.com/itsmistad/Mirai');
+        return;
+    });
     const textBoxes = $('input[type="text"], input[type="email"], textarea');
 
     // Initialized the value attribute if it's missing for each textbox.
@@ -132,7 +142,7 @@ $(function() {
     // Prevents anchor elements from immediately redirecting. Replaces the behavior with a smooth transition.
     $('a').click(function(e) {
         e.preventDefault();
-        redirect($(this).attr('href'));
+        if ($(this).attr('href')) redirect($(this).attr('href'));
         return false;
     });
 });
