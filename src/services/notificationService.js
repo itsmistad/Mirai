@@ -14,7 +14,7 @@ class NotificationService {
     }
 
     async start() {
-        log.info('Starting Notification Service');
+        log.info('Starting Notification Service...');
         const notif_email = await config.get(configKeys.notifications.email);
         log.debug(`Notification Contact retrieved from configuration: ${notif_email}`);
         const notif_public_key = await config.get(configKeys.notifications.public_key);
@@ -38,7 +38,7 @@ class NotificationService {
                 log.error(`Error sending notification: ${error}`);
             });
         });
-        log.info('Successfully started Notification Service! Passing to Web Service...');
+        log.info('Successfully started Notification Service! Passing back to Web Service...');
         return app;
     }
 }
