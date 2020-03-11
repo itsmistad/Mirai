@@ -35,7 +35,7 @@ class NotificationService {
             res.status(201).json({});
             const payload = JSON.stringify({ title: 'Notification Test' });      
             webpush.sendNotification(subscription, payload).catch(error => {
-                console.error(error.stack);
+                log.error(`Error sending notification: ${error}`);
             });
         });
         log.info('Successfully started Notification Service! Passing to Web Service...');
