@@ -98,6 +98,16 @@ function toggleScrollBar($e) {
 }
 
 $(function() {
+    $('#header__button-logo').click(function(e) {
+        redirect('/');
+        e.preventDefault();
+        return;
+    });
+    $('#footer__button-github').click(function(e) {
+        e.preventDefault();
+        redirect('https://github.com/itsmistad/Mirai');
+        return;
+    });
     const textBoxes = $('input[type="text"], input[type="email"], textarea');
 
     // Initialized the value attribute if it's missing for each textbox.
