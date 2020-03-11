@@ -142,7 +142,7 @@ $(function() {
     // Prevents anchor elements from immediately redirecting. Replaces the behavior with a smooth transition.
     $('a').click(function(e) {
         e.preventDefault();
-        redirect($(this).attr('href'));
+        if ($(this).attr('href')) redirect($(this).attr('href'));
         return false;
     });
 });
