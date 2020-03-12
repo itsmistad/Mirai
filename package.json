@@ -23,6 +23,7 @@
     "@itsmistad/network.js": "^1.0.1",
     "@itsmistad/notify.js": "^1.0.1",
     "aws-sdk": "^2.622.0",
+    "body-parser": "^1.19.0",
     "deasync": "^0.1.19",
     "express": "^4.17.1",
     "express-session": "^1.17.0",
@@ -30,8 +31,9 @@
     "mongodb": "^3.5.2",
     "nodemailer": "^6.4.3",
     "nodemailer-mailgun-transport": "^2.0.0",
-    "socket.io": "^2.3.0",
-    "underscore": "^1.9.2"
+    "underscore": "^1.9.2",
+    "web-push": "^3.4.3",
+    "socket.io": "^2.3.0"
   },
   "devDependencies": {
     "browser-sync": "^2.26.7",
