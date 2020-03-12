@@ -39,6 +39,11 @@ const configKeys = Object.freeze({
         api_key: new ConfigKey('Mailgun.ApiKey', ''), // Mirai's API key for Mailgun; any string value
         domain: new ConfigKey('Mailgun.Domain', '') // Mirai's domain for Mailgun; any string value
     },
+    notifications: {
+        email: new ConfigKey('Notifications.Email', 'mailto:mirai@mistad.net'), // Mirai's email to use for VAPID key; any string value
+        public_key: new ConfigKey('Notifications.PublicKey', ''), // Mirai's private VAPID key for sending notifications; any string value
+        private_key: new ConfigKey('Notifications.PrivateKey', '') // Mirai's private VAPID key for sending notifications; any string value
+    },
     theme: {
         slogan: new ConfigKey('Theme.Slogan', 'Plan it your way.') // The html for the "slogan" partial; any string value
     }

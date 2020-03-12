@@ -5,10 +5,12 @@ const express = require('express');
 const configKeys = require('./config/configKeys');
 
 let log, app, config, root, controllers = [];
+let notification;
 let routes = [
 //  ['/route/to/page', '<page>Controller', 'GET' or 'POST']
     ['/', 'homeController', 'GET'],
-    ['/dashboard', '/dashboard/dashboardController', 'GET']
+    ['/dashboard', '/dashboard/dashboardController', 'GET'],
+    ['/subscribe', '/notifications/notificationController', 'POST']
 ];
 
 function setRoutes() {
@@ -26,7 +28,7 @@ function setRoutes() {
         footer: 'shared/footer'
     });
     app.engine('hjs', require('hogan-express'));
-
+    
     routes.forEach(entry => {
         const routePath = entry[0];
         const splitRoute = routePath.split('/');
@@ -59,8 +61,9 @@ function setRoutes() {
     });
 }
 
-function hookServices() {
+async function hookServices() {
     // Insert any networking services here (push notifications, socket.io, etc.).
+    await notification.start(app);
 }
 
 class WebService {
@@ -68,6 +71,7 @@ class WebService {
         log = _root.log;
         config = _root.config;
         root = _root;
+        notification = _root.notification;
     }
 
     async start() {
@@ -75,6 +79,7 @@ class WebService {
         log.debug(`Port retrieved from configuration: ${port}`);
 
         log.info('Starting web service...');
+        log.info('Passing to Notification Service to start...');
         app = express();
         setRoutes();
         hookServices();
