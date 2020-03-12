@@ -8,7 +8,8 @@ let log, app, config, root, controllers = [];
 let notification;
 let routes = [
 //  ['/route/to/page', '<page>Controller', 'GET' or 'POST']
-    ['/', 'homeController', 'GET']
+    ['/', 'homeController', 'GET'],
+    ['/subscribe', '/notifications/notificationController', 'POST']
 ];
 
 function setRoutes() {
@@ -57,8 +58,9 @@ function setRoutes() {
     });
 }
 
-function hookServices() {
+async function hookServices() {
     // Insert any networking services here (push notifications, socket.io, etc.).
+    await notification.start(app);
 }
 
 class WebService {
@@ -75,7 +77,7 @@ class WebService {
 
         log.info('Starting web service...');
         log.info('Passing to Notification Service to start...');
-        app = await notification.start();
+        app = express();
         setRoutes();
         hookServices();
         app.listen(port, () => {

@@ -1,12 +1,12 @@
 const publicVapidKey = 'BEyl9KcoySMGEMf-L70zw3vLhFSkleIImIsZP_kK6yWhpvubMYGUtwqb8G-fKy1k1WeAjGRMQKfHewF5VH_JVnY';
 
-if ('serviceWorker' in navigator) {
+if ('service'+'Worker' in navigator) {
     run().catch(error => console.error(error));
 }
 
 async function run() {
     const registration = await navigator.serviceWorker.
-        register('/js/serviceWorker.js', {scope: '/'});
+        register('/js/shared/serviceWorker.js', {scope: '/'});
     const subscription = await registration.pushManager.
     subscribe({
         userVisibleOnly: true,
