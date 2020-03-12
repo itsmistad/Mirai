@@ -47,7 +47,9 @@ body {
 }
 
 hr {
-    color: #bbb;
+    color: #ddd;
+    width: 80%;
+    border-style: solid;
 }
 
 h6, h5, h4, h3, h2, h1 {
@@ -82,7 +84,7 @@ h1 {
 
 a {
     color: $color_links;
-    transition: all $transition_smooth;
+    transition: all $transition_200;
     font-weight: bold;
     cursor: pointer;
 
@@ -108,7 +110,7 @@ button {
     background-color: $color_links;
     font-weight: bold;
     cursor: pointer;
-    transition: all $transition_smooth;
+    transition: all $transition_200;
     font-size: em(20px);
     @include disable-selection;
 
@@ -186,7 +188,7 @@ div.textbox {
         outline: none;
         background-color: $color_background;
         font-size: em(18px);
-        transition: all $transition_smooth;
+        transition: all $transition_200;
         cursor: pointer;
 
         &:valid + label::after {
@@ -278,14 +280,14 @@ div.textbox {
             height: 100%;
             width: 100%;
             transform: translateX(-100%);
-            transition: all $transition_smooth;
+            transition: all $transition_200;
         }
     
         span {
             position: absolute;
             bottom: 5px;
             left: 0px;
-            transition: all $transition_smooth;
+            transition: all $transition_200;
         }
     }
 }
@@ -306,7 +308,7 @@ div.switch {
         align-items: center;
         color: $color_header;
         font-weight: bold;
-        transition: background-color $transition_smooth;
+        transition: background-color $transition_200;
         cursor: pointer;
         @include disable-selection;
         text-align: left;
@@ -327,7 +329,7 @@ div.switch {
                 width: 1.6em;
                 left: 0.2em;
                 bottom: .21em;
-                transition: transform $transition_smooth;
+                transition: transform $transition_200;
                 background-color: white;
                 border-radius: 50%;
             }
@@ -370,7 +372,7 @@ div.checkbox {
         align-items: center;
         color: $color_header;
         font-weight: bold;
-        transition: $transition_smooth;
+        transition: $transition_200;
         cursor: pointer;
         @include disable-selection;
         text-align: left;
@@ -387,13 +389,13 @@ div.checkbox {
         border: 2px solid $color_body;
         border-radius: 2px;
         cursor: pointer;  
-        transition: all $transition_smooth;
+        transition: all $transition_200;
     }
     
     input[type='checkbox']:checked + label > span {
         border: 2px solid $color_links;
         background-color: $color_links;
-        animation: shrink-bounce $transition_smooth;
+        animation: shrink-bounce $transition_200;
     }
     
     input[type='checkbox']:checked + label > span:before {
@@ -405,7 +407,7 @@ div.checkbox {
         border-bottom: 3px solid transparent;
         transform: rotate(45deg);
         transform-origin: 0% 100%;
-        animation: checkbox-check 125ms $transition_smooth forwards;
+        animation: checkbox-check 125ms $transition_200 forwards;
     }
     
     @keyframes shrink-bounce {
@@ -462,7 +464,7 @@ div.textarea {
         outline: none;
         background-color: $color_background;
         cursor: pointer;
-        transition: all $transition_smooth;
+        transition: all $transition_200;
         font-size: em(18px);
 
         &:valid + label::after {
@@ -552,14 +554,14 @@ div.textarea {
             height: 100%;
             width: 100%;
             transform: translateX(-100%);
-            transition: all $transition_smooth;
+            transition: all $transition_200;
         }
     
         span {
             position: absolute;
             bottom: 5px;
             left: 0px;
-            transition: all $transition_smooth;
+            transition: all $transition_200;
         }
     }
 }
@@ -707,7 +709,7 @@ div.textarea {
     margin: 15px 15px;
     padding: 20px 20px;
     border-radius: 10px;
-    transition: $transition_smooth;
+    transition: $transition_200;
     @include embossed;
 }
 
@@ -750,6 +752,11 @@ div.textarea {
 
 }
 
+.draggable {
+    user-select: none;
+    touch-action: none;
+}
+
 .full-center { // Fully center aligns the children of a container.
     display: flex;
     justify-content: center;
@@ -782,7 +789,7 @@ div.textarea {
     margin-top: 0;
     font-size: em(40px);
     margin-bottom: 0.5em;
-    transition: $transition_smooth_slower;
+    transition: $transition_350;
     text-shadow: 0 0 6px $color_light_accent;
     cursor: pointer;
     @include disable-selection;
@@ -798,6 +805,45 @@ div.textarea {
 
 .lower { // Forces any child text or text directly within to lowercase.
     text-transform: lowercase;
+}
+
+.page {
+    min-height: 100vh;
+    z-index: $layer_page_foreground;
+
+    & > div.background {
+        z-index: $layer_page_background;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        min-height: 100%;
+    }
+
+    & > h1 {
+        margin: 30px;
+        transform: translateY(1em) scale(0.8);
+        opacity: 0;
+        transition: all $transition_500;
+
+        &.up {
+            transform: translateY(0) scale(1);
+            opacity: 1;
+        }
+    }
+ 
+    & > .banner {
+        min-height: 100%;
+        flex: 1;
+        opacity: 0;
+        box-shadow: none;
+        transition: all $transition_800;
+        
+        &.up {
+            @include embossed;
+            opacity: 1;
+        }
+    }
 }
 
 .row { // Rowizes the children of the container.

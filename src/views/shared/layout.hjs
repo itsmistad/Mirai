@@ -7,9 +7,10 @@
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
         <link rel="shortcut icon" type="image/x-icon" href="/files/favicon.ico">
-        <link rel="stylesheet" href="/css/shared/notify.min.css" />
+        <link rel="stylesheet" href="/css/shared/notify.css" />
         <link rel="stylesheet" href="/css/shared/theme.css" />
         <link rel="stylesheet" href="/css/shared/loading.css" />
+        <link rel="stylesheet" href="/css/shared/all.css" />
         {{{ yield-styles }}}
     </head>
     <body>
@@ -33,8 +34,12 @@
                         integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU="
                             crossorigin="anonymous"></script>
     <script type="text/javascript" src="/js/dependencies/util.js"></script>
+    <script type="text/javascript" src="/js/dependencies/garlic.min.js"></script>
+    <script type="text/javascript" src="/js/dependencies/interact.min.js"></script>
     <script type="text/javascript" src="/js/dependencies/network.js"></script>
     <script type="text/javascript" src="/js/dependencies/notify.js"></script>
+    <script type="text/javascript" src="/js/dependencies/contextly.js"></script>
+    <script type="text/javascript" src="/js/dependencies/lottie.min.js"></script>
     <script type="text/javascript" src="/js/shared/theme.js"></script>
     <script type="text/javascript" src="/js/shared/loading.js"></script>
     <script type="text/javascript" src="/js/shared/initializeServiceWorker.js"></script>

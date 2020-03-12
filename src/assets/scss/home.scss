@@ -88,7 +88,7 @@
         }
     
         #home__banner-img {
-            transition: $transition_smooth_slower;
+            transition: $transition_350;
             cursor: pointer;
     
             @include for-small-tablet-down {

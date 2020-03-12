@@ -145,6 +145,10 @@ $(function() {
         if ($(this).attr('href')) redirect($(this).attr('href'));
         return false;
     });
+    
+    // Transitions templatized ".page" elements (h1 and .banner) in on page load.
+    $('.page>h1').addClass('up');
+    $('.page>.banner').addClass('up');
 });
 
 notify.initSound('default', '/files/notify.mp3');

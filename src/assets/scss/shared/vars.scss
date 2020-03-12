@@ -1,13 +1,16 @@
 $layer_loading_screen: 10000;
+$layer_notify_popup: 2000;
 $layer_notify_queue: 1000;
-$layer_page_background: -10;
+$layer_context_menu: 100;
+$layer_page_dashboard_full_view: 15;
 $layer_page_foreground: 10;
+$layer_page_background: -10;
 $layer_page_header_and_footer: 100;
 
 $color_light_accent: #ddd0f1;
 $color_accent: #A589D1; 
 $color_dark_accent: #8664BA;
-$color_header: #1e1b1e;
+$color_header: #1e1b1e; 
 $color_body: #494848;
 $color_links: #68adef;
 $color_highlighted: #2191fb;
@@ -19,5 +22,7 @@ $font_header: 'Montserrat', Arial;
 $font_body: 'Roboto', 'Courier New';
 $font_quote: 'Courier New';
 
-$transition_smooth: 200ms cubic-bezier(.4,.0,.23,1);
-$transition_smooth_slower: 350ms cubic-bezier(.4,.0,.6,1);
+$transition_200: 200ms cubic-bezier(.4,.0,.23,1);
+$transition_350: 350ms cubic-bezier(.4,.0,.6,1);
+$transition_500: 500ms cubic-bezier(.4,.0,.6,1);
+$transition_800: 800ms cubic-bezier(.4,.0,.6,1);

@@ -9,6 +9,7 @@ let notification;
 let routes = [
 //  ['/route/to/page', '<page>Controller', 'GET' or 'POST']
     ['/', 'homeController', 'GET'],
+    ['/dashboard', '/dashboard/dashboardController', 'GET'],
     ['/subscribe', '/notifications/notificationController', 'POST']
 ];
 
@@ -16,6 +17,8 @@ function setRoutes() {
     app.use('/js', express.static(path.join(__dirname, '..', 'dist/assets/js')));
     app.use('/css', express.static(path.join(__dirname, '..', 'dist/assets/css')));
     app.use('/files', express.static(path.join(__dirname, '..', 'dist/assets/files')));
+    app.use('/lottie', express.static(path.join(__dirname, '..', 'assets/files/lottie')));
+    app.use('/webfonts', express.static(path.join(__dirname, '..', 'assets/files/webfonts')));
     app.set('views', path.join(__dirname, '..', 'dist/views'));
     app.set('view engine', 'hjs');
     app.set('layout', 'shared/layout');

@@ -11,9 +11,9 @@
     position: fixed;
     background-color: $color_background;
     z-index: $layer_loading_screen;
-    transition: all $transition_smooth_slower;
+    transition: all $transition_350;
 
     #loading__img {
-        transition: all $transition_smooth;
+        transition: all $transition_200;
     }
 }

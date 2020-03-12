@@ -31,31 +31,31 @@ gulp.task('rev', function(done) {
         const previousRevisions = require('./' + manifest);
         const manifestFiles = [];
         for (let r in previousRevisions) {
-            const filePath = (distAssets + previousRevisions[r]).replace('/', '\\'); 
-            manifestFiles.push(filePath.replace('/', '\\'));
+            const filePath = (distAssets + previousRevisions[r]).replace(/\//g, '\\'); 
+            manifestFiles.push(filePath);
         }
         recursive(distAssets, manifestFiles, (err, files) => {
             if (err) {
                 console.log(err);
             }
         
-            files.forEach(file => {
-                try {
-                    fs.unlinkSync(file);
-                    console.log('Removed old file: ' + file);
-                } catch (ex) {
-                    console.log(ex);
-                }
-            });
+            if (files)
+                files.forEach(file => {
+                    try {
+                        fs.unlinkSync(file);
+                    } catch (ex) {
+                        console.log(ex);
+                    }
+                });
         });
     }
     return gulp.src(assets + '**/*')
         .pipe(revAll.revision({
             includeFilesInManifest: [
-                '.css', '.js', '.png', '.jpg', '.svg', '.gif', '.json',
+                '.css', '.js', '.png', '.jpg', '.svg', '.gif',
                 '.ttf', '.woff', '.eot'
             ],
-            dontRenameFile: [/favicon.ico/g]
+            dontRenameFile: [/favicon\.ico/g, /\.json/g]
         }))
         .on('error', function(error) {
             console.error('\x1b[31m\x1b[1m' + error + '\x1b[0m');
