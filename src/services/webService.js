@@ -2,47 +2,54 @@
 
 const path = require('path');
 const express = require('express');
-const bodyParser = require('body-parser');
-const webpush = require('web-push');
 const configKeys = require('./config/configKeys');
 
-let log, app, notification, config;
+let log, app, config, root, controllers = [];
+let notification;
 let routes = [
-    ['/', 'homeController']
+//  ['/route/to/page', '<page>Controller', 'GET' or 'POST']
+    ['/', 'homeController', 'GET']
 ];
 
 function setRoutes() {
-    app.use(bodyParser.json());
-    app.use((req, res, next) => {
-        if (req.url === '/js/serviceWorker.js') {
-            res.append('Service-Worker-Allowed', '/');
-        }
-        next();
-    });
-    app.use(express.static(path.join(__dirname, '..', 'assets')));
-    app.set('views', path.join(__dirname, '..', 'views'));
+    app.use('/js', express.static(path.join(__dirname, '..', 'dist/assets/js')));
+    app.use('/css', express.static(path.join(__dirname, '..', 'dist/assets/css')));
+    app.use('/files', express.static(path.join(__dirname, '..', 'dist/assets/files')));
+    app.set('views', path.join(__dirname, '..', 'dist/views'));
     app.set('view engine', 'hjs');
-    app.set('layout', 'layout');
+    app.set('layout', 'shared/layout');
     app.set('partials', {
-        loading: 'shared/loading'
+        loading: 'shared/loading',
+        header: 'shared/header',
+        footer: 'shared/footer'
     });
     app.engine('hjs', require('hogan-express'));
-    app.post('/subscribe', (req, res) => {
-        const subscription = req.body;
-        res.status(201).json({});
-        const payload = JSON.stringify({ title: 'Notification Test' });      
-        webpush.sendNotification(subscription, payload).catch(error => {
-            console.error(error.stack);
-        });
-    });
-    routes.forEach(pair => {
-        const routePath = pair[0];
-        const controllerName = pair[1];
+    
+    routes.forEach(entry => {
+        const routePath = entry[0];
+        const splitRoute = routePath.split('/');
+        const route = splitRoute[splitRoute.length - 1];
+        const controllerName = entry[1];
+        const requestType = entry[2];
         try {
-            const Controller = require(`../controllers/${controllerName}`);
-            app.get(routePath, function(req, res) {
-                new Controller().run(req, res);
-            });
+            let controller = controllers.find(_ => _.constructor.name === controllerName);
+            if (!controller) {
+                const Controller = require(`../controllers/${controllerName}`);
+                controller = new Controller(root);
+                controllers.push(controller);
+            }
+            switch (requestType) {
+            case 'POST':
+                app.post(routePath, function(req, res) {
+                    controller.run(route, req, res);
+                });
+                break;
+            case 'GET':
+                app.get(routePath, function(req, res) {
+                    controller.run(route, req, res);
+                });
+                break;
+            }
         }
         catch (ex) {
             log.error(`Failed to bind route "${routePath}" to controller "${controllerName}"! Error: ${ex}`);
@@ -50,19 +57,27 @@ function setRoutes() {
     });
 }
 
+function hookServices() {
+    // Insert any networking services here (push notifications, socket.io, etc.).
+}
+
 class WebService {
-    constructor(root) {
-        log = root.log;
-        config = root.config;
-        notification = root.notification;
+    constructor(_root) {
+        log = _root.log;
+        config = _root.config;
+        root = _root;
+        notification = _root.notification;
     }
 
     async start() {
-        const port = parseInt(process.env.PORT ? process.env.PORT : await config.get(configKeys.web.port));
+        const port = parseInt(process.env.PORT || await config.get(configKeys.web.port));
+        log.debug(`Port retrieved from configuration: ${port}`);
+
         log.info('Starting web service...');
         log.info('Passing to Notification Service to start...');
         app = await notification.start();
         setRoutes();
+        hookServices();
         app.listen(port, () => {
             log.info(`Successfully started web service! Listening on port ${port}.`);
         });

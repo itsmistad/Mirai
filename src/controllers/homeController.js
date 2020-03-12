@@ -1,15 +1,21 @@
 'use strict';
-const View = require('../views/view');
+
+const View = require('../views/shared/view');
+const configKeys = require('../services/config/configKeys');
+let config;
 
 class HomeController {
-    constructor() {
+    constructor(root) {
         this.name = 'Home';
+        config = root.config;
     }
 
-    run(req, res) {
-        var v = new View(res, 'home');
+    async run(route, req, res) {
+        const v = new View(res, 'home');
+        const slogan = await config.get(configKeys.theme.slogan);
         v.render({
-            title: 'Home'
+            title: 'Home',
+            slogan
         });
     }
 }

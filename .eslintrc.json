@@ -23,7 +23,13 @@
         "*.scss",
         "*.html",
         "*.md",
-        "**/assets/js/*.js"
+        "*.eot",
+        "*.svg",
+        "*.ttf",
+        "*.woff",
+        "*.json",
+        "*.mp3",
+        "**/assets/js/**/*.js"
     ],
     "rules": {
         "indent": [

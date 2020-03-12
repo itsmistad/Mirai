@@ -1,4 +1,87 @@
-<div class="center column">
-    <h3 class="upper spaced">Hello World!</h3>
-    <span>Or whoever is kind enough to listen.</span>
+<div id="home__background">
+    <img id="home__blob" src="/files/svg/blob.svg">
+    <img id="home__wave1" src="/files/svg/wave1.svg">
+    <img id="home__wave2" src="/files/svg/wave2.svg">
 </div>
+<div id="home__page" class="column">
+    <div class="row stack-when-laptop" style="justify-content:space-between">
+        <div id="home__main" class="column full-view-height full-center full-width">
+            <div id="home__welcome" class="full-center">
+                <a id="home__banner-anchor" href="https://www.freepik.com/free-photos-vectors/business"><img id="home__banner-img" src="/files/svg/thinking.svg" alt="Girl thinking of what to plan" style="filter: drop-shadow( 3px 3px 2px rgba(0, 0, 0, .7));"></a>
+                <div class="column">
+                    <span>
+                        <h3 id="home__superscript">Plan with</h3>
+                        <h1 id="home__mirai" class="logo home">Mirai</h1>
+                    </span>
+                    <button id="home__tryit" class="medium">Try it for free</button>
+                    <button id="home__github" class="medium outline">See the code</button>
+                </div>
+            </div>
+            <h4 id="home__slogan" class="text-center">
+                {{ slogan }}
+            </h4>
+        </div>
+    </div>
+    <div class="banner row stack-when-large-tablet stretch">
+        <div class="banner column left" style="flex:3">
+            <h1>Header 1</h1>
+            <h2>Header 2</h2>
+            <h3>Header 3</h3>
+            <h4>Header 4</h4>
+            <h5>Header 5</h5>
+            <h6>Header 6</h6>
+            <p>Here is an example of some body text.</p>
+            <p><i>Here is an example of some italic text.</i></p>
+            <p style="font-weight:bold;">Here is an example of some bold text.</p>
+            <blockquote>Here is a block quote.</blockquote>
+        </div>
+        <div class="banner column text-center full-center stretch" style="flex:2">
+            <h4>Here are some examples of the theme's elements.</h4>
+            <div class="textbox">
+                <input type="email" name="textbox" autocomplete="off" required>
+                <label for="textbox">
+                    <span>Email</span>
+                </label>
+            </div>
+
+            <div class="textarea">
+                <textarea id="textarea"></textarea>
+                <label for="textarea">
+                    <span>Text</span>
+                </label>
+            </div>
+
+            <div>
+                <div class="switch">
+                    <input id="switch" type="checkbox" />
+                    <label for="switch">
+                        <span></span>
+                        Here is a switch.
+                    </label>
+                </div>
+                <div class="checkbox">
+                    <input id="checkbox" type="checkbox" />
+                    <label for="checkbox">
+                        <span></span>
+                        Here is a checkbox.
+                    </label>
+                </div>
+            </div>
+            <h4>Here are some buttons.</h4>
+            <button>Large</button>
+            <button class="medium">Medium</button>
+            <button class="small">Small</button>
+            <h6>This button is disabled.</h6>
+            <button class="medium" disabled>Disabled</button>
+            <p><a href="/">Refresh</a></p>
+        </div>
+    </div>
+</div>
+
+{{#yield-styles}}
+    <link rel='stylesheet' href='/css/home.css' />
+{{/yield-styles}}
+ 
+{{#yield-scripts}}
+    <script type="text/javascript" src="/js/home.js"></script>
+{{/yield-scripts}}
