@@ -1,1 +1,6 @@
-<!-- Placeholder -->
+<div id="header__left-container">
+    <a id="header__button-logo" class="logo">Mirai</a>
+</div>
+<div id="header__right-container">
+    <a class="header__button">Login</a>
+</div>
