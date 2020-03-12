@@ -32,6 +32,7 @@ const notify = new function() {
         fadeOutDuration: 400, // How long (in ms) does the fade out animation last
         fadeInDuration: 800, // How long (in ms) does the fade in animation last
         layer: defaultNotificationLayer, // The z-index layer of the notification
+        overlayLayer: defaultOverlayLayer,
         onStartClose: () => { }, // The event that gets called when the notification starts closing 
         onClose: () => { }, // The event that gets called when the notification is fully closed
         queue: false, // Toggles handling FIFO notification queues by sliding down the notifications after an older sibling is closed
@@ -66,8 +67,6 @@ const notify = new function() {
         let overlayId = 'notify-overlay';
         const target = fullscreenElement || $(obj.mergedOptions.targetSelector);
         let currentOverlay = $('#' + overlayId);
-        console.log(target)
-        console.log(currentOverlay)
         if (currentOverlay.length && !enable) {
             if (!delay) delay = obj.mergedOptions.fadeOutDuration;
             currentOverlay.fadeOut(delay, () => {
@@ -84,7 +83,7 @@ const notify = new function() {
                 height: '3000%',
                 width: '3000%',
                 'background-color': `rgba(0,0,0,${opacity})`,
-                'z-index': defaultOverlayLayer
+                'z-index': obj.mergedOptions.overlayLayer
             });
             if (!delay) delay = obj.mergedOptions.fadeInDuration;
             currentOverlay.fadeIn(delay);
@@ -98,10 +97,8 @@ const notify = new function() {
      * - $ // The jQuery object of the element
      * - options // The original options notify.me was called with
      * - close() // Closes the notification
-     * 
-     * ignoreFunctions is for network use only. Setting this to true will ignore any JS functions passed from the network (prevents JS injection).
      */
-    obj.me = (options, callback, ignoreFunctions) => {
+    obj.me = (options, callback) => {
         let idSuffix = Math.ceil(Math.random() * 99999);
         let mergedOptions = { ...defaultOptions, ...options };
         for (const [key, value] of Object.entries(defaultOptions)) {
@@ -121,7 +118,7 @@ const notify = new function() {
 
         if (mergedOptions.queue && stack.filter(_ => _.targetSelector === '#notify-queue').length >= mergedOptions.maxInQueue){
             stackQueue.push({
-                options, callback, ignoreFunctions
+                options, callback
             });
             return;
         }
@@ -161,8 +158,7 @@ const notify = new function() {
                     let stackItem;
                     if (mergedOptions.timeoutHandle)
                         clearTimeout(mergedOptions.timeoutHandle);
-                    if (!ignoreFunctions)
-                        mergedOptions.onStartClose();
+                    mergedOptions.onStartClose();
                     if (mergedOptions.queue && stack.length) {
                         stackItem = stack.findIndex(_ => _.notification.id === result.id);
                         let wait = true;
@@ -189,11 +185,10 @@ const notify = new function() {
                     }
                     result.$.fadeOut(mergedOptions.fadeOutDuration, function () {
                         $(this).remove();
-                        if (!ignoreFunctions)
-                            mergedOptions.onClose();
+                        mergedOptions.onClose();
                         if (mergedOptions.queue && stackQueue.length > 0) {
                             let notification = stackQueue.pop();
-                            obj.me(notification.options, notification.callback, notification.ignoreFunctions);
+                            obj.me(notification.options, notification.callback);
                         }
                     });
                 };
@@ -250,10 +245,8 @@ const notify = new function() {
                     let buttonId = idPrefix + 'button-' + Math.ceil(Math.random() * 99999);
                     buttonsElement.append(`<button id="${buttonId}" class="${_.class}">${_.text}</button>`);
                     $('#' + buttonId).click(function () {
-                        if (!ignoreFunctions)
-                            _.action($(this));
-                        if (_.close)
-                            ret.close();
+                        if (_.action) _.action($(this));
+                        if (_.close) ret.close();
                     });
                 });
             }

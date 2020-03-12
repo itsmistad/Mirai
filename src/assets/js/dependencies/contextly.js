@@ -97,7 +97,7 @@ const contextly = new function() {
                     loop: false,
                     autoplay: false,
                     path: `/files/lottie/${o.icon}.json`,
-                    initialSegment: [0, 14]
+                    initialSegment: o.segment
                 });
                 menuItem.hover(function() {
                     anim.setDirection(1);
@@ -173,6 +173,7 @@ const contextly = new function() {
         const baseOptionSet = {
             icon: '',
             animateIcon: true,
+            segment: [0, 14],
             text: '',
             tooltip: '',
             action: e => {}
@@ -224,10 +225,10 @@ const contextly = new function() {
 };
 
 jQuery.fn.extend({
-    contextly: function(options) {
+    contextly: function(containerSelector, options, menuSettings) {
         return this.each(function() {
             const _ = $(this);
-            contextly.init(_, options);
+            contextly.init(_.attr('id'), containerSelector, options, menuSettings);
         });
     },
 });

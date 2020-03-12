@@ -11,9 +11,9 @@ class HomeController {
     }
 
     async run(route, req, res) {
-        const v = new View(res, 'home');
+        const v = new View(config, res, 'home');
         const slogan = await config.get(configKeys.theme.slogan);
-        v.render({
+        await v.render({
             title: 'Home',
             slogan
         });

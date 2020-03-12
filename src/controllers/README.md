@@ -15,15 +15,17 @@ If you haven't [created a view yet](https://github.com/itsmistad/Mirai/tree/deve
 > 'use strict';
 > 
 > const View = require('../views/shared/view');
+> let config;
 > 
 > class <Page>Controller {
 >     constructor(root) {
 >         this.name = '<page>';
+>         config = root.config;
 >     }
 > 
 >     async run(route, req, res) {
->         const v = new View(res, 'path/to/<page>');
->         v.render({
+>         const v = new View(config, res, 'path/to/<page>');
+>         await v.render({
 >             title: '<Page>'
 >         });
 >     }
