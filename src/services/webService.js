@@ -63,6 +63,7 @@ function setRoutes() {
 
 async function hookServices() {
     // Insert any networking services here (push notifications, socket.io, etc.).
+    log.info('Starting notification service...');
     await notification.start(app);
 }
 
@@ -79,7 +80,6 @@ class WebService {
         log.debug(`Port retrieved from configuration: ${port}`);
 
         log.info('Starting web service...');
-        log.info('Passing to Notification Service to start...');
         app = express();
         setRoutes();
         hookServices();

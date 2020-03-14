@@ -97,6 +97,14 @@ function toggleScrollBar($e) {
     $e.toggleClass(classes.hideScroll);
 }
 
+// Disables "for-small-tablets-down" sizes if 'Theme.EnableMobile' is false.
+if (!config.theme.enableMobile && $(window).width() <= 800 && location.pathname != "/") {
+    $('body').children().remove();
+    $('body').append('<p style="margin: 20px">Your device is not currently supported.</p>');
+    notify = null;
+    contextly = null;
+}
+
 $(function() {
     $('#header__button-logo').click(function(e) {
         redirect('/');

@@ -29,6 +29,7 @@
         "*.woff",
         "*.json",
         "*.mp3",
+        "*.woff2",
         "**/assets/js/**/*.js"
     ],
     "rules": {

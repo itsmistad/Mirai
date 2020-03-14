@@ -1,20 +1,30 @@
 'use strict';
 
+const configKeys = require('../../services/config/configKeys');
+
 class View {
-    constructor(response, template) {
+    constructor(config, response, template) {
+        this.config = config;
         this.response = response;
         this.template = template;
     }
 
-    render(locals, partials) {
+    async render(locals, partials) {
         if(this.response && this.template && locals) {
+            const globals = {
+                themeEnableMobile: await this.config.get(configKeys.theme.enableMobile)
+            };
+            for (const global in globals) {
+                this.response.locals[global] = globals[global];
+            }
+
             for (const local in locals) {
                 this.response.locals[local] = locals[local];
             }
             if (partials)
-                this.response.render(this.template, partials);
+                await this.response.render(this.template, partials);
             else 
-                this.response.render(this.template);
+                await this.response.render(this.template);
         }
     }
 }
