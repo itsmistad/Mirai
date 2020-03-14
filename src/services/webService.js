@@ -5,7 +5,7 @@ const express = require('express');
 const configKeys = require('./config/configKeys');
 
 let log, app, config, root, controllers = [];
-//let notification;
+let notification;
 let routes = [
 //  ['/route/to/page', '<page>Controller', 'GET' or 'POST']
     ['/', 'homeController', 'GET'],
@@ -64,7 +64,7 @@ function setRoutes() {
 async function hookServices() {
     // Insert any networking services here (push notifications, socket.io, etc.).
     log.info('Starting notification service...');
-    //await notification.start(app);
+    await notification.start(app);
 }
 
 class WebService {
@@ -72,7 +72,7 @@ class WebService {
         log = _root.log;
         config = _root.config;
         root = _root;
-        //notification = _root.notification;
+        notification = _root.notification;
     }
 
     async start() {
