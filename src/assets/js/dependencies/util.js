@@ -30,6 +30,11 @@ function redirect(url) {
     startLoaderTransition(() => window.location.href = url);
 }
 
+function cookiesFlag() {
+    const acceptedCookies = getCookie('acceptedCookies');
+    return acceptedCookies && acceptedCookies === 'true';
+}
+
 // Sets a cookie for a specified number of days.
 function setCookie(name, value, days) {
     var expires = "";

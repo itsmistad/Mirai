@@ -106,11 +106,28 @@ if (!config.theme.enableMobile && $(window).width() <= 800 && location.pathname 
 }
 
 $(function() {
+    if (!cookiesFlag()) {
+        notify.me({
+            header: 'Cookie Policy',
+            subheader: `<a href="/">Read our cookie policy</a>`,
+            body: 'Mirai uses cookies to provide you the best planning experience.<br/>By continuing to use our website, you accept our use of cookies.',
+            buttons: [{
+                text: 'I accept',
+                class: 'medium',
+                close: true,
+                action: () => {
+                    setCookie('acceptedCookies', 'true', 7);
+                }
+            }]
+        });
+    }
+
     $('#header__button-logo').click(function(e) {
         redirect('/');
         e.preventDefault();
         return;
     });
+
     $('#footer__button-github').click(function(e) {
         e.preventDefault();
         redirect('https://github.com/itsmistad/Mirai');
