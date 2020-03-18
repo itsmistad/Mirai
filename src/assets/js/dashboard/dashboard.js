@@ -38,14 +38,52 @@ function addFullViewNode(iconPath, nodeClass, text, id) {
     });
 }
 
-function increaseCounter(node) {
-    const counter = node.find('.dashboard__counter');
-    if (counter.length) {
-        let currentCount = parseInt(counter.text());
-        counter.text(++currentCount);
-        counter.addClass('show');
+const card = Object.freeze(new function() {
+    let obj = {}, cards = [];
+
+    obj.create = cardId => {
+        let c = {
+            id: cardId,
+            name: 'New Card'
+        };
+        cards.push(c);
+        return c;
     }
-}
+
+    obj.find = id => cards.find(_ => _.id === id);
+
+    return obj;
+});
+
+const folder = Object.freeze(new function() {
+    let obj = {}, folders = [];
+
+    obj.create = folderId => {
+        let f = {
+            id: folderId,
+            name: 'New Folder',
+            cards: [],
+            addCard: cardId => {
+                const $folder = $('#' + f.id);
+                const counter = $folder.find('.dashboard__counter');
+                console.log($folder);
+                if (counter.length) {
+                    let currentCount = parseInt(counter.text());
+                    counter.text(++currentCount);
+                    counter.addClass('show');
+                }
+                f.cards.push(card.find(cardId));
+            },
+            findCard: id => f.cards.find(_ => _.id === id)
+        };
+        folders.push(f);
+        return f;
+    }
+
+    obj.find = id => folders.find(_ => _.id === id);
+
+    return obj;
+});
 
 $(function() {
     const fullscreenBtn = $('#dashboard__fullscreen');
@@ -76,6 +114,10 @@ $(function() {
         action: () => {
             const id = 'dashboard__card-' + Math.floor(Math.random() * 99999);
             addFullViewNode('/files/svg/document.svg', 'dashboard__card', 'New Card', id);
+            card.create(id);
+            $('#' + id).click(function() {
+                // Start building the "modify pop-up" for cards.
+            });
         }
     }, {
         icon: 'add-folder',
@@ -84,6 +126,30 @@ $(function() {
         action: () => {
             const id = 'dashboard__folder-' + Math.floor(Math.random() * 99999);
             addFullViewNode('/files/svg/folder.svg', 'dashboard__folder', 'New Folder', id);
+            folder.create(id);
+            $('#' + id).click(function() {
+                // Start building the "modify pop-up" for folders.
+                const f = folder.find(this.id);
+                if (f.cards.length > 0) {
+                    for (let c of f.cards) {
+                        notify.me({
+                            header: `"${f.name}"`,
+                            subheader: 'Folder',
+                            body: 'Cards in this folder:',
+                            buttons: [],
+                            closeButton: true
+                        }, n => {
+                            let notifBody = n.$.find('.body');
+                            let cardsList = notifBody.find('#dashboard__modify-folder__cards');
+                            if (!cardsList.length) {
+                                notifBody.append('<ul id="dashboard__modify-folder__cards"></ul>');
+                                cardsList = notifBody.find('#dashboard__modify-folder__cards');
+                            }
+                            cardsList.append(`<li>${c.name}</li>`);
+                        });
+                    }
+                }
+            });
         }
     }], {
         minHeight: 100
@@ -211,10 +277,12 @@ interact('.dashboard__folder-wrapper').dropzone({
     ondrop: function (event) {
         // On card dropped (into folder).
         const card = event.relatedTarget;
-        const folder = event.target;
+        const _folder = event.target;
+        const cardId = event.relatedTarget.id;
+        const folderId = event.target.id;
 
-        folder.classList.remove('selected-dropzone');
-        increaseCounter($(folder));
+        _folder.classList.remove('selected-dropzone');
+        folder.find(folderId).addCard(cardId);
         $(card).fadeOut(200, function() {
             card.classList.remove('can-drop');
             $(this).remove();

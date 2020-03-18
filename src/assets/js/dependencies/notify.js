@@ -274,10 +274,13 @@ const notify = new function() {
             if (!mergedOptions.queue) {
                 if (!centerQueue.length) {
                     obj.overlay(true, mergedOptions.fadeInDuration, 0.3);
+                    $('#notify-overlay').click(function() {
+                        if (centerQueue.length === 1) {
+                            centerQueue[0].close();
+                        }
+                    });
                 }
-                centerQueue.push({
-                    ret
-                });
+                centerQueue.push(ret);
             }
 
             if (callback) callback(ret);
