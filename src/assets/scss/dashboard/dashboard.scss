@@ -41,9 +41,9 @@
     justify-content: flex-end;
     align-items: center;
     z-index: $layer_page_dashboard_full_view_buttons;
-    #dashboard__fullscreen {
+    .dashboard__button {
         padding: 0.4em;
-        margin: 0.4em;
+        margin: 0.4em 0.4em 0 0;
         line-height: 0;
         height: 40px;
         width: 40px;
@@ -132,15 +132,31 @@
                 max-height: 10em;
                 overflow-y: scroll;
                 overflow-x: hidden;
-                li {
-                    padding: 0.3em 0.4em;
-                    margin: 0.3em;
-                    text-align: left;
-                    border-radius: 2px;
+                .dashboard__modify-folder__card {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
                     transition: $transition_200;
-                    &:hover {
-                        box-shadow: 0 0 4px -1px rgba(0,0,0,1);
-                        cursor: pointer;
+                    li {
+                        padding: 0.3em 0.4em;
+                        margin: 0.3em;
+                        text-align: left;
+                        border-radius: 2px;
+                        transition: $transition_200;
+                        flex: 1;
+                        &:hover {
+                            box-shadow: 0 0 4px -1px rgba(0,0,0,1);
+                            cursor: pointer;
+                        }
+                    }
+                    i {
+                        padding: 0 0.4em;
+                        color: #ccc;
+                        transition: $transition_200;
+                        &:hover {
+                            cursor: pointer;
+                            color: black;
+                        }
                     }
                 }
             }
