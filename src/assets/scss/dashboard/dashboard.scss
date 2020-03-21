@@ -67,11 +67,7 @@
         flex-direction: column;
         justify-content: center;
 
-        .dashboard__create-card-name { //This will have the manditory astrick
-            
-        }
-
-        .dashboard__create-card-description { //Can be left blank
+        .dashboard__create-card-description {
             .textarea textarea {
                 height: 15em;
             }
@@ -85,18 +81,18 @@
     height: 30em;
     max-height: 80%;
 
-    .dashboard__create-due-date-container {
+    .dashboard__due-date-container {
         display: flex;
         flex-direction: column;
         justify-content: center;
 
-        .dashboard__create-due-date-time {
+        .dashboard__due-date-time {
             .textbox {
                 padding-top: 4em;
             }
         }
 
-        .dashboard__create-due-date-date {
+        .dashboard__due-date-date {
             .textbox {
                 padding-top: 4em;
             }
@@ -109,6 +105,14 @@
     max-width: 80%;
     height: 53em;
     max-height: 80%;
+
+    .dashboard__modify-card-container {
+        .dashboard__modify-card-description {
+            .textarea textarea {
+                height: 25em;
+            }
+        }
+    }
 
     .cards-container {
         display: flex;

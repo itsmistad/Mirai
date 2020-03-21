@@ -2,7 +2,7 @@ function addFullViewNode(iconPath, nodeClass, text, id, x = mouse.x, y = mouse.y
     const parent = $('#dashboard__full-view');
     const fullViewButtons = $('#dashboard__full-view #dashboard__buttons');
     $(`
-    <div id="${id}" class="draggable dashboard__draggable ${nodeClass}-wrapper" style="left:${mouse.x - parent.offset().left - 50}px;top:${mouse.y - parent.offset().top - 50}px">
+    <div id="${id}" class="draggable dashboard__draggable ${nodeClass}-wrapper" style="left:${x - parent.offset().left - 50}px;top:${y - parent.offset().top - 50}px">
         <div class="${nodeClass}">
             <div class="dashboard__counter">0</div>
             <div class="dashboard__pin"><i class="fas fa-thumbtack"></i></div>
@@ -235,8 +235,8 @@ $(function() {
                             subheader: 'Enter a due date and time',
                             class: 'notify-popup dashboard__due-date-popup',
                             body: `
-                            <div class="dashboard__create-due-date-container">
-                                <div class="dashboard__create-due-date-time">
+                            <div class="dashboard__due-date-container">
+                                <div class="dashboard__due-date-time">
                                     <div class="textbox">
                                             <input type="time" name="time" autocomplete="off" required value="${c.time ? c.time : ""}">
                                             <label for="time">
@@ -244,7 +244,7 @@ $(function() {
                                             </label>
                                         </div>
                                     </div>
-                                <div class="dashboard__create-due-date-date">
+                                <div class="dashboard__due-date-date">
                                     <div class="textbox">
                                         <input type="date" name="date" autocomplete="off" required value="${c.date ? c.date : ""}">
                                         <label for="date">
@@ -258,8 +258,8 @@ $(function() {
                                 text: 'Done',
                                 close: true,
                                 action: () => {
-                                    c.date = $('.dashboard__create-due-date-date input').attr('value'); // Get the value of $('.dashboard__create-due-date-date input')
-                                    c.time = $('.dashboard__create-due-date-time input').attr('value'); // Get the value of $('.dashboard__create-due-date-time input')
+                                    c.date = $('.dashboard__due-date-date input').attr('value'); // Get the value of $('.dashboard__create-due-date-date input')
+                                    c.time = $('.dashboard__due-date-time input').attr('value'); // Get the value of $('.dashboard__create-due-date-time input')
                                 }
                             }],
                             closeButton: false
@@ -272,29 +272,101 @@ $(function() {
                     close: true,
                     action: () => {
                         c.name = $('.dashboard__create-card-name input').attr('value');
+                        c.description = $('.dashboard__create-card-description textarea').attr('value');
                         addFullViewNode('/files/svg/document.svg', 'dashboard__card', c.name, id);
+                        $('#' + id).click(function() {
+                            let dragging = $(this).attr('dragging');
+                            if (dragging && dragging === 'true')
+                            {
+                                $(this).attr('dragging', 'false');
+                                return;   
+                            }
+                            // Start building the "modify card" pop-up.
+                            notify.me({
+                                header: `Modify "${c.name}"`,
+                                subheader: 'Enter a new name and description',
+                                class: 'notify-popup dashboard__modify-popup',
+                                body: `
+                                <div class="dashboard__modify-card-container">
+                                    <div class="dashboard__modify-card-name">
+                                        <div class="textbox">
+                                            <input type="text" name="name" autocomplete="off" required value="${c.name}">
+                                            <label for="name">
+                                                <span>Name</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="dashboard__modify-card-description">
+                                        <div class="textarea">
+                                            <textarea id="description">${c.description}</textarea>
+                                            <label for="description">
+                                                <span>Description</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                `,
+                                buttons: [ {
+                                    text: 'Change Due Date',
+                                    close: false,
+                                    class: 'small',
+                                    action: () => {
+                                        notify.me({
+                                            header: 'Modify the Due Date',
+                                            subheader: 'Enter a new due date and time',
+                                            class: 'notify-popup dashboard__due-date-popup',
+                                            body: `
+                                            <div class="dashboard__due-date-container">
+                                                <div class="dashboard__due-date-time">
+                                                    <div class="textbox">
+                                                            <input type="time" name="time" autocomplete="off" required value="${c.time ? c.time : ""}">
+                                                            <label for="time">
+                                                                <span>Time</span>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                <div class="dashboard__due-date-date">
+                                                    <div class="textbox">
+                                                        <input type="date" name="date" autocomplete="off" required value="${c.date ? c.date : ""}">
+                                                        <label for="date">
+                                                            <span>Date</span>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            `,
+                                            buttons: [ {
+                                                text: 'Done', 
+                                                close: true,
+                                                action: () => {
+                                                    c.date = $('.dashboard__due-date-date input').attr('value'); // Get the value of $('.dashboard__create-due-date-date input')
+                                                    c.time = $('.dashboard__due-date-time input').attr('value'); // Get the value of $('.dashboard__create-due-date-time input')
+                                                }
+                                            }],
+                                            closeButton: false
+                                        }, () => {
+                                            initializeTextboxes();
+                                        });
+                                    }
+                                }, {
+                                    text: 'Save',
+                                    class: 'small',
+                                    close: true,
+                                    action: () => {
+                                        c.name = $('.dashboard__modify-card-name input').attr('value');
+                                        c.description = $('.dashboard__modify-card-description textarea').attr('value');
+                                    }
+                                }],
+                                closeButton: true
+                            }, () => {
+                                initializeTextboxes();
+                            });
+                        });
                     }
                 }],
                 closeButton: false
             }, () => {
                 initializeTextboxes();
-            });
-            $('#' + id).click(function() {
-                let dragging = $(this).attr('dragging');
-                if (dragging && dragging === 'true')
-                {
-                    $(this).attr('dragging', 'false');
-                    return;   
-                }
-                // Start building the "modify card" pop-up.
-                notify.me({
-                    header: `"${c.name}"`,
-                    subheader: 'Card',
-                    body: `<div class="dashboard__modify-popup__path-wrapper"><div class="dashboard__modify-popup__path"><div class="card">${c.name}</div></div></div>`,
-                    class: 'notify-popup dashboard__modify-popup',
-                    buttons: [],
-                    closeButton: true
-                });
             });
         }
     }, {

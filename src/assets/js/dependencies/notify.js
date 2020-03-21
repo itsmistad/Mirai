@@ -6,7 +6,7 @@
 
 const notify = new function() {
 
-    let obj = {}, stack = [], audio = [], stackQueue = [], centerQueue = [];
+    let obj = {}, stack = [], audio = [], stackQueue = [], centerQueue = [], overlayClickRegistered;
     let idPrefix = 'notify-popup-';
     let popupElement = options =>
         `<div id="${options.id}" class="${options.class}" style="display:none;">
@@ -73,6 +73,7 @@ const notify = new function() {
                 currentOverlay.remove();
             });
             $('html').css('overflow', 'unset');
+            overlayClickRegistered = false;
         } else if (!currentOverlay.length && enable) {
             target.append(`<div id="${overlayId}" style="display:none;"></div>`);
             currentOverlay = $('#' + overlayId);
@@ -89,6 +90,19 @@ const notify = new function() {
             });
             if (!delay) delay = obj.mergedOptions.fadeInDuration;
             currentOverlay.fadeIn(delay);
+            if (!overlayClickRegistered) {
+                currentOverlay.click(function() {
+                    let closeArray = [];
+                    for (let queueItem of centerQueue.reverse()) {
+                        closeArray.push(queueItem);
+                    }
+                    for (let queueItem of closeArray) {
+                        queueItem.close();
+                    }
+                    closeArray = [];
+                });
+            }
+            overlayClickRegistered = true;
         }
     };
 
@@ -183,6 +197,8 @@ const notify = new function() {
                         centerQueue.pop();  
                         if (!centerQueue.length) {
                             obj.overlay(false, mergedOptions.fadeOutDuration, 0.3);
+                        } else {
+                            centerQueue[centerQueue.length - 1].$.fadeIn(200);
                         }
                     }
                     result.$.fadeOut(mergedOptions.fadeOutDuration, function () {
@@ -276,12 +292,8 @@ const notify = new function() {
             if (!mergedOptions.queue) {
                 if (!centerQueue.length) {
                     obj.overlay(true, mergedOptions.fadeInDuration, 0.3);
-                    $('#notify-overlay').click(function() {
-                        if (centerQueue.length === 1) {
-                            centerQueue[0].close();
-                        }
-                    });
-                }
+                } else
+                    centerQueue[centerQueue.length - 1].$.fadeOut(200);
                 centerQueue.push(ret);
             }
 
