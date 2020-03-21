@@ -56,11 +56,63 @@
     margin: 0;
 }
 
+.dashboard__create-card-popup {
+    width: 30em;
+    max-width: 80%;
+    height: 30em;
+    max-height: 80%;
+
+    .dashboard__create-card-container {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+
+        .dashboard__create-card-description {
+            .textarea textarea {
+                height: 15em;
+            }
+        }
+    }
+}
+
+.dashboard__due-date-popup {
+    width: 30em;
+    max-width: 80%;
+    height: 30em;
+    max-height: 80%;
+
+    .dashboard__due-date-container {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+
+        .dashboard__due-date-time {
+            .textbox {
+                padding-top: 4em;
+            }
+        }
+
+        .dashboard__due-date-date {
+            .textbox {
+                padding-top: 4em;
+            }
+        }
+    }
+}
+
 .dashboard__modify-popup {
     width: 40em;
     max-width: 80%;
     height: 53em;
     max-height: 80%;
+
+    .dashboard__modify-card-container {
+        .dashboard__modify-card-description {
+            .textarea textarea {
+                height: 25em;
+            }
+        }
+    }
 
     .cards-container {
         display: flex;
@@ -242,6 +294,7 @@
     height: 100px;
     width: 100px;
     border-radius: 50%;
+    position: relative;
     background-color: $color_light_accent;
     justify-content: center;
     display: flex;

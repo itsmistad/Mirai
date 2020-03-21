@@ -177,6 +177,8 @@ div.textbox {
     width: 100%;
     padding: 0 0 1.4em;
 
+    input[type='date'],
+    input[type='time'],
     input[type='text'],
     input[type='email'] {
         font-family: $font_header;
@@ -212,7 +214,6 @@ div.textbox {
             font-size: em(14px);
             color: $color_error;
         }
-    
     }
     
     input[value=''] {
@@ -230,6 +231,8 @@ div.textbox {
         }
     }
     
+    input[type='date'],
+    input[type='time'],
     input[type='text'],
     input[type='email'] {
         &:hover {
@@ -250,7 +253,7 @@ div.textbox {
         }
         
         &:focus + label span {
-            transform: translateY(170%);
+            transform: translateY(150%);
             font-size: em(14px);
             color: $color_highlighted;
         }
@@ -258,6 +261,18 @@ div.textbox {
         &:focus + label::after {
             transform: translateX(0%);
             border-bottom: 3px solid $color_highlighted;
+        }
+    }
+
+    input[type='date'][value=''] {
+        & + label span {
+            transform: translateY(150%) !important;
+        }
+    }
+
+    input[type='time'],[value=''] {
+        & + label span {
+            transform: translateY(150%) !important;
         }
     }
     
