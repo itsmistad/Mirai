@@ -1,8 +1,8 @@
-function addFullViewNode(iconPath, nodeClass, text, id) {
+function addFullViewNode(iconPath, nodeClass, text, id, x = mouse.x, y = mouse.y) {
     const parent = $('#dashboard__full-view');
     const fullViewButtons = $('#dashboard__full-view #dashboard__buttons');
     $(`
-    <div id="${id}" class="draggable dashboard__draggable ${nodeClass}-wrapper" style="left:${mouse.x - parent.offset().left - 50}px;top:${mouse.y - parent.offset().top - 50}px">
+    <div id="${id}" class="draggable dashboard__draggable ${nodeClass}-wrapper" style="left:${x - parent.offset().left - 50}px;top:${y - parent.offset().top - 50}px">
         <div class="dashboard__counter">0</div>
         <div class="dashboard__pin"><i class="fas fa-thumbtack"></i></div>
         <div class="dashboard__remove"><i class="fas fa-times"></i></div>
@@ -71,13 +71,23 @@ const folder = Object.freeze(new function() {
             addCard: cardId => {
                 const $folder = $('#' + f.id);
                 const counter = $folder.find('.dashboard__counter');
-                console.log($folder);
                 if (counter.length) {
                     let currentCount = parseInt(counter.text());
                     counter.text(++currentCount);
                     counter.addClass('show');
                 }
                 f.cards.push(card.find(cardId));
+            },
+            removeCard: cardId => {
+                const $folder = $('#' + f.id);
+                const counter = $folder.find('.dashboard__counter');
+                if (counter.length) {
+                    let currentCount = parseInt(counter.text()) - 1;
+                    counter.text(currentCount);
+                    if (currentCount === 0)
+                        counter.removeClass('show');
+                }
+                f.cards.splice(card.find(cardId), 1);
             },
             findCard: id => f.cards.find(_ => _.id === id)
         };
@@ -90,9 +100,60 @@ const folder = Object.freeze(new function() {
     return obj;
 });
 
+function returnNodesToView(viewWidth) {
+    if (viewWidth >= 800)
+        $('.dashboard__draggable').each(function() {
+            let parent = $('#dashboard__full-view');
+            let _ = $(this);
+            let top = parseFloat(_.css('top').replace('px', ''));
+            let left = parseFloat(_.css('left').replace('px', ''));
+            let y = _.attr('data-y') || 0;
+            y = parseFloat(y);
+            let x = _.attr('data-x') || 0;
+            x = parseFloat(x);
+            let relativeY = top + y;
+            let relativeX = left + x;
+            let width = _.width();
+            let height = _.height();
+            _.css('transition', 'transform 200ms cubic-bezier(.4,.0,.23,1)');
+            if (relativeY + height > parent.innerHeight() && relativeX + width > parent.innerWidth()) {
+                let newX = parent.innerWidth() - width - left;
+                let newY = parent.innerHeight() - height - top;
+                _.attr('data-x', newX);
+                _.attr('data-y', newY);
+                _.css('transform', `translate(${newX}px, ${newY}px)`);
+            } else if (relativeY + height > parent.innerHeight()) {
+                let newY = parent.innerHeight() - height - top;
+                _.attr('data-y', newY);
+                _.css('transform', `translate(${x}px, ${newY}px)`);
+            } else if (relativeX + width > parent.innerWidth()) {
+                let newX = parent.innerWidth() - width - left;
+                _.attr('data-x', newX);
+                console.log(`translate(${newX}px, ${y}px)`)
+                _.css('transform', `translate(${newX}px, ${y}px)`);
+            } else if (relativeY < 0 && relativeX < 0) {
+                let newX = -1 * left;
+                let newY = -1 * top;
+                _.attr('data-x', newX);
+                _.attr('data-y', newY);
+                _.css('transform', `translate(${newX}px, ${newY}px)`);
+            } else if (relativeY < 0) {
+                let newY = -1 * top;
+                _.attr('data-y', newY);
+                _.css('transform', `translate(${x}px, ${newY}px)`);
+            } else if (relativeX < 0) {
+                let newX = -1 * left;
+                _.attr('data-x', newX);
+                console.log(`translate(${newX}px, ${y}px)`)
+                _.css('transform', `translate(${newX}px, ${y}px)`);
+            }
+            setTimeout(() => _.css('transition', 'unset'), 210);
+        });
+}
+
 $(function() {
     const fullscreenBtn = $('#dashboard__fullscreen');
-    const anim = lottie.loadAnimation({
+    const fullscreenAnim = lottie.loadAnimation({
         container: fullscreenBtn.get(0),
         renderer: 'svg',
         loop: false,
@@ -101,16 +162,37 @@ $(function() {
         initialSegment: [0, 14]
     });
     fullscreenBtn.hover(function() {
-        anim.setDirection(1);
-        anim.setSpeed(3);
-        anim.play();
+        fullscreenAnim.setDirection(1);
+        fullscreenAnim.setSpeed(3);
+        fullscreenAnim.play();
     }, function() {
-        anim.setDirection(-1);
-        anim.setSpeed(3);
-        anim.play();
+        fullscreenAnim.setDirection(-1);
+        fullscreenAnim.setSpeed(3);
+        fullscreenAnim.play();
     });
     fullscreenBtn.click(function() {
         setFullscreenElement($('#dashboard__full-view'));
+    });
+    const returnNodesBtn = $('#dashboard__return-nodes');
+    const returnNodesAnim = lottie.loadAnimation({
+        container: returnNodesBtn.get(0),
+        renderer: 'svg',
+        loop: false,
+        autoplay: false,
+        path: '/lottie/design.json',
+        initialSegment: [0, 14]
+    });
+    returnNodesBtn.hover(function() {
+        returnNodesAnim.setDirection(1);
+        returnNodesAnim.setSpeed(1.2);
+        returnNodesAnim.play();
+    }, function() {
+        returnNodesAnim.setDirection(-1);
+        returnNodesAnim.setSpeed(1.2);
+        returnNodesAnim.play();
+    });
+    returnNodesBtn.click(function() {
+        returnNodesToView($(window).width());
     });
     contextly.init('#dashboard__full-view', '#dashboard__full-view', [{
         icon: 'document',
@@ -135,10 +217,10 @@ $(function() {
         text: 'Create a folder',
         tooltip: '',
         action: () => {
-            const id = 'dashboard__folder-' + Math.floor(Math.random() * 99999);
-            addFullViewNode('/files/svg/folder.svg', 'dashboard__folder', 'New Folder', id);
-            folder.create(id);
-            $('#' + id).click(function() {
+            let folderId = 'dashboard__folder-' + Math.floor(Math.random() * 99999);
+            addFullViewNode('/files/svg/folder.svg', 'dashboard__folder', 'New Folder', folderId);
+            folder.create(folderId);
+            $('#' + folderId).click(function() {
                 let dragging = $(this).attr('dragging');
                 if (dragging && dragging === 'true')
                 {
@@ -158,7 +240,7 @@ $(function() {
                                 </div>
                             </div>
                             <div class="cards-container">
-                                <h5>Cards</h5>
+                                <h5>Cards<span style="color:#ccc;font-style:italic"> - click <i style="padding: 0 0.2em" class="fas fa-arrow-alt-circle-right"></i> to remove from the folder</span></h5>
                             </div>`,
                         class: 'notify-popup dashboard__modify-popup',
                         buttons: [],
@@ -171,7 +253,40 @@ $(function() {
                             cardsList = notifBody.find('.dashboard__modify-folder__cards ul');
                         }
                         for (let c of f.cards) {
-                            cardsList.append(`<li>${c.name}</li>`);
+                            let cardId = 'dashboard__modify-folder__card-' + Math.floor(Math.random() * 99999);
+                            cardsList.append(`<div class="dashboard__modify-folder__card" id="${cardId}"><li>${c.name}</li><i class="fas fa-arrow-alt-circle-right"></i></div>`);
+                            $(`#${cardId} .fa-arrow-alt-circle-right`).click(function() {
+                                let cardItem = $(this).parent();
+                                cardItem.css({
+                                    transform: 'translateX(100%)',
+                                    opacity: 0
+                                });
+                                f.removeCard(c.id);
+                                let axis = Math.ceil(Math.random() * 100);
+                                let flipped = Math.ceil(Math.random() * 100);
+                                let x = $('#' + folderId).offset().left + (axis >= 50 ? Math.floor(Math.random() * 241): 0) - 70 + (axis < 50 && flipped >= 50 ? 240 : 0);
+                                let y = $('#' + folderId).offset().top + (axis < 50 ? Math.floor(Math.random() * 241): 0) - 70 + (axis >= 50 && flipped < 50 ? 240 : 0);
+                                addFullViewNode('/files/svg/document.svg', 'dashboard__card', c.name, c.id, x, y);
+                                let cardParent = cardItem.parent();
+                                cardParent.children('.dashboard__modify-folder__card').not(cardItem).css({
+                                    transform: 'translateY(-100%)'
+                                });
+                                setTimeout(() => {
+                                    let oldTransition = cardParent.children('.dashboard__modify-folder__card').css('transition');
+                                    cardParent.children('.dashboard__modify-folder__card').css({
+                                        transition: 'unset'
+                                    });
+                                    cardItem.remove();
+                                    cardParent.children('.dashboard__modify-folder__card').css({
+                                        transform: 'unset'
+                                    });
+                                    setTimeout(() => {
+                                        cardParent.children('.dashboard__modify-folder__card').css({
+                                            transition: oldTransition
+                                        });
+                                    }, 50);
+                                }, 210);
+                            });
                         }
                     });
                 } else {
@@ -190,39 +305,7 @@ $(function() {
         minHeight: 100
     });
     $(window).afterResize(function(e) {
-        if (e.size.width >= 800)
-            $('.dashboard__draggable').each(function() {
-                let parent = $('#dashboard__full-view');
-                let _ = $(this);
-                let top = parseFloat(_.css('top').replace('px', ''));
-                let left = parseFloat(_.css('left').replace('px', ''));
-                let y = _.attr('data-y') || 0;
-                y = parseFloat(y);
-                let x = _.attr('data-x') || 0;
-                x = parseFloat(x);
-                let relativeY = top + y;
-                let relativeX = left + x;
-                let width = _.width();
-                let height = _.height();
-                _.css('transition', 'transform 200ms cubic-bezier(.4,.0,.23,1)');
-                if (relativeY + height > parent.innerHeight() && relativeX + width > parent.innerWidth()) {
-                    let newX = parent.innerWidth() - width - left;
-                    let newY = parent.innerHeight() - height - top;
-                    _.attr('data-x', newX);
-                    _.attr('data-y', newY);
-                    _.css('transform', `translate(${newX}px, ${newY}px)`);
-                } else if (relativeY + height > parent.height()) {
-                    let newY = parent.innerHeight() - height - top;
-                    _.attr('data-y', newY);
-                    _.css('transform', `translate(${x}px, ${newY}px)`);
-                } else if (relativeX + width > parent.width()) {
-                    let newX = parent.innerWidth() - width - left;
-                    _.attr('data-x', newX);
-                    console.log(`translate(${newX}px, ${y}px)`)
-                    _.css('transform', `translate(${newX}px, ${y}px)`);
-                }
-                setTimeout(() => _.css('transition', 'unset'), 210);
-            });
+        returnNodesToView(e.size.width);
     });
     notify.me({
         header: 'Welcome!',
