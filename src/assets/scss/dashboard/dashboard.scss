@@ -236,10 +236,13 @@
     box-shadow: 0 0 12px -6px rgba(0,0,0,0.2);
     transition: background-color $transition_200, box-shadow $transition_200,
         transform $transition_200;
+    z-index: 1;
     &:hover {
         box-shadow: 3px 3px 4px 0 rgba(0,0,0,0.3);
     }
-    z-index: 1;
+    img {
+        user-select: none;
+    }
 }
 
 .dashboard__card-wrapper {
