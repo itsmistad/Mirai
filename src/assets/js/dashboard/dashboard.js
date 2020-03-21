@@ -122,12 +122,27 @@ function returnNodesToView(viewWidth) {
                 _.attr('data-x', newX);
                 _.attr('data-y', newY);
                 _.css('transform', `translate(${newX}px, ${newY}px)`);
-            } else if (relativeY + height > parent.height()) {
+            } else if (relativeY + height > parent.innerHeight()) {
                 let newY = parent.innerHeight() - height - top;
                 _.attr('data-y', newY);
                 _.css('transform', `translate(${x}px, ${newY}px)`);
-            } else if (relativeX + width > parent.width()) {
+            } else if (relativeX + width > parent.innerWidth()) {
                 let newX = parent.innerWidth() - width - left;
+                _.attr('data-x', newX);
+                console.log(`translate(${newX}px, ${y}px)`)
+                _.css('transform', `translate(${newX}px, ${y}px)`);
+            } else if (relativeY < 0 && relativeX < 0) {
+                let newX = -1 * left;
+                let newY = -1 * top;
+                _.attr('data-x', newX);
+                _.attr('data-y', newY);
+                _.css('transform', `translate(${newX}px, ${newY}px)`);
+            } else if (relativeY < 0) {
+                let newY = -1 * top;
+                _.attr('data-y', newY);
+                _.css('transform', `translate(${x}px, ${newY}px)`);
+            } else if (relativeX < 0) {
+                let newX = -1 * left;
                 _.attr('data-x', newX);
                 console.log(`translate(${newX}px, ${y}px)`)
                 _.css('transform', `translate(${newX}px, ${y}px)`);
