@@ -1,6 +1,6 @@
 function addFullViewNode(iconPath, nodeClass, text, id) {
     const parent = $('#dashboard__full-view');
-    const fullViewButtons = $('#dashboard__full-view .dashboard__buttons');
+    const fullViewButtons = $('#dashboard__full-view #dashboard__buttons');
     $(`
     <div id="${id}" class="draggable dashboard__draggable ${nodeClass}-wrapper" style="left:${mouse.x - parent.offset().left - 50}px;top:${mouse.y - parent.offset().top - 50}px">
         <div class="dashboard__counter">0</div>
@@ -22,7 +22,7 @@ function addFullViewNode(iconPath, nodeClass, text, id) {
         notify.me({
             subheader: `Delete \"${$(this).parent().find('.dashboard__text').text()}"`,
             body: 'Are you sure you want to delete this?',
-            fadeInDuration: 200,
+            fadeInDuration: 200,    
             fadeOutDuration: 300,
             closeButton: false,
             buttons: [{
@@ -152,14 +152,14 @@ $(function() {
                         header: `"${f.name}"`,
                         subheader: 'Folder',
                         body: `
-<div class="dashboard__modify-popup__path-wrapper">
-<div class="dashboard__modify-popup__path">
-    <div class="folder">${f.name}</div>
-</div>
-</div>
-<div class="cards-container">
-<h5>Cards</h5>
-</div>`,
+                            <div class="dashboard__modify-popup__path-wrapper">
+                                <div class="dashboard__modify-popup__path">
+                                    <div class="folder">${f.name}</div>
+                                </div>
+                            </div>
+                            <div class="cards-container">
+                                <h5>Cards</h5>
+                            </div>`,
                         class: 'notify-popup dashboard__modify-popup',
                         buttons: [],
                         closeButton: true
