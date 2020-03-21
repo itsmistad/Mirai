@@ -72,9 +72,11 @@ const notify = new function() {
             currentOverlay.fadeOut(delay, () => {
                 currentOverlay.remove();
             });
+            $('html').css('overflow', 'unset');
         } else if (!currentOverlay.length && enable) {
             target.append(`<div id="${overlayId}" style="display:none;"></div>`);
             currentOverlay = $('#' + overlayId);
+            $('html').css('overflow', 'hidden');
             if (!opacity) opacity = 0.3;
             currentOverlay.css({
                 position: 'fixed',

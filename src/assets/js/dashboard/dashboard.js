@@ -1,6 +1,7 @@
 function addFullViewNode(iconPath, nodeClass, text, id) {
     const parent = $('#dashboard__full-view');
-    parent.append(`
+    const fullViewButtons = $('#dashboard__full-view .dashboard__buttons');
+    $(`
     <div id="${id}" class="draggable dashboard__draggable ${nodeClass}-wrapper" style="left:${mouse.x - parent.offset().left - 50}px;top:${mouse.y - parent.offset().top - 50}px">
         <div class="dashboard__counter">0</div>
         <div class="dashboard__pin"><i class="fas fa-thumbtack"></i></div>
@@ -10,11 +11,14 @@ function addFullViewNode(iconPath, nodeClass, text, id) {
         </div>
         <span class="dashboard__text">${text}</span>
     </div>
-    `);
-    $(`#${id} .dashboard__pin`).click(function() {
+    `).insertBefore(fullViewButtons);
+    $(`#${id} .dashboard__pin`).click(function(e) {
+        e.preventDefault();
         $(this).toggleClass('active');
+        return false;
     });
-    $(`#${id} .dashboard__remove`).click(function() {
+    $(`#${id} .dashboard__remove`).click(function(e) {
+        e.preventDefault();
         notify.me({
             subheader: `Delete \"${$(this).parent().find('.dashboard__text').text()}"`,
             body: 'Are you sure you want to delete this?',
@@ -35,6 +39,7 @@ function addFullViewNode(iconPath, nodeClass, text, id) {
                 close: true
             }]
         });
+        return false;
     });
 }
 
@@ -104,7 +109,7 @@ $(function() {
         anim.setSpeed(3);
         anim.play();
     });
-    fullscreenBtn.on('click', function() {
+    fullscreenBtn.click(function() {
         setFullscreenElement($('#dashboard__full-view'));
     });
     contextly.init('#dashboard__full-view', '#dashboard__full-view', [{
@@ -116,7 +121,13 @@ $(function() {
             addFullViewNode('/files/svg/document.svg', 'dashboard__card', 'New Card', id);
             card.create(id);
             $('#' + id).click(function() {
-                // Start building the "modify pop-up" for cards.
+                let dragging = $(this).attr('dragging');
+                if (dragging && dragging === 'true')
+                {
+                    $(this).attr('dragging', 'false');
+                    return;   
+                }
+                // Start building the "modify card" pop-up.
             });
         }
     }, {
@@ -128,26 +139,50 @@ $(function() {
             addFullViewNode('/files/svg/folder.svg', 'dashboard__folder', 'New Folder', id);
             folder.create(id);
             $('#' + id).click(function() {
-                // Start building the "modify pop-up" for folders.
+                let dragging = $(this).attr('dragging');
+                if (dragging && dragging === 'true')
+                {
+                    $(this).attr('dragging', 'false');
+                    return;   
+                }
+                // Start building the "modify folder" pop-up.
                 const f = folder.find(this.id);
                 if (f.cards.length > 0) {
-                    for (let c of f.cards) {
-                        notify.me({
-                            header: `"${f.name}"`,
-                            subheader: 'Folder',
-                            body: 'Cards in this folder:',
-                            buttons: [],
-                            closeButton: true
-                        }, n => {
-                            let notifBody = n.$.find('.body');
-                            let cardsList = notifBody.find('#dashboard__modify-folder__cards');
-                            if (!cardsList.length) {
-                                notifBody.append('<ul id="dashboard__modify-folder__cards"></ul>');
-                                cardsList = notifBody.find('#dashboard__modify-folder__cards');
-                            }
+                    notify.me({
+                        header: `"${f.name}"`,
+                        subheader: 'Folder',
+                        body: `
+<div class="dashboard__modify-popup__path-wrapper">
+<div class="dashboard__modify-popup__path">
+    <div class="folder">${f.name}</div>
+</div>
+</div>
+<div class="cards-container">
+<h5>Cards</h5>
+</div>`,
+                        class: 'notify-popup dashboard__modify-popup',
+                        buttons: [],
+                        closeButton: true
+                    }, n => {
+                        let notifBody = n.$.find('.cards-container');
+                        let cardsList = notifBody.find('.dashboard__modify-folder__cards ul');
+                        if (!cardsList.length) {
+                            notifBody.append('<div class="dashboard__modify-folder__cards"><ul></ul></div>');
+                            cardsList = notifBody.find('.dashboard__modify-folder__cards ul');
+                        }
+                        for (let c of f.cards) {
                             cardsList.append(`<li>${c.name}</li>`);
-                        });
-                    }
+                        }
+                    });
+                } else {
+                    notify.me({
+                        header: `"${f.name}"`,
+                        subheader: 'Folder',
+                        body: `<div class="dashboard__modify-popup__path-wrapper"><div class="dashboard__modify-popup__path"><div class="folder">${f.name}</div></div></div>`,
+                        class: 'notify-popup dashboard__modify-popup',
+                        buttons: [],
+                        closeButton: true
+                    });
                 }
             });
         }
@@ -304,6 +339,8 @@ interact('.draggable').draggable({
     listeners: {
         move: dragMoveListener,
         end (event) {
+            var target = event.target;
+            setTimeout(() => target.setAttribute('dragging', 'false'), 50);
         }
     }
 });
@@ -312,6 +349,8 @@ function dragMoveListener (event) {
     var target = event.target;
     if ($(target).find('.dashboard__pin').hasClass('active'))
         return;
+
+    target.setAttribute('dragging', 'true');
 
     // keep the dragged position in the data-x/data-y attributes
     const x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx;
