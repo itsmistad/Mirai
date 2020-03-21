@@ -97,6 +97,29 @@ function toggleScrollBar($e) {
     $e.toggleClass(classes.hideScroll);
 }
 
+// Set the "value" attributes and "required" formatting for any textbox on the page. Call this when you add any textbox through JS.
+function initializeTextboxes() {
+    const textBoxes = $('input[type="text"], input[type="email"], input[type="date"], input[type="time"], textarea');
+
+    // Initialized the value attribute if it's missing for each textbox.
+    textBoxes.each(function() {
+        if (!$(this).attr('value'))
+            $(this).attr('value', '');
+    });
+
+    // Updates the value attribute for each textbox on-change.
+    textBoxes.change(function() {
+        $(this).attr('value', $(this).val());
+    });
+ 
+    // Adds an asterick next to any textbox that is marked as required.
+    textBoxes.each(function() {
+        if ($(this).prop('required')) {
+            $(this).siblings('label').append(`<span class="${classes.required}">*</span>`);
+        }
+    });
+}
+
 // Disables "for-small-tablets-down" sizes if 'Theme.EnableMobile' is false.
 if (!config.theme.enableMobile && $(window).width() <= 800 && location.pathname != "/") {
     $('body').children().remove();
@@ -133,25 +156,6 @@ $(function() {
         redirect('https://github.com/itsmistad/Mirai');
         return;
     });
-    const textBoxes = $('input[type="text"], input[type="email"], textarea');
-
-    // Initialized the value attribute if it's missing for each textbox.
-    textBoxes.each(function() {
-        if (!$(this).attr('value'))
-            $(this).attr('value', '');
-    });
-
-    // Updates the avlue attribute for each textbox on-change.
-    textBoxes.change(function() {
-        $(this).attr('value', $(this).val());
-    });
- 
-    // Adds an asterick next to any textbox that is marked as required.
-    textBoxes.each(function() {
-        if ($(this).prop('required')) {
-            $(this).siblings('label').append(`<span class="${classes.required}">*</span>`);
-        }
-    });
 
     // If the page is loaded from browserSync, track changes to textbox values over-the-network.
     if (window.location.href.includes('3001')) {
@@ -170,6 +174,8 @@ $(function() {
         if ($(this).attr('href')) redirect($(this).attr('href'));
         return false;
     });
+
+    initializeTextboxes();
     
     // Transitions templatized ".page" elements (h1 and .banner) in on page load.
     $('.page>h1').addClass('up');

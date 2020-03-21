@@ -3,15 +3,16 @@ function addFullViewNode(iconPath, nodeClass, text, id) {
     const fullViewButtons = $('#dashboard__full-view #dashboard__buttons');
     $(`
     <div id="${id}" class="draggable dashboard__draggable ${nodeClass}-wrapper" style="left:${mouse.x - parent.offset().left - 50}px;top:${mouse.y - parent.offset().top - 50}px">
-        <div class="dashboard__counter">0</div>
-        <div class="dashboard__pin"><i class="fas fa-thumbtack"></i></div>
-        <div class="dashboard__remove"><i class="fas fa-times"></i></div>
         <div class="${nodeClass}">
+            <div class="dashboard__counter">0</div>
+            <div class="dashboard__pin"><i class="fas fa-thumbtack"></i></div>
+            <div class="dashboard__remove"><i class="fas fa-times"></i></div>
             <img src="${iconPath}">
         </div>
-        <span class="dashboard__text">${text}</span>
+        <span class="dashboard__text"></span>
     </div>
     `).insertBefore(fullViewButtons);
+    $(`#${id} .dashboard__text`).text(text);
     $(`#${id} .dashboard__pin`).click(function(e) {
         e.preventDefault();
         $(this).toggleClass('active');
@@ -20,7 +21,7 @@ function addFullViewNode(iconPath, nodeClass, text, id) {
     $(`#${id} .dashboard__remove`).click(function(e) {
         e.preventDefault();
         notify.me({
-            subheader: `Delete \"${$(this).parent().find('.dashboard__text').text()}"`,
+            subheader: `Delete \"${$(this).parent().parent().find('.dashboard__text').text()}"`,
             body: 'Are you sure you want to delete this?',
             fadeInDuration: 200,    
             fadeOutDuration: 300,
@@ -29,7 +30,7 @@ function addFullViewNode(iconPath, nodeClass, text, id) {
                 text: 'Yes',
                 class: 'medium',
                 action: () => {
-                    $(this).parent().fadeOut(200, 'swing', () => $(this).parent().remove());
+                    $(this).parent().parent().fadeOut(200, 'swing', () => $(this).parent().parent().remove());
                 },
                 close: true
             }, {
@@ -118,8 +119,84 @@ $(function() {
         tooltip: '',
         action: () => {
             const id = 'dashboard__card-' + Math.floor(Math.random() * 99999);
-            addFullViewNode('/files/svg/document.svg', 'dashboard__card', 'New Card', id);
-            card.create(id);
+            let c = card.create(id);
+            notify.me({
+                header: `Create a Card`,
+                subheader: 'Enter a name and description',
+                class: 'notify-popup dashboard__create-card-popup',
+                body: `
+                <div class="dashboard__create-card-container">
+                    <div class="dashboard__create-card-name">
+                        <div class="textbox">
+                            <input type="text" name="name" autocomplete="off" required value="New Card">
+                            <label for="name">
+                                <span>Name</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="dashboard__create-card-description">
+                        <div class="textarea">
+                            <textarea id="description"></textarea>
+                            <label for="description">
+                                <span>Description</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                `,
+                buttons: [ {
+                    text: 'Set Due Date',
+                    close: false,
+                    action: () => {
+                        notify.me({
+                            header: 'Set a Due Date',
+                            subheader: 'Enter a due date and time',
+                            class: 'notify-popup dashboard__due-date-popup',
+                            body: `
+                            <div class="dashboard__create-due-date-container">
+                                <div class="dashboard__create-due-date-time">
+                                    <div class="textbox">
+                                            <input type="time" name="time" autocomplete="off" required value="${c.time ? c.time : ""}">
+                                            <label for="time">
+                                                <span>Time</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                <div class="dashboard__create-due-date-date">
+                                    <div class="textbox">
+                                        <input type="date" name="date" autocomplete="off" required value="${c.date ? c.date : ""}">
+                                        <label for="date">
+                                            <span>Date</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            `,
+                            buttons: [ {
+                                text: 'Done',
+                                close: true,
+                                action: () => {
+                                    c.date = $('.dashboard__create-due-date-date input').attr('value'); // Get the value of $('.dashboard__create-due-date-date input')
+                                    c.time = $('.dashboard__create-due-date-time input').attr('value'); // Get the value of $('.dashboard__create-due-date-time input')
+                                }
+                            }],
+                            closeButton: false
+                        }, () => {
+                            initializeTextboxes();
+                        });
+                    }
+                }, {
+                    text: 'Create',
+                    close: true,
+                    action: () => {
+                        c.name = $('.dashboard__create-card-name input').attr('value');
+                        addFullViewNode('/files/svg/document.svg', 'dashboard__card', c.name, id);
+                    }
+                }],
+                closeButton: false
+            }, () => {
+                initializeTextboxes();
+            });
             $('#' + id).click(function() {
                 let dragging = $(this).attr('dragging');
                 if (dragging && dragging === 'true')
@@ -128,6 +205,14 @@ $(function() {
                     return;   
                 }
                 // Start building the "modify card" pop-up.
+                notify.me({
+                    header: `"${c.name}"`,
+                    subheader: 'Card',
+                    body: `<div class="dashboard__modify-popup__path-wrapper"><div class="dashboard__modify-popup__path"><div class="card">${c.name}</div></div></div>`,
+                    class: 'notify-popup dashboard__modify-popup',
+                    buttons: [],
+                    closeButton: true
+                });
             });
         }
     }, {
