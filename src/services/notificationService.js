@@ -15,7 +15,6 @@ class NotificationService {
     }
 
     async start(app) {
-        log.info('Starting Notification Service...');
         const notif_email = await config.get(configKeys.notifications.email);
         log.debug(`Notification Contact retrieved from configuration: ${notif_email}`);
         const notif_public_key = await config.get(configKeys.notifications.public_key);
@@ -23,15 +22,19 @@ class NotificationService {
         const notif_private_key = await config.get(configKeys.notifications.private_key);
         log.debug(`Notification private key retrieved from configuration: ${notif_private_key}`);
         
-        webpush.setVapidDetails(notif_email, notif_public_key, notif_private_key);
-        app.use(bodyParser.json());
-        app.use((req, res, next) => {
-            if (req.url.startsWith('/js/shared/serviceWorker.')) {
-                res.append('Service-Worker-Allowed', '/');
-            }
-            next();
-        });
-        log.info('Successfully started Notification Service! Passing back to Web Service...');
+        log.debug('Starting notification service...');
+        if (notif_email && notif_private_key && notif_public_key) {
+            webpush.setVapidDetails(notif_email, notif_public_key, notif_private_key);
+            app.use(bodyParser.json());
+            app.use((req, res, next) => {
+                if (req.url.startsWith('/js/shared/serviceWorker.')) {
+                    res.append('Service-Worker-Allowed', '/');
+                }
+                next();
+            });
+            log.info('Successfully started notification service!');
+        } else
+            log.debug('Failed to start notification service - looks like we\'re missing config values.');
         return app;
     }
 }

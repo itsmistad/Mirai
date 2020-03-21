@@ -13,6 +13,6 @@
         }
     },
     "log": {
-        "debug": false
+        "debug": true
     }
 }

@@ -72,9 +72,11 @@ const notify = new function() {
             currentOverlay.fadeOut(delay, () => {
                 currentOverlay.remove();
             });
+            $('html').css('overflow', 'unset');
         } else if (!currentOverlay.length && enable) {
             target.append(`<div id="${overlayId}" style="display:none;"></div>`);
             currentOverlay = $('#' + overlayId);
+            $('html').css('overflow', 'hidden');
             if (!opacity) opacity = 0.3;
             currentOverlay.css({
                 position: 'fixed',
@@ -274,10 +276,13 @@ const notify = new function() {
             if (!mergedOptions.queue) {
                 if (!centerQueue.length) {
                     obj.overlay(true, mergedOptions.fadeInDuration, 0.3);
+                    $('#notify-overlay').click(function() {
+                        if (centerQueue.length === 1) {
+                            centerQueue[0].close();
+                        }
+                    });
                 }
-                centerQueue.push({
-                    ret
-                });
+                centerQueue.push(ret);
             }
 
             if (callback) callback(ret);

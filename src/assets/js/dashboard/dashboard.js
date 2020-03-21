@@ -1,6 +1,7 @@
 function addFullViewNode(iconPath, nodeClass, text, id) {
     const parent = $('#dashboard__full-view');
-    parent.append(`
+    const fullViewButtons = $('#dashboard__full-view .dashboard__buttons');
+    $(`
     <div id="${id}" class="draggable dashboard__draggable ${nodeClass}-wrapper" style="left:${mouse.x - parent.offset().left - 50}px;top:${mouse.y - parent.offset().top - 50}px">
         <div class="dashboard__counter">0</div>
         <div class="dashboard__pin"><i class="fas fa-thumbtack"></i></div>
@@ -10,11 +11,14 @@ function addFullViewNode(iconPath, nodeClass, text, id) {
         </div>
         <span class="dashboard__text">${text}</span>
     </div>
-    `);
-    $(`#${id} .dashboard__pin`).click(function() {
+    `).insertBefore(fullViewButtons);
+    $(`#${id} .dashboard__pin`).click(function(e) {
+        e.preventDefault();
         $(this).toggleClass('active');
+        return false;
     });
-    $(`#${id} .dashboard__remove`).click(function() {
+    $(`#${id} .dashboard__remove`).click(function(e) {
+        e.preventDefault();
         notify.me({
             subheader: `Delete \"${$(this).parent().find('.dashboard__text').text()}"`,
             body: 'Are you sure you want to delete this?',
@@ -35,17 +39,56 @@ function addFullViewNode(iconPath, nodeClass, text, id) {
                 close: true
             }]
         });
+        return false;
     });
 }
 
-function increaseCounter(node) {
-    const counter = node.find('.dashboard__counter');
-    if (counter.length) {
-        let currentCount = parseInt(counter.text());
-        counter.text(++currentCount);
-        counter.addClass('show');
+const card = Object.freeze(new function() {
+    let obj = {}, cards = [];
+
+    obj.create = cardId => {
+        let c = {
+            id: cardId,
+            name: 'New Card'
+        };
+        cards.push(c);
+        return c;
     }
-}
+
+    obj.find = id => cards.find(_ => _.id === id);
+
+    return obj;
+});
+
+const folder = Object.freeze(new function() {
+    let obj = {}, folders = [];
+
+    obj.create = folderId => {
+        let f = {
+            id: folderId,
+            name: 'New Folder',
+            cards: [],
+            addCard: cardId => {
+                const $folder = $('#' + f.id);
+                const counter = $folder.find('.dashboard__counter');
+                console.log($folder);
+                if (counter.length) {
+                    let currentCount = parseInt(counter.text());
+                    counter.text(++currentCount);
+                    counter.addClass('show');
+                }
+                f.cards.push(card.find(cardId));
+            },
+            findCard: id => f.cards.find(_ => _.id === id)
+        };
+        folders.push(f);
+        return f;
+    }
+
+    obj.find = id => folders.find(_ => _.id === id);
+
+    return obj;
+});
 
 $(function() {
     const fullscreenBtn = $('#dashboard__fullscreen');
@@ -66,7 +109,7 @@ $(function() {
         anim.setSpeed(3);
         anim.play();
     });
-    fullscreenBtn.on('click', function() {
+    fullscreenBtn.click(function() {
         setFullscreenElement($('#dashboard__full-view'));
     });
     contextly.init('#dashboard__full-view', '#dashboard__full-view', [{
@@ -76,6 +119,16 @@ $(function() {
         action: () => {
             const id = 'dashboard__card-' + Math.floor(Math.random() * 99999);
             addFullViewNode('/files/svg/document.svg', 'dashboard__card', 'New Card', id);
+            card.create(id);
+            $('#' + id).click(function() {
+                let dragging = $(this).attr('dragging');
+                if (dragging && dragging === 'true')
+                {
+                    $(this).attr('dragging', 'false');
+                    return;   
+                }
+                // Start building the "modify card" pop-up.
+            });
         }
     }, {
         icon: 'add-folder',
@@ -84,6 +137,54 @@ $(function() {
         action: () => {
             const id = 'dashboard__folder-' + Math.floor(Math.random() * 99999);
             addFullViewNode('/files/svg/folder.svg', 'dashboard__folder', 'New Folder', id);
+            folder.create(id);
+            $('#' + id).click(function() {
+                let dragging = $(this).attr('dragging');
+                if (dragging && dragging === 'true')
+                {
+                    $(this).attr('dragging', 'false');
+                    return;   
+                }
+                // Start building the "modify folder" pop-up.
+                const f = folder.find(this.id);
+                if (f.cards.length > 0) {
+                    notify.me({
+                        header: `"${f.name}"`,
+                        subheader: 'Folder',
+                        body: `
+<div class="dashboard__modify-popup__path-wrapper">
+<div class="dashboard__modify-popup__path">
+    <div class="folder">${f.name}</div>
+</div>
+</div>
+<div class="cards-container">
+<h5>Cards</h5>
+</div>`,
+                        class: 'notify-popup dashboard__modify-popup',
+                        buttons: [],
+                        closeButton: true
+                    }, n => {
+                        let notifBody = n.$.find('.cards-container');
+                        let cardsList = notifBody.find('.dashboard__modify-folder__cards ul');
+                        if (!cardsList.length) {
+                            notifBody.append('<div class="dashboard__modify-folder__cards"><ul></ul></div>');
+                            cardsList = notifBody.find('.dashboard__modify-folder__cards ul');
+                        }
+                        for (let c of f.cards) {
+                            cardsList.append(`<li>${c.name}</li>`);
+                        }
+                    });
+                } else {
+                    notify.me({
+                        header: `"${f.name}"`,
+                        subheader: 'Folder',
+                        body: `<div class="dashboard__modify-popup__path-wrapper"><div class="dashboard__modify-popup__path"><div class="folder">${f.name}</div></div></div>`,
+                        class: 'notify-popup dashboard__modify-popup',
+                        buttons: [],
+                        closeButton: true
+                    });
+                }
+            });
         }
     }], {
         minHeight: 100
@@ -211,10 +312,12 @@ interact('.dashboard__folder-wrapper').dropzone({
     ondrop: function (event) {
         // On card dropped (into folder).
         const card = event.relatedTarget;
-        const folder = event.target;
+        const _folder = event.target;
+        const cardId = event.relatedTarget.id;
+        const folderId = event.target.id;
 
-        folder.classList.remove('selected-dropzone');
-        increaseCounter($(folder));
+        _folder.classList.remove('selected-dropzone');
+        folder.find(folderId).addCard(cardId);
         $(card).fadeOut(200, function() {
             card.classList.remove('can-drop');
             $(this).remove();
@@ -236,6 +339,8 @@ interact('.draggable').draggable({
     listeners: {
         move: dragMoveListener,
         end (event) {
+            var target = event.target;
+            setTimeout(() => target.setAttribute('dragging', 'false'), 50);
         }
     }
 });
@@ -244,6 +349,8 @@ function dragMoveListener (event) {
     var target = event.target;
     if ($(target).find('.dashboard__pin').hasClass('active'))
         return;
+
+    target.setAttribute('dragging', 'true');
 
     // keep the dragged position in the data-x/data-y attributes
     const x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx;
