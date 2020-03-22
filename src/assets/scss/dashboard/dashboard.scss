@@ -75,6 +75,25 @@
     }
 }
 
+.dashboard__create-folder-popup {
+    width: 30em;
+    max-width: 80%;
+    height: 30em;
+    max-height: 80%;
+
+    .dashboard__create-folder-container {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+
+        .dashboard__create-folder-description {
+            .textarea textarea {
+                height: 15em;
+            }
+        }
+    }
+}
+
 .dashboard__due-date-popup {
     width: 30em;
     max-width: 80%;
@@ -114,6 +133,19 @@
         }
     }
 
+    .dashboard__modify-folder-container {
+        .dashboard__modify-folder-description {
+            .textarea textarea {
+                height: 25em;
+            }
+        }
+        .dashboard__modify-folder-description-with-cards {
+            .textarea textarea {
+                height: 10em;
+            }
+        }
+    }
+
     .cards-container {
         display: flex;
         flex-direction: column;
@@ -133,7 +165,7 @@
                 margin: unset;
                 padding: unset;
                 width: 100%;
-                max-height: 10em;
+                height: 15em;
                 overflow-y: scroll;
                 overflow-x: hidden;
                 .dashboard__modify-folder__card {
