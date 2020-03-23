@@ -5,7 +5,7 @@ const express = require('express');
 const configKeys = require('./config/configKeys');
 
 let log, app, config, root, controllers = [];
-let notification;
+let notification, authentication;
 let routes = [
 //  ['/route/to/page', '<page>Controller', 'GET' or 'POST']
     ['/', 'homeController', 'GET'],
@@ -65,6 +65,8 @@ async function hookServices() {
     // Insert any networking services here (push notifications, socket.io, etc.).
     log.info('Starting notification service...');
     await notification.start(app);
+    log.info('Starting authentication service...');
+    await authentication.start(app);
 }
 
 class WebService {
@@ -73,6 +75,7 @@ class WebService {
         config = _root.config;
         root = _root;
         notification = _root.notification;
+        authentication = _root.authentication;
     }
 
     async start() {
