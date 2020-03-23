@@ -50,7 +50,6 @@ class AuthenticationService {
                 return cb(null, profile);
             },
         ));
-        app.get('/auth/google', passport.authenticate('google'));  
         app.get('/auth/google/callback',  
             passport.authenticate('google', { failureRedirect: '/', session: true }),
             async (req, res) => {
