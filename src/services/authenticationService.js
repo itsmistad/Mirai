@@ -44,7 +44,7 @@ class AuthenticationService {
                 clientID: passport_google_clientid,
                 clientSecret: passport_google_clientsecret,
                 callbackURL: passport_google_redirect,
-                scope: ['email'],
+                scope: ['profile', 'email'],
             },
             (accessToken, refreshToken, profile, cb) => {
                 return cb(null, profile);
@@ -55,14 +55,20 @@ class AuthenticationService {
             async (req, res) => {
                 let mongoFind = {id: req.user.id};
                 let retrieveUser = await mongo.find('users', mongoFind);
-                if (retrieveUser && retrieveUser !== undefined && retrieveUser !== null && retrieveUser.constructor == Object) {
-                    log.debug(`user data for ${req.user._json.email} already exists!`);
+                if (retrieveUser == null) { 
+                    const user = {
+                        firstName: req.user.name.givenName,
+                        lastName: req.user.name.familyName,
+                        fullName: req.user.displayName,
+                        picture: req.user._json.picture,
+                        email: req.user._json.email,
+                        googleId: req.user.id
+                    };
+
+                    mongo.save('users', user);
+                    log.debug(`Stored user data: ${JSON.stringify(user)}`);
                 }
-                else {
-                    log.debug(`stored user data for ${req.user._json.email}`);
-                    mongo.save('users', req.user);
-                }
-                log.info(`authentication successful for user ${req.user._json.email}`);
+                log.info(`Authentication successful for user ${req.user._json.email}`);
                 res.redirect('/');
             }
         );
