@@ -5,7 +5,7 @@ let log;
 
 class NotificationController {
     constructor(root) {
-        this.name = 'notification';
+        this.name = 'Notification';
         log = root.log;
     }
 

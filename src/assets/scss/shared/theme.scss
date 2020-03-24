@@ -270,7 +270,7 @@ div.textbox {
         }
     }
 
-    input[type='time'],[value=''] {
+    input[type='time'][value=''] {
         & + label span {
             transform: translateY(150%) !important;
         }
@@ -631,12 +631,23 @@ $header_height: 4em;
             justify-content: center;
             align-items: center;
             height: 100%;
-            margin: 0 14px;
-            padding: 0 6px;
+            margin: 0 0 0 0.4em;
+            padding: 0 0.8em;
+            text-decoration: none;
+            user-select: none;
             &:hover {
-                box-shadow: 0 0 4px 0 rgba(0,0,0,0.4);
+                background-color: #ddd;
             }
-        }    
+        }   
+
+        #header__button-login {
+            img {
+                width: 2em;
+                height: 2em;
+                margin-left: 0.4em;
+                border-radius: 50%;
+            }
+        }
     }
 }
 
@@ -679,10 +690,12 @@ $header_height: 4em;
             justify-content: center;
             align-items: center;
             height: 100%;
-            margin: 0 14px;
-            padding: 0 6px;
+            margin: 0 0 0 0.4em;
+            padding: 0 0.8em;
+            text-decoration: none;
+            user-select: none;
             &:hover {
-                box-shadow: 0 0 4px 0 rgba(0,0,0,0.4);
+                background-color: #D4C4EE;
             }
         }
     }
@@ -930,7 +943,7 @@ $header_height: 4em;
 }
 
 // ----------------- Global Selectors ------------------
-// These are classes you should not use to modify your elements.
+// These are classes/ids you should not use to modify your elements.
 
 .required {
     position: absolute !important;
@@ -950,4 +963,58 @@ $header_height: 4em;
 
 #notify-queue {
     z-index: $layer_notify_queue;
+}
+
+.contextly-menu {
+    font-size: em(16);
+    font-weight: bold;
+    position: absolute;
+    opacity: 0;
+    width: 200px;
+    max-height: 0;
+    background-color: white;
+    border-radius: 8px;
+    z-index: $layer_context_menu;
+    box-shadow: 6px 6px 8px 0px rgba(0,0,0,0.3);
+    overflow: hidden;
+
+    ul {
+        color: $color_body;
+        list-style-type: none; 
+        font-family: $font_header;
+        padding: 0;
+        margin: 0;
+        li {
+            padding: 0.6em 0.8em;
+            margin: 0;
+            cursor: pointer;
+            transition: all $transition_200;
+            user-select: none;
+            display:flex;
+            justify-content: left;
+
+            span:first-of-type {
+                margin-right: 0.6em;
+                width: 2em;
+                height: 2em;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+
+            span:nth-of-type(2) {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+
+            &:hover {
+                background-color: $color_light_accent;
+            }
+        }
+    }
+
+    &.show {
+        opacity: 1;
+    }
 }

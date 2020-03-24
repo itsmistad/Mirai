@@ -35,7 +35,6 @@ class NotificationService {
             log.info('Successfully started notification service!');
         } else
             log.debug('Failed to start notification service - looks like we\'re missing config values.');
-        return app;
     }
 }
 

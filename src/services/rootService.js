@@ -29,7 +29,7 @@ class RootService {
         this.s3 = new S3Persister(this);
         this.email = new EmailService(this);
         this.notification = new NotificationService(this);
-        this.authentication = new AuthenticationService(this);
+        this.auth = new AuthenticationService(this);
         this.web = new WebService(this);
     }
 }

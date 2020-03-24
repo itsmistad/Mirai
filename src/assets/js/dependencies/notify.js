@@ -264,7 +264,10 @@ const notify = new function() {
                     buttonsElement.append(`<button id="${buttonId}" class="${_.class}">${_.text}</button>`);
                     $('#' + buttonId).click(function () {
                         if (_.action) _.action($(this));
-                        if (_.close) ret.close();
+                        if (_.close) {
+                            ret.close();
+                            $(this).off('click');
+                        }
                     });
                 });
             }
@@ -272,6 +275,7 @@ const notify = new function() {
                 jQ.find('.close').hide();
             jQ.find('.close').click(function () {
                 ret.close();
+                $(this).off('click');
             });
 
             if (mergedOptions.sound) {

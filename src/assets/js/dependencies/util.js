@@ -30,7 +30,7 @@ function redirect(url) {
     startLoaderTransition(() => window.location.href = url);
 }
 
-function cookiesFlag() {
+function hasAcceptedCookies() {
     const acceptedCookies = getCookie('acceptedCookies');
     return acceptedCookies && acceptedCookies === 'true';
 }
@@ -61,6 +61,13 @@ function getCookie(name) {
 // Compeletly erases a cookie.
 function eraseCookie(name) {   
     document.cookie = name+'=; Max-Age=-99999999;';  
+}
+
+// Returns a random integer between two numbers, inclusively.
+function getRandomInt(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
 function setFullscreenElement($e) {

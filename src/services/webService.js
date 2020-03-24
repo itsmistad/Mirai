@@ -5,20 +5,25 @@ const express = require('express');
 const configKeys = require('./config/configKeys');
 
 let log, app, config, root, controllers = [];
-let notification, authentication;
+let notification, auth;
 let routes = [
 //  ['/route/to/page', '<page>Controller', 'GET' or 'POST']
     ['/', 'homeController', 'GET'],
     ['/dashboard', '/dashboard/dashboardController', 'GET'],
-    ['/subscribe', '/notifications/notificationController', 'POST']
+    ['/subscribe', '/notifications/notificationController', 'POST'],
+    ['/auth/google/callback', '/authentication/authenticationController', 'GET'],
+    ['/auth/logout', '/authentication/authenticationController', 'GET']
 ];
 
-function setRoutes() {
+function setStaticRoutes() {
     app.use('/js', express.static(path.join(__dirname, '..', 'dist/assets/js')));
     app.use('/css', express.static(path.join(__dirname, '..', 'dist/assets/css')));
     app.use('/files', express.static(path.join(__dirname, '..', 'dist/assets/files')));
     app.use('/lottie', express.static(path.join(__dirname, '..', 'assets/files/lottie')));
     app.use('/webfonts', express.static(path.join(__dirname, '..', 'assets/files/webfonts')));
+}
+
+function setRoutes() {
     app.set('views', path.join(__dirname, '..', 'dist/views'));
     app.set('view engine', 'hjs');
     app.set('layout', 'shared/layout');
@@ -66,7 +71,7 @@ async function hookServices() {
     log.info('Starting notification service...');
     await notification.start(app);
     log.info('Starting authentication service...');
-    await authentication.start(app);
+    await auth.start(app);
 }
 
 class WebService {
@@ -75,7 +80,7 @@ class WebService {
         config = _root.config;
         root = _root;
         notification = _root.notification;
-        authentication = _root.authentication;
+        auth = _root.auth;
     }
 
     async start() {
@@ -84,8 +89,9 @@ class WebService {
 
         log.info('Starting web service...');
         app = express();
+        setStaticRoutes();
+        await hookServices();
         setRoutes();
-        hookServices();
         app.listen(port, () => {
             log.info(`Successfully started web service! Listening on port ${port}.`);
         });
