@@ -57,7 +57,7 @@ class AuthenticationService {
             },
         ));
         this.passport = passport;
-        log.info('Successfully started authentication service!')
+        log.info('Successfully started authentication service!');
     }
 
     async processCallback(req, res) {
