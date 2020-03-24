@@ -1,19 +1,23 @@
 'use strict';
 
 const View = require('../../views/shared/view');
-let config;
+let root;
 
 class DashboardController {
-    constructor(root) {
+    constructor(_root) {
         this.name = 'Dashboard';
-        config = root.config;
+        root = _root;
     }
 
     async run(route, req, res) {
-        const v = new View(config, res, 'dashboard/dashboard');
+        if (!req.user) { // Prevent the page from loading if the user is not logged in.
+            res.redirect('/');
+            return;
+        }
+        const v = new View(root, res, 'dashboard/dashboard');
         await  v.render({
             title: 'Dashboard'
-        });
+        }, req.user);
     }
 }
 

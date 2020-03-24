@@ -128,8 +128,43 @@ if (!config.theme.enableMobile && $(window).width() <= 800 && location.pathname 
     contextly = null;
 }
 
+if (user.googleId) {
+    const loginBtn = $('#header__button-login');
+    loginBtn.attr('href', '');
+    const phrases = ['Welcome', 'Howdy', 'Hi', 'Hey', 'Hello'];
+    const index = getRandomInt(0, phrases.length - 1);
+    phrase = phrases[index];
+    loginBtn.html(`<span>${phrase}, ${user.firstName}!</span><img src="${user.picture}">`);
+
+    contextly.init('#header__button-login', '#layout__main', [{
+        icon: 'menu-close',
+        text: 'Logout',
+        tooltip: '',
+        action: () => {
+            redirect('/auth/logout');
+        }
+    }, {
+        icon: 'settings',
+        text: 'Preferences',
+        tooltip: '',
+        action: () => {
+            redirect('/user/preferences');
+        }
+    }, {
+        icon: 'profile',
+        text: 'Profile',
+        speed: 1,
+        tooltip: '',
+        action: () => {
+            redirect(`/user/profile?googleId=${user.googleId}`);
+        }
+    }], {
+        showOnLeftClick: true
+    });
+}
+
 $(function() {
-    if (!cookiesFlag()) {
+    if (!hasAcceptedCookies()) {
         notify.me({
             header: 'Cookie Policy',
             subheader: `<a href="/">Read our cookie policy</a>`,
@@ -160,7 +195,7 @@ $(function() {
     // If the page is loaded from browserSync, track changes to textbox values over-the-network.
     if (window.location.href.includes('3001')) {
         setInterval(() => {
-            const textBoxes = $('input[type="text"], input[type="email"], textarea');
+            const textBoxes = $('input[type="text"], input[type="email"], input[type="date"], input[type="time"], textarea');
             textBoxes.each(function() {
                 if ($(this).attr('value') !== $(this).val())
                     $(this).attr('value', $(this).val());

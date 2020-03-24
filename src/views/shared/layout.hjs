@@ -20,6 +20,8 @@
                     enableMobile: {{ themeEnableMobile }}
                 }
             });
+            const user = Object.freeze(JSON.parse("{{ userObj }}".replace(/&quot;/g,'"')));
+            const isProd = {{ isProd }};
         </script>
     </head>
     <body>

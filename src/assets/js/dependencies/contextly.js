@@ -87,7 +87,10 @@ const contextly = new function() {
             const menuItem = $('#' + optionId);
             menuItem.click(function() {
                 hideCurrentContextMenu();
-                o.action();
+                o.action({
+                    x: mouseX,
+                    y: mouseY
+                });
             });
             if (o.animateIcon) {
                 const iconSpan = menuItem.find('.' + o.icon);
@@ -101,11 +104,11 @@ const contextly = new function() {
                 });
                 menuItem.hover(function() {
                     anim.setDirection(1);
-                    anim.setSpeed(1.6);
+                    anim.setSpeed(o.speed);
                     anim.play();
                 }, function() {
                     anim.setDirection(-1);
-                    anim.setSpeed(1.6);
+                    anim.setSpeed(o.speed);
                     anim.play();
                 });
             }
@@ -138,12 +141,15 @@ const contextly = new function() {
         showContextMenu(context, x, y);
     }
 
-    function hook(selector, containerSelector) {
+    function hook(selector, containerSelector, showOnLeftClick) {
         if (!initialized) {
             $(containerSelector).leftClick(onLeftClick);
             initialized = true;
         }
-        $(selector).rightClick(onRightClick);
+        if (!showOnLeftClick)
+            $(selector).rightClick(onRightClick);
+        else
+            $(selector).leftClick(onRightClick);
     }
 
     ret.find = $e => {
@@ -168,12 +174,14 @@ const contextly = new function() {
         }
         const baseMenuSettings = {
             minHeight: 0,
-            minWidth: 200
+            minWidth: 200,
+            showOnLeftClick: false
         };
         const baseOptionSet = {
             icon: '',
             animateIcon: true,
             segment: [0, 14],
+            speed: 1.6,
             text: '',
             tooltip: '',
             action: e => {}
@@ -206,7 +214,7 @@ const contextly = new function() {
             }
             resultMenuSettings[key] = menuSettings[key];
         }
-        hook(selector, containerSelector);
+        hook(selector, containerSelector, resultMenuSettings.showOnLeftClick);
         contexts.push({
             selector,
             containerSelector: containerSelector,
@@ -228,7 +236,7 @@ jQuery.fn.extend({
     contextly: function(containerSelector, options, menuSettings) {
         return this.each(function() {
             const _ = $(this);
-            contextly.init(_.attr('id'), containerSelector, options, menuSettings);
+            contextly.init('#' + _.attr('id'), containerSelector, options, menuSettings);
         });
     },
 });
