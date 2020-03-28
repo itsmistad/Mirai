@@ -12,7 +12,9 @@ let routes = [
     ['/dashboard', '/dashboard/dashboardController', 'GET'],
     ['/subscribe', '/notifications/notificationController', 'POST'],
     ['/auth/google/callback', '/authentication/authenticationController', 'GET'],
-    ['/auth/logout', '/authentication/authenticationController', 'GET']
+    ['/auth/logout', '/authentication/authenticationController', 'GET'],
+    ['/user/preferences', '/user/userController', 'GET'],
+    ['/user/upload/preferences', '/user/userController', 'POST']
 ];
 
 function setStaticRoutes() {

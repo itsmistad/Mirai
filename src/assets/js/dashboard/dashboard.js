@@ -587,6 +587,8 @@ $(function() {
     $(window).afterResize(function(e) {
         returnNodesToView(e.size.width);
     });
+    if (user.nightMode)
+        $('#dashboard__full-view .background img').attr('src', '/files/svg/grid-black.svg');
 });
 
 interact('.dashboard__folder-wrapper').dropzone({

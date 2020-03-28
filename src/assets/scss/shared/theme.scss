@@ -836,7 +836,7 @@ $header_height: 4em;
 }
 
 .page {
-    margin-top: $header_height;
+    margin: $header_height 0 2em;
     min-height: 100vh; 
 
     & > div.background {
@@ -1016,5 +1016,146 @@ $header_height: 4em;
 
     &.show {
         opacity: 1;
+    }
+}
+
+body.dark {
+    background-color: $color_dark_background !important;
+
+    #layout__footer {
+        background-color: $color_dark_header !important;
+    }
+    
+    .logo {
+        color: $color_dark_mirai_glow !important;
+        text-shadow: 0 0 6px $color_dark_light_accent !important;
+    }
+    
+    .contextly-menu {
+        background-color: $color_dark_background !important;
+        ul {
+            color: $color_dark_body_text !important;
+            li {
+                span:first-of-type {
+                    filter: invert(1);
+                }
+                &:hover {
+                    background-color: $color_accent !important;
+                }
+            }
+        }
+    }
+    
+    div.switch {
+        input[type='checkbox'] + label {
+            color: $color_dark_header_text !important;
+            span {
+                &:before {
+                    background-color: $color_dark_header !important;
+                }
+            }
+        }
+    }
+
+    div.checkbox {
+        input[type='checkbox'] + label {
+            color: $color_dark_header_text !important;
+        }
+        input[type='checkbox'] + label > span {
+            border: 2px solid $color_dark_header !important;
+        }
+        input[type='checkbox']:checked + label > span:before {
+            animation: checkbox-check 125ms $transition_200 forwards !important;
+        }
+
+        @keyframes checkbox-check {
+            0% {
+                width: 0;
+                height: 0;
+                border-color: $color_dark_header;
+                transform: translate3d(0,0,0) rotate(45deg);
+            }
+            33% {
+                width: .2em;
+                height: .4em;
+                transform: translate3d(0,0,0) rotate(45deg);
+            }
+            100% {    
+                width: .2em;
+                height: 1em;    
+                border-color: $color_dark_header;
+                transform: translate3d(0,-.5em,0) rotate(45deg);
+            }
+        }
+    }
+    
+    h6, h5, h4, h3, h2, h1 {
+        color: $color_dark_header_text !important;
+    }
+
+    p, span, div, label, input {
+        color: $color_dark_body_text !important;
+    }
+
+    button {
+        &.outline {
+            background-color: $color_dark_background !important;
+            color: $color_dark_body_text !important;
+            border: solid 3px $color_links !important;
+            &:hover {
+                background-color: $color_dark_background !important;
+            }
+        }
+        &:hover {
+            box-shadow: -3px 3px $color_dark_header_button !important;
+        }
+    }
+    
+    blockquote {
+        color: $color_dark_body_text !important;
+    }
+
+    div.textbox {
+        input[type='date'],
+        input[type='time'],
+        input[type='text'],
+        input[type='email'] {
+            background-color: $color_dark_background !important;
+            color: $color_dark_body_text !important;
+        }
+    }
+
+    div.textarea {
+        textarea {
+            background-color: $color_dark_background !important;
+            color: $color_dark_body_text !important;
+        }
+    }
+
+    .banner {
+        background-color: $color_dark_background !important;
+        box-shadow: 6px 6px 10px rgba(0,0,0,0.2),
+        -6px -6px 10px rgba(44,44,44,1) !important;
+    } 
+
+    #layout__header {
+        background-color: rgba(45, 45, 47, 0.9) !important;
+        #header__right-container {
+            .header__button {
+                &:hover {
+                    background-color: $color_dark_header_button;
+                }
+            }   
+        }
+    }
+
+    a {
+        &:hover {
+            text-shadow: -1px 1px 0 $color_dark_shadow;
+        }
+    }
+
+    .notify-popup {
+        background-color: $color_dark_shadow;
     }
 }

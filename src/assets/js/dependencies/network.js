@@ -69,7 +69,8 @@ const network = new function() {
         return obj;
     };
 
-    obj.post = (route, json, func) => {
+    obj.post = (route, json, func, async) => {
+        if (!func) func = () => {};
         $.ajax({
             type: "POST",
             url: route,
@@ -77,21 +78,24 @@ const network = new function() {
             contentType: "application/json; charset=utf-8",
             dataType: "json",
             success: response => {
-                log(response.toString());
-                func(response);
+                log(JSON.stringify(response));
+                func();
             },
             failure: response => {
-                logErr(response.toString());
+                logErr(JSON.stringify(response));
                 func(response);
             },
             error: response => {
-                logErr(response.toString());
+                logErr(JSON.stringify(response));
                 func(response);
-            }
+            },
+            async: async || false,
+            timeout: 60000
         });  
     };
 
-    obj.get = (route, json, func) => {
+    obj.get = (route, json, func, async) => {
+        if (!func) func = () => {};
         $.ajax({
             type: "GET",
             url: route,
@@ -99,17 +103,19 @@ const network = new function() {
             contentType: "application/json; charset=utf-8",
             dataType: "json",
             success: response => {
-                log(response.toString());
-                func(response);
+                log(JSON.stringify(response));
+                func();
             },
             failure: response => {
-                logErr(response.toString());
+                logErr(JSON.stringify(response));
                 func(response);
             },
             error: response => {
-                logErr(response.toString());
+                logErr(JSON.stringify(response));
                 func(response);
-            }
+            },
+            async: async || false,
+            timeout: 60000
         });
     };
 
