@@ -2,7 +2,6 @@
 
 class MockLogService {
     constructor() {
-        this.enable = false;
     }
 
     log(tag, message) {
@@ -12,8 +11,7 @@ class MockLogService {
             underscore: '\x1b[4m',
             magenta: '\x1b[35m',
         };
-        if (this.enable)
-            console.log(`${colors.underscore}[${new Date().toISOString()}]${colors.reset} ${colors.bright + colors.magenta}[${tag}]\t${message}${colors.reset}`);
+        console.log(`${colors.underscore}[${new Date().toISOString()}]${colors.reset} ${colors.bright + colors.magenta}[${tag}]\t${message}${colors.reset}`);
         return message;
     }
     

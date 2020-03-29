@@ -3,8 +3,13 @@
 const path = require('path');
 const express = require('express');
 const configKeys = require('./config/configKeys');
+const bodyParser = require('body-parser');
+const multer = require('multer');
+const fs = require('fs');
+const crypto = require('crypto');
+let upload;
 
-let log, app, config, root, controllers = [];
+let log, app, config, root, controllers = [], env;
 let notification, auth;
 let routes = [
 //  ['/route/to/page', '<page>Controller', 'GET' or 'POST']
@@ -12,15 +17,26 @@ let routes = [
     ['/dashboard', '/dashboard/dashboardController', 'GET'],
     ['/subscribe', '/notifications/notificationController', 'POST'],
     ['/auth/google/callback', '/authentication/authenticationController', 'GET'],
-    ['/auth/logout', '/authentication/authenticationController', 'GET']
+    ['/auth/logout', '/authentication/authenticationController', 'GET'],
+    ['/user/profile', '/user/userController', 'GET'],
+    ['/user/upload/picture', '/user/userController', 'POST'],
+    ['/user/upload/banner', '/user/userController', 'POST'],
+    ['/user/upload/about', '/user/userController', 'POST']
 ];
 
 function setStaticRoutes() {
     app.use('/js', express.static(path.join(__dirname, '..', 'dist/assets/js')));
     app.use('/css', express.static(path.join(__dirname, '..', 'dist/assets/css')));
     app.use('/files', express.static(path.join(__dirname, '..', 'dist/assets/files')));
+    app.use('/files/uploads', express.static(path.join(__dirname, '..', 'uploads')));
     app.use('/lottie', express.static(path.join(__dirname, '..', 'assets/files/lottie')));
     app.use('/webfonts', express.static(path.join(__dirname, '..', 'assets/files/webfonts')));
+    app.use(bodyParser.urlencoded({
+        extended: true
+    }));
+    app.use(bodyParser.json());
+    app.use(upload.single('file')); 
+    app.use(upload.array('files')); 
 }
 
 function setRoutes() {
@@ -30,6 +46,7 @@ function setRoutes() {
     app.set('partials', {
         loading: 'shared/loading',
         header: 'shared/header',
+       
         footer: 'shared/footer'
     });
     app.engine('hjs', require('hogan-express'));
@@ -49,13 +66,13 @@ function setRoutes() {
             }
             switch (requestType) {
             case 'POST':
-                app.post(routePath, function(req, res) {
-                    controller.run(route, req, res);
+                app.post(routePath, function(req, res, next) {
+                    controller.run(route, req, res, next);
                 });
                 break;
             case 'GET':
-                app.get(routePath, function(req, res) {
-                    controller.run(route, req, res);
+                app.get(routePath, function(req, res, next) {
+                    controller.run(route, req, res, next);
                 });
                 break;
             }
@@ -81,6 +98,7 @@ class WebService {
         root = _root;
         notification = _root.notification;
         auth = _root.auth;
+        env = _root.env;
     }
 
     async start() {
@@ -88,6 +106,24 @@ class WebService {
         log.debug(`Port retrieved from configuration: ${port}`);
 
         log.info('Starting web service...');
+
+        if (!env.isProd) {
+            let dir = path.join(__dirname, '..', 'uploads');
+            if (!fs.existsSync(dir))
+                fs.mkdirSync(dir);
+            let storage = multer.diskStorage({
+                destination: function (req, file, cb) {
+                    cb(null, 'uploads/');
+                },
+                filename: function (req, file, cb) {
+                    let customFileName = crypto.randomBytes(10).toString('hex');
+                    cb(null, `${customFileName}-${Date.now()}`);
+                }
+            });
+            
+            upload = multer({ storage: storage });
+        }
+
         app = express();
         setStaticRoutes();
         await hookServices();

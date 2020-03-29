@@ -323,6 +323,7 @@
 
 .dashboard__card,
 .dashboard__folder {
+    max-width: 10em;
     height: 8em;
     width: 8em;
     border-radius: 50%;
@@ -347,8 +348,6 @@
 }
 
 .dashboard__card-wrapper {
-    max-width: 10em;
-
     &.can-drop .dashboard__card {
         background-color: $color_links;
         transform: scale(0.7);

@@ -69,7 +69,36 @@ const network = new function() {
         return obj;
     };
 
-    obj.post = (route, json, func) => {
+    obj.upload = (route, formSelector, xhr, func, async) => {
+        if (!func) func = () => {};
+        let formData = new FormData($(formSelector)[0]);
+        $.ajax({
+            type: "POST",
+            url: route,
+            data: formData,
+            xhr,
+            async: async || false,
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: response => {
+                log(JSON.stringify(response));
+                func(response);
+            },
+            failure: response => {
+                logErr(JSON.stringify(response));
+                func(response);
+            },
+            error: response => {
+                logErr(JSON.stringify(response));
+                func(response);
+            },
+            timeout: 60000
+        });  
+    };
+
+    obj.post = (route, json, func, async) => {
+        if (!func) func = () => {};
         $.ajax({
             type: "POST",
             url: route,
@@ -77,21 +106,24 @@ const network = new function() {
             contentType: "application/json; charset=utf-8",
             dataType: "json",
             success: response => {
-                log(response.toString());
-                func(response);
+                log(JSON.stringify(response));
+                func();
             },
             failure: response => {
-                logErr(response.toString());
+                logErr(JSON.stringify(response));
                 func(response);
             },
             error: response => {
-                logErr(response.toString());
+                logErr(JSON.stringify(response));
                 func(response);
-            }
+            },
+            async: async || false,
+            timeout: 60000
         });  
     };
 
-    obj.get = (route, json, func) => {
+    obj.get = (route, json, func, async) => {
+        if (!func) func = () => {};
         $.ajax({
             type: "GET",
             url: route,
@@ -99,17 +131,19 @@ const network = new function() {
             contentType: "application/json; charset=utf-8",
             dataType: "json",
             success: response => {
-                log(response.toString());
-                func(response);
+                log(JSON.stringify(response));
+                func();
             },
             failure: response => {
-                logErr(response.toString());
+                logErr(JSON.stringify(response));
                 func(response);
             },
             error: response => {
-                logErr(response.toString());
+                logErr(JSON.stringify(response));
                 func(response);
-            }
+            },
+            async: async || false,
+            timeout: 60000
         });
     };
 

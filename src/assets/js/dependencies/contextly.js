@@ -44,7 +44,6 @@ const contextly = new function() {
             height: () => $('#' + id).innerHeight(),
             width: () => $('#' + id).innerWidth(),
         };
-        currentContext.menu.$.rightClick(() => {});
         setTimeout(() => currentContext.menu.$.addClass('show'), 20);
         currentContext.menu.$.animate({
             'max-height': (currentContext.options.length * 3.4) + 'em'
@@ -83,8 +82,15 @@ const contextly = new function() {
         }, 100);
         for (const o of currentContext.options) {
             optionId = `${currentContext.menu.id}-${Math.round(Math.random() * Math.floor(99999))}`;
-            ul.append(`<li id="${optionId}"><span class="${o.icon}"></span><span>${o.text}</span></li>`);
-            const menuItem = $('#' + optionId);
+            let menuItem;
+            if (o.href !== '')
+                ul.append(`<a href="${o.href}" style="text-decoration:none"><li id="${optionId}">${o.icon !== '' ? '<span class="icon ' + o.icon + '">' : ''}</span><span class="text">${o.text}</span></li></a>`);
+            else {
+                ul.append(`<li id="${optionId}">${o.icon !== '' ? '<span class="icon ' + o.icon + '">' : ''}</span><span class="text">${o.text}</span></li>`);
+                menuItem = $('#' + optionId);
+                menuItem.rightClick(() => {});
+            }
+            menuItem = $('#' + optionId);
             menuItem.click(function() {
                 hideCurrentContextMenu();
                 o.action({
@@ -92,8 +98,9 @@ const contextly = new function() {
                     y: mouseY
                 });
             });
-            if (o.animateIcon) {
+            if (o.animateIcon && o.icon !== '') {
                 const iconSpan = menuItem.find('.' + o.icon);
+                console.log('loading anim')
                 const anim = lottie.loadAnimation({
                     container: iconSpan[0],
                     renderer: 'svg',
@@ -133,7 +140,7 @@ const contextly = new function() {
 
     function onRightClick(event) {
         const _ = $(event.target);
-        const context = ret.find(_);
+        const context = ret.find(_) || ret.find(_.parent());
         const x = mouse.x;
         const y = mouse.y;
         if (!context)
@@ -179,6 +186,7 @@ const contextly = new function() {
         };
         const baseOptionSet = {
             icon: '',
+            href: '',
             animateIcon: true,
             segment: [0, 14],
             speed: 1.6,

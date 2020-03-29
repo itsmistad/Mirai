@@ -97,9 +97,10 @@ function toggleScrollBar($e) {
     $e.toggleClass(classes.hideScroll);
 }
 
-// Set the "value" attributes and "required" formatting for any textbox on the page. Call this when you add any textbox through JS.
+// Set the "value" attributes and "required" formatting for any textbox on the page. Call th`is` when you add any textbox through JS.
 function initializeTextboxes() {
     const textBoxes = $('input[type="text"], input[type="email"], input[type="date"], input[type="time"], textarea');
+    textBoxes.off('change');
 
     // Initialized the value attribute if it's missing for each textbox.
     textBoxes.each(function() {
@@ -129,38 +130,7 @@ if (!config.theme.enableMobile && $(window).width() <= 800 && location.pathname 
 }
 
 if (user.googleId) {
-    const loginBtn = $('#header__button-login');
-    loginBtn.attr('href', '');
-    const phrases = ['Welcome', 'Howdy', 'Hi', 'Hey', 'Hello'];
-    const index = getRandomInt(0, phrases.length - 1);
-    phrase = phrases[index];
-    loginBtn.html(`<span>${phrase}, ${user.firstName}!</span><img src="${user.picture}">`);
-
-    contextly.init('#header__button-login', '#layout__main', [{
-        icon: 'menu-close',
-        text: 'Logout',
-        tooltip: '',
-        action: () => {
-            redirect('/auth/logout');
-        }
-    }, {
-        icon: 'settings',
-        text: 'Preferences',
-        tooltip: '',
-        action: () => {
-            redirect('/user/preferences');
-        }
-    }, {
-        icon: 'profile',
-        text: 'Profile',
-        speed: 1,
-        tooltip: '',
-        action: () => {
-            redirect(`/user/profile?googleId=${user.googleId}`);
-        }
-    }], {
-        showOnLeftClick: true
-    });
+    overrideLoading();
 }
 
 $(function() {
@@ -215,6 +185,44 @@ $(function() {
     // Transitions templatized ".page" elements (h1 and .banner) in on page load.
     $('.page>h1').addClass('up');
     $('.page>.banner').addClass('up');
+
+    if (user.googleId) {
+        const loginBtn = $('#header__button-login');
+        loginBtn.removeAttr('href');
+        const phrases = ['Welcome', 'Howdy', 'Hi', 'Hey', 'Hello'];
+        const index = getRandomInt(0, phrases.length - 1);
+        phrase = phrases[index];
+        loginBtn.html(`<span>${phrase}, ${user.firstName}!</span><img src="${user.picture}">`);
+    
+        contextly.init('#header__button-login', '#layout__main', [{
+            text: 'Logout',
+            href: '/auth/logout',
+            action: () => {
+                redirect('/auth/logout');
+            }
+        }, {
+            text: 'Preferences',
+            href: '/user/preferences',
+            action: () => {
+                redirect('/user/preferences');
+            }
+        }, {
+            text: 'Profile',
+            href: `/user/profile?googleId=${user.googleId}`,
+            action: () => {
+                redirect(`/user/profile?googleId=${user.googleId}`);
+            }
+        }, {
+            text: 'Dashboard',
+            href: '/dashboard',
+            action: () => {
+                redirect('/dashboard');
+            }
+        }], {
+            showOnLeftClick: true
+        });
+        finishLoading();
+    }
 });
 
 notify.initSound('default', '/files/notify.mp3');

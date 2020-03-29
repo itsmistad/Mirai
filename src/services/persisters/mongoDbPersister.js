@@ -8,14 +8,14 @@
 const mongodb = require('mongodb');
 const ObjectId = mongodb.ObjectId;
 
-let config, databaseConfig, mongoConfig, log;
+let config, databaseConfig, mongoConfig;
 
 class MongoDbPersister {
     constructor(root) {
         config = root.config;
         databaseConfig = config['database'];
         mongoConfig = databaseConfig['mongo'];
-        log = root.log;
+        this._log = root.log;
         this._mongoClient = mongodb.MongoClient;
     }
 
@@ -36,25 +36,25 @@ class MongoDbPersister {
                 done: () => db.close(),
                 mirai: dbo
             };
-        }).catch(err => log.error('Failed to connect to database. Exception: ' + err, true));
+        }).catch(err => this._log.error('Failed to connect to database. Exception: ' + err, true));
     }
 
     get(collection, id) {
         return this.connect().then(db => {
-            log.debug(`Retrieving ${id} from ${collection}`, true);
+            this._log.debug(`Retrieving ${id} from ${collection}`, true);
             return db.mirai.collection(collection).findOne({
                 _id: ObjectId(id)
             }).then(res => {
                 db.done();
                 return res;
-            }).catch(() => log.error(`Failed to get item with "${id}".`, true));
+            }).catch(() => this._log.error(`Failed to get item with "${id}".`, true));
         });
     }
 
     save(collection, data) {
         return this.connect().then(db => {
             const str = JSON.stringify(data);
-            log.debug(`Saving ${str} to ${collection}`, true);
+            this._log.debug(`Saving ${str} to ${collection}`, true);
             return db.mirai.collection(collection).insertOne(data)
                 .then(res => {
                     db.done();
@@ -63,14 +63,14 @@ class MongoDbPersister {
                         ok: 1
                     };
                     return returnObj;
-                }).catch(() => log.error(`Failed to save item: ${str}`, true));
+                }).catch(() => this._log.error(`Failed to save item: ${str}`, true));
         });
     }
     
     update(collection, query, data, upsert) {
         return this.connect().then(db => {
             const str = JSON.stringify(data);
-            log.debug(`Updating ${str} to ${collection}`, true);
+            this._log.debug(`Updating ${str} to ${collection}`, true);
             return db.mirai.collection(collection).updateOne(query, data, {
                 upsert: !upsert ? false : true
             })
@@ -81,14 +81,14 @@ class MongoDbPersister {
                         ok: 1
                     };
                     return returnObj;
-                }).catch((ex) => log.error(`Failed to update item: ${ex}`, true));
+                }).catch((ex) => this._log.error(`Failed to update item: ${ex}`, true));
         });
     }
     
     updateMany(collection, query, data, upsert) {
         return this.connect().then(db => {
             const str = JSON.stringify(data);
-            log.debug(`Updating ${str} to ${collection}`, true);
+            this._log.debug(`Updating ${str} to ${collection}`, true);
             return db.mirai.collection(collection).updateMany(query, data, {
                 upsert: !upsert ? false : true
             })
@@ -99,14 +99,14 @@ class MongoDbPersister {
                         ok: 1
                     };
                     return returnObj;
-                }).catch(() => log.error(`Failed to update item: ${str}`, true));
+                }).catch(() => this._log.error(`Failed to update item: ${str}`, true));
         });
     }
 
     replace(collection, id, data, upsert) {
         return this.connect().then(db => {
             const str = JSON.stringify(data);
-            log.debug(`Replacing ${str} in ${collection}`, true);
+            this._log.debug(`Replacing ${str} in ${collection}`, true);
             return db.mirai.collection(collection).replaceOne({
                 _id: ObjectId(id)
             }, data, {
@@ -119,38 +119,38 @@ class MongoDbPersister {
                         ok: 1
                     };
                     return returnObj;
-                }).catch(() => log.error(`Failed to replace item "${id}": ${str}`, true));
+                }).catch(() => this._log.error(`Failed to replace item "${id}": ${str}`, true));
         });
     }
 
     find(collection, data) {
         return this.connect().then(db => {
             const str = JSON.stringify(data);
-            log.debug(`Finding ${str} (one) in ${collection}`, true);
+            this._log.debug(`Finding ${str} (one) in ${collection}`, true);
             return db.mirai.collection(collection).findOne(data)
                 .then(res => {
                     db.done();
                     return res;
-                }).catch(() => log.error(`Failed to find any item with ${str}.`, true));
+                }).catch(() => this._log.error(`Failed to find any item with ${str}.`, true));
         });
     }
 
     findMany(collection, data) {
         return this.connect().then(db => {
             const str = JSON.stringify(data);
-            log.debug(`Finding ${str} (many) in ${collection}`, true);
+            this._log.debug(`Finding ${str} (many) in ${collection}`, true);
             return db.mirai.collection(collection).find(data).toArray()
                 .then(res => {
                     db.done();
                     return res;
-                }).catch(() => log.error(`Failed to find items with ${str}.`, true));
+                }).catch(() => this._log.error(`Failed to find items with ${str}.`, true));
         });
     }
 
     delete(collection, data) {
         return this.connect().then(db => {
             const str = JSON.stringify(data);
-            log.debug(`Deleting ${str} (one) in ${collection}`, true);
+            this._log.debug(`Deleting ${str} (one) in ${collection}`, true);
             return db.mirai.collection(collection).deleteOne(data)
                 .then(res => {
                     db.done();
@@ -159,14 +159,14 @@ class MongoDbPersister {
                         ok: 1
                     };
                     return returnObj;
-                }).catch(() => log.error(`Failed to delete any item with ${str}.`, true));
+                }).catch(() => this._log.error(`Failed to delete any item with ${str}.`, true));
         });
     }
 
     deleteMany(collection, data) {
         return this.connect().then(db => {
             const str = JSON.stringify(data);
-            log.debug(`Deleting ${str} (many) in ${collection}`, true);
+            this._log.debug(`Deleting ${str} (many) in ${collection}`, true);
             return db.mirai.collection(collection).deleteMany(data)
                 .then(res => {
                     db.done();
@@ -175,7 +175,7 @@ class MongoDbPersister {
                         ok: 1
                     };
                     return returnObj;
-                }).catch(() => log.error(`Failed to delete items ${str}.`, true));
+                }).catch(() => this._log.error(`Failed to delete items ${str}.`, true));
         });
     }
 }

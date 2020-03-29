@@ -712,6 +712,7 @@ $header_height: 4em;
 
 ::-webkit-scrollbar {
     width: 6px;
+    height: 4px;
 }
 
 ::-webkit-scrollbar-track {
@@ -836,7 +837,7 @@ $header_height: 4em;
 }
 
 .page {
-    margin-top: $header_height;
+    margin: $header_height 0 2em;
     min-height: 100vh; 
 
     & > div.background {
@@ -993,7 +994,7 @@ $header_height: 4em;
             display:flex;
             justify-content: left;
 
-            span:first-of-type {
+            span.icon {
                 margin-right: 0.6em;
                 width: 2em;
                 height: 2em;
@@ -1002,7 +1003,7 @@ $header_height: 4em;
                 align-items: center;
             }
 
-            span:nth-of-type(2) {
+            span.text {
                 display: flex;
                 justify-content: center;
                 align-items: center;
@@ -1017,4 +1018,12 @@ $header_height: 4em;
     &.show {
         opacity: 1;
     }
+}
+  
+.progress-bar {
+    height: 100%;
+    border-radius: 3px;
+    background-color: $color_light_accent;
+    width: 0;
+    height: 1em;
 }
