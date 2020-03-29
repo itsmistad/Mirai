@@ -11,7 +11,6 @@ class DashboardController {
 
     async run(route, req, res) {
         if (!req.user) { // Prevent the page from loading if the user is not logged in.
-            req.session.redirect = req.originalUrl;
             res.redirect('/auth/google/callback');
             return;
         }

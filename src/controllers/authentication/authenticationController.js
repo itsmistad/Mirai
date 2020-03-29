@@ -10,12 +10,12 @@ class AuthenticationController {
 
     async run(route, req, res) {
         switch (route) {
-        case 'callback':
+        case '/auth/google/callback': 
             auth.processCallback(req, res);
             break;
-        case 'logout':
+        case '/auth/logout':
             req.session.destroy();
-            res.redirect('/');
+            res.redirect('back');
             break;
         }
     }

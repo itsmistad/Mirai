@@ -37,12 +37,22 @@ const color = {
     accent: '#A589D1',
     darkAccent: '#8664BA',
     header: '#1e1b1e',
-    body: '#2B2B2B',
+    body: '#494848',
     links: '#68adef',
     highlighted: '#2191fb',
     background: '#F2F3F4',
     success: '#27BA56',
-    error: '#ba274a'
+    error: '#ba274a',
+    dark: {
+        header: '#2D2F2F',
+        mirai_glow: '#A589D1',
+        shadow: '#444444',
+        background: '#4D5050',
+        bodyText: '#E8EDED',
+        headerText: '#FFFFFF',
+        lightAccent: '#4335558',
+        headerButton: '#575B5B'
+    }
 };
 
 const font = {
@@ -227,5 +237,5 @@ $(function() {
 
 if (user.notifySound)
     notify.initSound('default', '/files/notify.mp3');
-if (user.nightMode)
-    $('body').addClass('dark');
+if (user.nightMode) 
+    $('body, html').addClass('dark');

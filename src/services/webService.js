@@ -69,12 +69,12 @@ function setRoutes() {
             switch (requestType) {
             case 'POST':
                 app.post(routePath, function(req, res, next) {
-                    controller.run(route, req, res, next);
+                    controller.run(routePath, req, res, next);
                 });
                 break;
             case 'GET':
                 app.get(routePath, function(req, res, next) {
-                    controller.run(route, req, res, next);
+                    controller.run(routePath, req, res, next);
                 });
                 break;
             }

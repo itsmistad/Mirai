@@ -75,7 +75,7 @@
         #profile__content {
             position: relative;
             padding: 12.425em 0 0 20em;
-
+            margin-bottom: 4em;
             #profile__buttons {
                 position: absolute;
                 display: flex;
@@ -230,6 +230,18 @@
 
                 #profile__friends-text {
                     text-align: center;
+                }
+            }
+        }
+    }
+}
+
+body.dark {
+    .page {
+        #profile__main {
+            #profile__user-data {
+                #profile__picture-wrapper {
+                    background-color: $color_dark_background;
                 }
             }
         }

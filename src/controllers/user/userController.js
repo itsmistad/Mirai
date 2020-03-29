@@ -16,7 +16,7 @@ class UserController {
         let v, paramUser, filePath;
 
         switch (route) {
-        case 'profile':
+        case '/user/profile':
             paramUser =  await mongo.find('users', {
                 googleId: req.query['googleId']
             });
@@ -30,42 +30,25 @@ class UserController {
                 paramUserObj: JSON.stringify(paramUser)
             }, req.user);
             break;
-        case 'preferences':
-            if (req.route.path.includes('/upload/')) {
-                if (!req.isAuthenticated()) { // Don't do anything if the user is not logged in
-                    res.send({
-                        response: 'err'
-                    });
-                    return;
-                }
-                mongo.update('users', {
-                    googleId: req.user.googleId
-                }, {
-                    $set: {
-                        priorityStyle: req.body.priorityStyle,
-                        nightMode: req.body.nightMode,
-                        notifySound: req.body.notifySound
-                    }
-                });
-                res.send({
-                    response: 'ok'
-                });
-            } else {
-                if (!req.user) { // Prevent the page from loading if the user is not logged in.
-                    res.redirect('/');
-                    return;
-                }
-                v = new View(root, res, 'user/preferences');
-                await v.render({
-                    title: 'Preferences'
-                }, req.user);
+        case '/user/preferences':
+            if (!req.user) { // Prevent the page from loading if the user is not logged in.
+                req.session.redirect = req.originalUrl;
+                res.redirect('/auth/google/callback');
+                return;
             }
+            v = new View(root, res, 'user/preferences');
+            await v.render({
+                title: 'Preferences'
+            }, req.user);
             break;
-        case 'about':
+        case '/user/upload/about':
             paramUser =  await mongo.find('users', {
                 googleId: req.query['googleId']
             });
             if (!req.isAuthenticated() || !paramUser || req.user.googleId !== paramUser.googleId) { // Don't do anything if the user is not logged in, the target used cannot be found, or the logged in user is not the owning/target user.
+                res.send({
+                    response: 'err'
+                });
                 return;
             }
             mongo.update('users', {
@@ -83,8 +66,28 @@ class UserController {
                 response: 'ok'
             });
             break;
-        case 'picture':
-        case 'banner':
+        case '/user/upload/preferences':
+            if (!req.isAuthenticated()) { // Don't do anything if the user is not logged in
+                res.send({
+                    response: 'err'
+                });
+                return;
+            }
+            mongo.update('users', {
+                googleId: req.user.googleId
+            }, {
+                $set: {
+                    priorityStyle: req.body.priorityStyle,
+                    nightMode: req.body.nightMode,
+                    notifySound: req.body.notifySound
+                }
+            });
+            res.send({
+                response: 'ok'
+            });
+            break;
+        case '/user/upload/picture':
+        case '/user/upload/banner':
             // Example of "req.file":
             // {
             //     fieldname: 'file',
@@ -100,6 +103,9 @@ class UserController {
                 googleId: req.query['googleId']
             });
             if (!req.isAuthenticated() || !paramUser || req.user.googleId !== paramUser.googleId) { // Don't do anything if the user is not logged in, the target used cannot be found, or the logged in user is not the owning/target user.
+                res.send({
+                    response: 'err'
+                });
                 return;
             }
             filePath = `/files/uploads/${req.file.filename}`;

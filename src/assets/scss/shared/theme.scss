@@ -614,6 +614,7 @@ $header_height: 4em;
             align-items: center;
             height: 100%;
             margin: 0 20px;
+            text-decoration: none;
             &:hover {
                 color: $color_dark_accent;
             }
@@ -1033,11 +1034,18 @@ body.dark {
 
     #layout__footer {
         background-color: $color_dark_header !important;
+        #footer__right-container {
+            #footer__button-github {
+                &:hover {
+                    background-color: $color_dark_header_button;
+                }
+            }   
+        }
     }
     
     .logo {
         color: $color_dark_mirai_glow !important;
-        text-shadow: 0 0 6px $color_dark_light_accent !important;
+        text-shadow: 0 0 6px $color_dark_light_accent !important; 
     }
     
     .contextly-menu {
@@ -1045,7 +1053,7 @@ body.dark {
         ul {
             color: $color_dark_body_text !important;
             li {
-                span:first-of-type {
+                .icon {
                     filter: invert(1);
                 }
                 &:hover {
@@ -1059,10 +1067,14 @@ body.dark {
         input[type='checkbox'] + label {
             color: $color_dark_header_text !important;
             span {
+                background-color: $color_dark_shadow;
                 &:before {
                     background-color: $color_dark_header !important;
                 }
             }
+        }
+        input[type='checkbox']:checked + label > span {
+            background-color: $color_success;
         }
     }
 
@@ -1112,11 +1124,11 @@ body.dark {
             color: $color_dark_body_text !important;
             border: solid 3px $color_links !important;
             &:hover {
-                background-color: $color_dark_background !important;
+                background-color: $color_dark_shadow !important;
             }
         }
         &:hover {
-            box-shadow: -3px 3px $color_dark_header_button !important;
+            box-shadow: -3px 3px $color_dark_shadow !important;
         }
     }
     
@@ -1165,6 +1177,20 @@ body.dark {
     }
 
     .notify-popup {
-        background-color: $color_dark_shadow;
+        background-color: $color_dark_shadow !important;
+    }
+}
+
+html.dark {
+    ::-webkit-scrollbar-track {
+        background: $color_dark_background !important;
+    }
+    
+    ::-webkit-scrollbar-thumb {
+        background: $color_accent !important;
+    }
+    
+    ::-webkit-scrollbar-thumb:hover {
+        background: $color_dark_accent !important;
     }
 }
