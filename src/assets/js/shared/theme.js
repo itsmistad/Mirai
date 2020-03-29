@@ -225,4 +225,7 @@ $(function() {
     }
 });
 
-notify.initSound('default', '/files/notify.mp3');
+if (user.notifySound)
+    notify.initSound('default', '/files/notify.mp3');
+if (user.nightMode)
+    $('body').addClass('dark');

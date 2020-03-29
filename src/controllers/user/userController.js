@@ -31,10 +31,34 @@ class UserController {
             }, req.user);
             break;
         case 'preferences':
-            if (!req.user) { // Prevent the page from loading if the user is not logged in.
-                req.session.redirect = req.originalUrl;
-                res.redirect('/auth/google/callback');
-                return;
+            if (req.route.path.includes('/upload/')) {
+                if (!req.isAuthenticated()) { // Don't do anything if the user is not logged in
+                    res.send({
+                        response: 'err'
+                    });
+                    return;
+                }
+                mongo.update('users', {
+                    googleId: req.user.googleId
+                }, {
+                    $set: {
+                        priorityStyle: req.body.priorityStyle,
+                        nightMode: req.body.nightMode,
+                        notifySound: req.body.notifySound
+                    }
+                });
+                res.send({
+                    response: 'ok'
+                });
+            } else {
+                if (!req.user) { // Prevent the page from loading if the user is not logged in.
+                    res.redirect('/');
+                    return;
+                }
+                v = new View(root, res, 'user/preferences');
+                await v.render({
+                    title: 'Preferences'
+                }, req.user);
             }
             break;
         case 'about':

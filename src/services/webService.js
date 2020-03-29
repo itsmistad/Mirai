@@ -19,9 +19,11 @@ let routes = [
     ['/auth/google/callback', '/authentication/authenticationController', 'GET'],
     ['/auth/logout', '/authentication/authenticationController', 'GET'],
     ['/user/profile', '/user/userController', 'GET'],
+    ['/user/preferences', '/user/userController', 'GET'],
     ['/user/upload/picture', '/user/userController', 'POST'],
     ['/user/upload/banner', '/user/userController', 'POST'],
-    ['/user/upload/about', '/user/userController', 'POST']
+    ['/user/upload/about', '/user/userController', 'POST'],
+    ['/user/upload/preferences', '/user/userController', 'POST']
 ];
 
 function setStaticRoutes() {
