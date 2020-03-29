@@ -123,3 +123,12 @@
 #home__theme-examples {
     display: none; 
 }
+
+body.dark {
+    #home__background {
+        background-image: radial-gradient(circle at top left, $color_dark_light_accent 0%, $color_dark_background 40%, $color_dark_background 100%) !important;
+    }
+    #home__superscript {
+        color: $color_dark_body_text !important;
+    }
+}

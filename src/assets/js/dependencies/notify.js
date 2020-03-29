@@ -49,10 +49,17 @@ const notify = new function() {
     };
 
     obj.initSound = (name, file) => {
-        audio.push({
-            name,
-            audio: new Audio(file)
-        });
+        console.log(audio);
+        if (!audio.find(_ => _.name === name))
+            audio.push({
+                name,
+                audio: new Audio(file)
+            });
+    };
+
+    obj.removeSound = (name) => {
+        if (audio.find(_ => _.name === name))
+            audio.splice(audio.findIndex(_ => _.name === name), 1);
     };
 
     // Initializes a connection to the socket.io server
@@ -279,13 +286,17 @@ const notify = new function() {
             });
 
             if (mergedOptions.sound) {
-                let sound = audio.find(_ => _.name === mergedOptions.sound).audio.play();
-                if (sound !== undefined) {
-                    sound.then(_ => {
-                        // Do... nothing?
-                    }).catch(err => {
-                        console.error(`😞 notify.js failed to play the "${mergedOptions.sound}" sound because the user hasn't interacted with the page yet.`);
-                    });
+                let audioEntry = audio.find(_ => _.name === mergedOptions.sound);
+                console.log(audioEntry);
+                if (audioEntry) {
+                    let sound = audioEntry.audio.play();
+                    if (sound !== undefined) {
+                        sound.then(_ => {
+                            // Do... nothing?
+                        }).catch(err => {
+                            console.error(`😞 notify.js failed to play the "${mergedOptions.sound}" sound because the user hasn't interacted with the page yet.`);
+                        });
+                    }
                 }
             }
             jQ.fadeIn(mergedOptions.fadeInDuration, () => {
