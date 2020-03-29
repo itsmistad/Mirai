@@ -2,5 +2,5 @@
     <p>&copy; 2020, <b>Mirai</b></p>
 </div>
 <div id="footer__right-container">
-    <a id="footer__button-github">GitHub</a>
+    <a id="footer__button-github" href="//github.com/itsmistad/Mirai">GitHub</a>
 </div>

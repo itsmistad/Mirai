@@ -199,6 +199,8 @@ $(function() {
     if (user.googleId) {
         const loginBtn = $('#header__button-login');
         loginBtn.removeAttr('href');
+        loginBtn.off('click');
+        loginBtn.attr('href', `/user/profile?googleId=${user.googleId}`);
         const phrases = ['Welcome', 'Howdy', 'Hi', 'Hey', 'Hello'];
         const index = getRandomInt(0, phrases.length - 1);
         phrase = phrases[index];

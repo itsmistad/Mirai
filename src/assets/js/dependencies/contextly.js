@@ -139,7 +139,7 @@ const contextly = new function() {
     }
 
     function onRightClick(event) {
-        const _ = $(event.target);
+        const _ = $(event.$this);
         const context = ret.find(_) || ret.find(_.parent());
         const x = mouse.x;
         const y = mouse.y;

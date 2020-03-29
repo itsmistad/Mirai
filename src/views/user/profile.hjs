@@ -80,8 +80,5 @@
 {{/yield-styles}}
  
 {{#yield-scripts}}
-    <script type="text/javascript">
-        let paramUser = Object.freeze(JSON.parse("{{ paramUserObj }}".replace(/&quot;/g,'"')));
-    </script>
     <script type="text/javascript" src="/js/user/profile.js"></script>
 {{/yield-scripts}}
