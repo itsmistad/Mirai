@@ -55,8 +55,6 @@ function setRoutes() {
     
     routes.forEach(entry => {
         const routePath = entry[0];
-        const splitRoute = routePath.split('/');
-        const route = splitRoute[splitRoute.length - 1];
         const controllerName = entry[1];
         const requestType = entry[2];
         try {
