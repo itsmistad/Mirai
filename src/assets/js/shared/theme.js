@@ -239,5 +239,3 @@ $(function() {
 
 if (user.notifySound)
     notify.initSound('default', '/files/notify.mp3');
-if (user.nightMode) 
-    $('body, html').addClass('dark');

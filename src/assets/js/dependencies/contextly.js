@@ -150,7 +150,7 @@ const contextly = new function() {
 
     function hook(selector, containerSelector, showOnLeftClick) {
         if (!initialized) {
-            $(containerSelector).leftClick(onLeftClick);
+            $(containerSelector).leftClick(onLeftClick, false);
             initialized = true;
         }
         if (!showOnLeftClick)
