@@ -276,7 +276,7 @@
         display: none;
         opacity: 0;
         top: unset;
-        bottom: 20px;
+        bottom: 0px;
         right: 0;
         &:active,
         &:hover {
@@ -368,6 +368,14 @@ body.dark {
     .dashboard__card,
     .dashboard__folder {
         background-color: $color_accent;
+    }
+
+    .dashboard__modify-popup__path-wrapper {
+        .dashboard__modify-popup__path {
+            .folder, .card {
+                color: $color_dark_body_text;
+            }
+        }
     }
     
     .dashboard__card-wrapper,

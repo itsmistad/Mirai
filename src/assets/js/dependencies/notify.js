@@ -84,6 +84,7 @@ const notify = new function() {
         } else if (!currentOverlay.length && enable) {
             target.append(`<div id="${overlayId}" style="display:none;"></div>`);
             currentOverlay = $('#' + overlayId);
+            currentOverlay.rightClick(() => {});
             $('html').css('overflow', 'hidden');
             if (!opacity) opacity = 0.3;
             currentOverlay.css({
@@ -287,7 +288,6 @@ const notify = new function() {
 
             if (mergedOptions.sound) {
                 let audioEntry = audio.find(_ => _.name === mergedOptions.sound);
-                console.log(audioEntry);
                 if (audioEntry) {
                     let sound = audioEntry.audio.play();
                     if (sound !== undefined) {
