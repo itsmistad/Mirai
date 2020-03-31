@@ -74,8 +74,7 @@
 
         #profile__content {
             position: relative;
-            padding: 12.425em 0 0 20em;
-            margin-bottom: 4em;
+            padding-top: 12.425em;
             #profile__buttons {
                 position: absolute;
                 display: flex;
@@ -176,6 +175,7 @@
             #profile__full-name {
                 margin-top: 0.5em;
                 margin-bottom: 0;
+                transform: translate(8em, -4em);
             }
             
             #profile__display-name {
@@ -183,54 +183,57 @@
                 margin-bottom: 0.5em;
                 font-weight: normal;
                 color: $color_body;
+                transform: translate(11em, -6em);
+            }
+            
+            #profile__display-name-textbox {
+                transform: translate(11em, -5.8em);
+                input {
+                    background-color: rgba(0,0,0,0) !important;
+                }
+            }
+        }
+
+        #profile__about {
+            overflow: hidden;
+
+            h5 {
+                margin-top: 0;
+                text-align: center;
             }
 
-            #profile__about {
-                margin-top: 0.5em;
-                margin-left: 0;
-                overflow: hidden;
-                width: 100%;
+            ul {
+                font-family: 'Montserrat', Arial;
+                font-size: em(14);
+                list-style-type: none;
+                padding-inline-start: 0;
+                
+                li {
+                    display: flex;
+                    justify-content: flex-start;
+                    align-items: center;
+                    margin-bottom: 1em;
 
-                h5 {
-                    margin-top: 0;
-                    text-align: center;
-                }
-
-                ul {
-                    list-style-type: none;
-                    padding-inline-start: 0;
-                    font-size: em(14);
-                    
-                    li {
-                        display: flex;
-                        justify-content: flex-start;
-                        align-items: center;
-                        margin-bottom: 1em;
-
-                        img {
-                            height: 1.5em;
-                            width: 1.5em;
-                            margin: 0 2em;
-                            user-select: none;
-                        }
+                    img {
+                        height: 1.5em;
+                        width: 1.5em;
+                        margin: 0 2em;
+                        user-select: none;
                     }
                 }
             }
+        }
 
-            #profile__friends {
-                margin-top: 0.5em;
-                margin-left: 0;
-                overflow: hidden;
-                width: 100%;
+        #profile__friends {
+            overflow: hidden;
 
-                #profile__friends-header {
-                    margin-top: 0;
-                    text-align: center;
-                }
+            #profile__friends-header {
+                margin-top: 0;
+                text-align: center;
+            }
 
-                #profile__friends-text {
-                    text-align: center;
-                }
+            #profile__friends-text {
+                text-align: center;
             }
         }
     }

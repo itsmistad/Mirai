@@ -313,7 +313,7 @@
     }
     & > span {
         margin-top: 0.2em;
-        text-shadow: -2px -2px 2px white, 2px 2px 2px rgba(0,0,0,0.3);
+        text-shadow: -1px -1px 1px rgba(255,255,255,0.3), -1px 1px 1px rgba(255,255,255,0.3), 1px 1px 1px rgba(255,255,255,0.3), 1px -1px 1px rgba(255,255,255,0.3);
         color: $color_body;
         text-align: center;
         font-weight: bold;
@@ -367,7 +367,7 @@
 body.dark {
     .dashboard__card,
     .dashboard__folder {
-        background-color: $color_accent !important;
+        background-color: $color_accent;
     }
     
     .dashboard__card-wrapper,
@@ -383,8 +383,7 @@ body.dark {
                 background-color: $color_highlighted;
             }
             &.active {
-                opacity: 1 !important;
-                background-color: $color_highlighted !important;
+                background-color: $color_highlighted;
             }
         }
         .dashboard__remove {
@@ -395,13 +394,12 @@ body.dark {
                 background-color: darkred;
             }
             &.active {
-                opacity: 1 !important;
-                background-color: darkred !important;
+                background-color: darkred;
             }
         }
         & > span {
             color: $color_dark_body_text !important;
-            text-shadow: -2px -2px 2px $color_dark_shadow, 2px 2px 2px rgba(0,0,0,0.3) !important;
+            text-shadow: -1px -1px 1px rgba(0,0,0,0.3), -1px 1px 1px rgba(0,0,0,0.3), 1px 1px 1px rgba(0,0,0,0.3), 1px -1px 1px rgba(0,0,0,0.3);
         }
     }
 }

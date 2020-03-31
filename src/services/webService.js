@@ -23,7 +23,8 @@ let routes = [
     ['/user/upload/picture', '/user/userController', 'POST'],
     ['/user/upload/banner', '/user/userController', 'POST'],
     ['/user/upload/about', '/user/userController', 'POST'],
-    ['/user/upload/preferences', '/user/userController', 'POST']
+    ['/user/upload/preferences', '/user/userController', 'POST'],
+    ['/user/upload/preferences/bg', '/user/userController', 'POST']
 ];
 
 function setStaticRoutes() {
@@ -72,6 +73,8 @@ function setRoutes() {
                 break;
             case 'GET':
                 app.get(routePath, function(req, res, next) {
+                    if (routePath !== '/auth/google/callback')
+                        req.session.redirect = req.originalUrl;
                     controller.run(routePath, req, res, next);
                 });
                 break;
@@ -116,8 +119,10 @@ class WebService {
                     cb(null, 'uploads/');
                 },
                 filename: function (req, file, cb) {
+                    const extension = file.originalname.substring(file.originalname.lastIndexOf('.'), file.originalname.length);
+                    console.log(extension);
                     let customFileName = crypto.randomBytes(10).toString('hex');
-                    cb(null, `${customFileName}-${Date.now()}`);
+                    cb(null, `${customFileName}-${Date.now() + extension}`);
                 }
             });
             

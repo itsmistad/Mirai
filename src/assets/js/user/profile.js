@@ -7,6 +7,7 @@ $(function() {
     $('#profile__picture').attr('src', paramUser.picture);
     if (paramUser.banner && paramUser.banner.trim().length)
         $('#profile__banner').css('background', `url("${paramUser.banner}") no-repeat center center`);
+    $('#profile__banner').css('background-size', 'cover');
     $('#profile__about__email span').text(paramUser.email);
     if (paramUser.job && paramUser.job.trim().length) {
         $('#profile__about__job span').text(paramUser.job);
@@ -76,7 +77,7 @@ $(function() {
                     value: $(this).text()
                 });
                 $(this).html(`
-                    <div class="textbox" style="transform:translateY(0.7em)">
+                    <div class="textbox" style="transform:translateY(0.7em);">
                         <input type="${$(this).attr('name') === 'Email Address' ? 'email' : 'text'}" name="${$(this).parent().attr('id')}-input" autocomplete="on" value="${$(this).text()}">
                         <label for="${$(this).parent().attr('id')}-input">
                             <span>${$(this).attr('name')}</span>
@@ -99,6 +100,7 @@ $(function() {
             $('#profile__picture-overlay').click(function() {
                 $('#profile__picture-file').click();
             });
+            $('#profile__display-name-input').attr('value', $('#profile__display-name').text());
             $('#profile__banner-file').change(function(e) {
                 var file = $(this)[0].files[0];
                 if (!file) return;
@@ -107,6 +109,7 @@ $(function() {
                 upload.form(`/user/upload/banner?googleId=${paramUser.googleId}`, '#profile__banner-form', '#profile__banner-overlay', res => {
                     if (res.filePath) {
                         $('#profile__banner').css('background', `url("${res.filePath}") no-repeat center center`);
+                        $('#profile__banner').css('background-size', 'cover');
                     } else {
                         notify.me({
                             header: 'Uh oh',

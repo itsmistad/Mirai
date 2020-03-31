@@ -8,14 +8,14 @@ $(function() {
     $('#home__mirai').click(function(e) {
         e.preventDefault();
         redirect('/');
-});
+    });
 
     $('#home__github').click(function() {
         redirect('https://github.com/itsmistad/Mirai');
     });
 
     $('#home__tryit').click(function() {
-        redirect('/dashboard');
+        redirect('/dashboard?login=1');
     });
 
     if (!isProd) {

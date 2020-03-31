@@ -17,7 +17,7 @@ class HomeController {
         await v.render({
             title: 'Home',
             slogan,
-            badLogin: req.params.badLogin || 0
+            badLogin: req.query['badLogin'] || 0
         }, req.user);
     }
 }

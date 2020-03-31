@@ -264,6 +264,11 @@ function returnNodesToView(viewWidth) {
 }
 
 $(function() {
+    if (user.backgroundTile) {
+        const backgroundImage = $('#dashboard__full-view .background img');
+        backgroundImage.attr('src', '');
+        backgroundImage.css('background', `url("${user.backgroundTile}") repeat`);
+    }
     const fullscreenBtn = $('#dashboard__fullscreen');
     const fullscreenAnim = lottie.loadAnimation({
         container: fullscreenBtn.get(0),
@@ -587,7 +592,7 @@ $(function() {
     $(window).afterResize(function(e) {
         returnNodesToView(e.size.width);
     });
-    if (user.nightMode)
+    if (user.nightMode && !user.backgroundTile)
         $('#dashboard__full-view .background img').attr('src', '/files/svg/grid-black.svg');
 });
 

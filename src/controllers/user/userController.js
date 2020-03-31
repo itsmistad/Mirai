@@ -32,8 +32,7 @@ class UserController {
             break;
         case '/user/preferences':
             if (!req.user) { // Prevent the page from loading if the user is not logged in.
-                req.session.redirect = req.originalUrl;
-                res.redirect('/auth/google/callback');
+                res.redirect('/');
                 return;
             }
             v = new View(root, res, 'user/preferences');
@@ -79,12 +78,44 @@ class UserController {
                 $set: {
                     priorityStyle: req.body.priorityStyle,
                     nightMode: req.body.nightMode,
-                    notifySound: req.body.notifySound
+                    notifySound: req.body.notifySound,
+                    backgroundTileName: req.body.backgroundTileName
                 }
             });
             res.send({
                 response: 'ok'
             });
+            break;
+        case '/user/upload/preferences/bg':
+            if (!req.isAuthenticated()) { // Don't do anything if the user is not logged in
+                res.send({
+                    response: 'err'
+                });
+                return;
+            }
+            filePath = `/files/uploads/${req.file ? req.file.filename : ''}`;
+            res.send({
+                filePath
+            });
+            if (env.isProd) {
+                // Delete original file from S3.
+                
+                // Store the new file path into user's mongo object.
+            } else {
+                // Delete original file from local storage.
+                if (req.user.backgroundTile && req.user.backgroundTile.startsWith('/files/uploads/') && fs.existsSync(req.user.backgroundTile)) {
+                    fs.unlink(req.user.backgroundTile);
+                }
+
+                // Store the new file path into user's mongo object.
+                mongo.update('users', {
+                    googleId: req.user.googleId
+                }, {
+                    $set: {
+                        backgroundTile: req.file ? filePath : null
+                    }
+                });
+            }
             break;
         case '/user/upload/picture':
         case '/user/upload/banner':
@@ -123,7 +154,7 @@ class UserController {
                 }
 
                 // Store the new file path into paramUser's mongo object.
-                if (route === 'picture') {
+                if (route === '/user/upload/picture') {
                     mongo.update('users', {
                         googleId: paramUser.googleId
                     }, {
@@ -131,7 +162,7 @@ class UserController {
                             picture: filePath
                         }
                     });
-                } else if (route === 'banner') {
+                } else if (route === '/user/upload/banner') {
                     mongo.update('users', {
                         googleId: paramUser.googleId
                     }, {

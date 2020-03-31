@@ -49,7 +49,7 @@ const notify = new function() {
     };
 
     obj.initSound = (name, file) => {
-        console.log(audio);
+        if (!audio) audio = [];
         if (!audio.find(_ => _.name === name))
             audio.push({
                 name,

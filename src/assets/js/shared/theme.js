@@ -150,7 +150,7 @@ $(function() {
             subheader: `<a href="/">Read our cookie policy</a>`,
             body: 'Mirai uses cookies to provide you the best planning experience.<br/>By continuing to use our website, you accept our use of cookies.',
             buttons: [{
-                text: 'I accept',
+                text: 'Ok',
                 class: 'medium',
                 close: true,
                 action: () => {
@@ -237,5 +237,7 @@ $(function() {
     }
 });
 
-if (user.notifySound)
+if (user.notifySound) {
+    console.log('Registering notify.me default sound...');
     notify.initSound('default', '/files/notify.mp3');
+}

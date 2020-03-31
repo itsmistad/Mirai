@@ -183,13 +183,13 @@ div.textbox {
     input[type='email'] {
         font-family: $font_header;
         color: $color_body;
-        width: calc(100% - .8em);
+        width: calc(100%);
         height: calc(100% - .6em);
-        padding: 0.3em 0.4em;
+        padding: 0.3em 0;
         border: none;
         outline: none;
         background-color: $color_background;
-        font-size: em(18px);
+        font-size: em(16px);
         transition: all $transition_200;
         cursor: pointer;
 
@@ -1115,7 +1115,7 @@ body.dark {
     }
 
     p, span, div, label, input {
-        color: $color_dark_body_text !important;
+        color: $color_dark_body_text;
     }
 
     button {
