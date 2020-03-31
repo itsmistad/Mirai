@@ -114,8 +114,10 @@ function initializeTextboxes() {
 
     // Initialized the value attribute if it's missing for each textbox.
     textBoxes.each(function() {
-        if (!$(this).attr('value'))
-            $(this).attr('value', '');
+        if ((!$(this).attr('value') || $(this).attr('value').trim() === '') && $(this).text && $(this).attr('value') !== $(this).text())
+            $(this).attr('value', $(this).text());
+        else if ((!$(this).attr('value') || $(this).attr('value').trim() === '') && $(this).val && $(this).attr('value') !== $(this).val())
+            $(this).attr('value', $(this).val());
     });
 
     // Updates the value attribute for each textbox on-change.
@@ -237,7 +239,6 @@ $(function() {
     }
 });
 
-if (user.notifySound) {
-    console.log('Registering notify.me default sound...');
+if (user.notifySound || user.notifySound == null) {
     notify.initSound('default', '/files/notify.mp3');
 }

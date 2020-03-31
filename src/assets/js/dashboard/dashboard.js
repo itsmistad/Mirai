@@ -186,7 +186,7 @@ function registerFolderClickEvent(folderId) {
                     </div>
                 </div>`,
                 buttons: [ {
-                    text: 'Done', 
+                    text: 'Save', 
                     close: true,
                     action: () => {
                         f.name = $('.dashboard__modify-folder-name input').attr('value');
