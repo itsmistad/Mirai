@@ -131,4 +131,10 @@ body.dark {
     #home__superscript {
         color: $color_dark_body_text !important;
     }
+    #home__github {
+        border: solid 3px $color_accent !important;
+        &:hover {
+            border: solid 3px $color_dark_accent !important;
+        }
+    }
 }

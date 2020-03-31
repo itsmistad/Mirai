@@ -10,15 +10,13 @@ class NotificationController {
     }
 
     async run(route, req, res) {
-        if (route === 'subscribe') {
-            const subscription = req.body;
-            res.status(201).json({});
-            const payload = JSON.stringify({ title: 'Notification Test' });   
-               
-            webpush.sendNotification(subscription, payload).catch(error => {
-                log.error(`Error sending notification: ${error}`);
-            });
-        }
+        const subscription = req.body;
+        res.status(201).json({});
+        const payload = JSON.stringify({ title: 'Notification Test' });   
+            
+        webpush.sendNotification(subscription, payload).catch(error => {
+            log.error(`Error sending notification: ${error}`);
+        });
     }
 }
 

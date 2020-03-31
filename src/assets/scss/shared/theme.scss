@@ -183,13 +183,13 @@ div.textbox {
     input[type='email'] {
         font-family: $font_header;
         color: $color_body;
-        width: calc(100% - .8em);
+        width: calc(100%);
         height: calc(100% - .6em);
-        padding: 0.3em 0.4em;
+        padding: 0.3em 0;
         border: none;
         outline: none;
         background-color: $color_background;
-        font-size: em(18px);
+        font-size: em(16px);
         transition: all $transition_200;
         cursor: pointer;
 
@@ -614,6 +614,7 @@ $header_height: 4em;
             align-items: center;
             height: 100%;
             margin: 0 20px;
+            text-decoration: none;
             &:hover {
                 color: $color_dark_accent;
             }
@@ -712,6 +713,7 @@ $header_height: 4em;
 
 ::-webkit-scrollbar {
     width: 6px;
+    height: 4px;
 }
 
 ::-webkit-scrollbar-track {
@@ -970,7 +972,6 @@ $header_height: 4em;
     font-weight: bold;
     position: absolute;
     opacity: 0;
-    width: 200px;
     max-height: 0;
     background-color: white;
     border-radius: 8px;
@@ -993,7 +994,7 @@ $header_height: 4em;
             display:flex;
             justify-content: left;
 
-            span:first-of-type {
+            span.icon {
                 margin-right: 0.6em;
                 width: 2em;
                 height: 2em;
@@ -1002,7 +1003,7 @@ $header_height: 4em;
                 align-items: center;
             }
 
-            span:nth-of-type(2) {
+            span.text {
                 display: flex;
                 justify-content: center;
                 align-items: center;
@@ -1018,17 +1019,32 @@ $header_height: 4em;
         opacity: 1;
     }
 }
+  
+.progress-bar {
+    height: 100%;
+    border-radius: 3px;
+    background-color: $color_light_accent;
+    width: 0;
+    height: 1em;
+}
 
 body.dark {
     background-color: $color_dark_background !important;
 
     #layout__footer {
         background-color: $color_dark_header !important;
+        #footer__right-container {
+            #footer__button-github {
+                &:hover {
+                    background-color: $color_dark_header_button;
+                }
+            }   
+        }
     }
     
     .logo {
         color: $color_dark_mirai_glow !important;
-        text-shadow: 0 0 6px $color_dark_light_accent !important;
+        text-shadow: 0 0 6px $color_dark_light_accent !important; 
     }
     
     .contextly-menu {
@@ -1036,7 +1052,7 @@ body.dark {
         ul {
             color: $color_dark_body_text !important;
             li {
-                span:first-of-type {
+                .icon {
                     filter: invert(1);
                 }
                 &:hover {
@@ -1050,10 +1066,14 @@ body.dark {
         input[type='checkbox'] + label {
             color: $color_dark_header_text !important;
             span {
+                background-color: $color_dark_shadow;
                 &:before {
                     background-color: $color_dark_header !important;
                 }
             }
+        }
+        input[type='checkbox']:checked + label > span {
+            background-color: $color_success;
         }
     }
 
@@ -1094,7 +1114,7 @@ body.dark {
     }
 
     p, span, div, label, input {
-        color: $color_dark_body_text !important;
+        color: $color_dark_body_text;
     }
 
     button {
@@ -1103,11 +1123,11 @@ body.dark {
             color: $color_dark_body_text !important;
             border: solid 3px $color_links !important;
             &:hover {
-                background-color: $color_dark_background !important;
+                background-color: $color_dark_shadow !important;
             }
         }
         &:hover {
-            box-shadow: -3px 3px $color_dark_header_button !important;
+            box-shadow: -3px 3px $color_dark_shadow !important;
         }
     }
     
@@ -1156,6 +1176,20 @@ body.dark {
     }
 
     .notify-popup {
-        background-color: $color_dark_shadow;
+        background-color: $color_dark_shadow !important;
+    }
+}
+
+html.dark {
+    ::-webkit-scrollbar-track {
+        background: $color_dark_background !important;
+    }
+    
+    ::-webkit-scrollbar-thumb {
+        background: $color_accent !important;
+    }
+    
+    ::-webkit-scrollbar-thumb:hover {
+        background: $color_dark_accent !important;
     }
 }

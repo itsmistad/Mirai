@@ -34,7 +34,15 @@ function addFullViewNode(iconPath, nodeClass, text, id, x = mouse.x, y = mouse.y
                 text: 'Yes',
                 class: 'medium',
                 action: () => {
-                    $(this).parent().parent().fadeOut(200, 'swing', () => $(this).parent().parent().remove());
+                    let nodeWrapper = $(this).parent().parent();
+                    nodeWrapper.fadeOut(200, 'swing', () => nodeWrapper.remove());
+                    let f = folder.find(nodeWrapper.attr('id'));
+                    let c = card.find(nodeWrapper.attr('id'));
+                    if (f) { // If the node we're removing is a folder...
+                        folder.delete(f.id);
+                    } else if (c) { // If the node we're removing is a card...
+                        card.delete(c.id);
+                    }
                 },
                 close: true
             }, {
@@ -45,6 +53,152 @@ function addFullViewNode(iconPath, nodeClass, text, id, x = mouse.x, y = mouse.y
             }]
         });
         return false;
+    });
+}
+
+function registerFolderClickEvent(folderId) {
+    $('#' + folderId).click(function() {
+        let dragging = $(this).attr('dragging');
+        if (dragging && dragging === 'true')
+        {
+            $(this).attr('dragging', 'false');
+            return;   
+        }
+        // Start building the "modify folder" pop-up.
+        const f = folder.find(this.id);
+        if (f.cards.length > 0) {
+            notify.me({
+                header: `Modify "${f.name}"`,
+                subheader: 'Enter a new name and description',
+                class: 'notify-popup dashboard__modify-popup',
+                body: `
+                <div class="dashboard__modify-popup__path-wrapper">
+                    <div class="dashboard__modify-popup__path">
+                        <div class="folder">${f.name}</div>
+                    </div>
+                </div>
+                <div class="dashboard__modify-folder-container">
+                    <div class="dashboard__modify-folder-name">
+                        <div class="textbox">
+                            <input type="text" name="name" autocomplete="off" required value="${f.name}">
+                            <label for="name">
+                                <span>Name</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="dashboard__modify-folder-description-with-cards">
+                        <div class="textarea">
+                            <textarea id="description">${f.description}</textarea>
+                            <label for="description">
+                                <span>Description</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="cards-container">
+                    <h5>Cards<span style="color:#ccc;font-style:italic"> - click <i style="padding: 0 0.2em" class="fas fa-arrow-alt-circle-right"></i> to remove from the folder</span></h5>
+                </div>
+                `,
+                buttons: [ {
+                    text: 'Save', 
+                    close: true,
+                    action: () => {
+                        f.name = $('.dashboard__modify-folder-name input').attr('value');
+                        f.description = $('.dashboard__modify-folder-description-with-cards textarea').attr('value');
+                        $('#' + f.id + ' .dashboard__text').text(f.name);
+                    }
+                }],
+                closeButton: true
+            }, n => {
+                initializeTextboxes();
+                let notifBody = n.$.find('.cards-container');
+                let cardsList = notifBody.find('.dashboard__modify-folder__cards ul');
+                if (!cardsList.length) {
+                    notifBody.append('<div class="dashboard__modify-folder__cards"><ul></ul></div>');
+                    cardsList = notifBody.find('.dashboard__modify-folder__cards ul');
+                }
+                for (let c of f.cards) {
+                    let cardId = 'dashboard__modify-folder__card-' + Math.floor(Math.random() * 99999);
+                    cardsList.append(`<div class="dashboard__modify-folder__card" id="${cardId}"><li>${c.name}</li><i class="fas fa-arrow-alt-circle-right"></i></div>`);
+                    registerCardClickEvent(c, `#${cardId} li`, `#${cardId} li`);
+                    $(`#${cardId} .fa-arrow-alt-circle-right`).click(function() {
+                        let cardItem = $(this).parent();
+                        cardItem.css({
+                            transform: 'translateX(100%)',
+                            opacity: 0
+                        });
+                        f.removeCard(c.id);
+                        let axis = Math.ceil(Math.random() * 100);
+                        let flipped = Math.ceil(Math.random() * 100);
+                        let x = $('#' + folderId).offset().left + (axis >= 50 ? Math.floor(Math.random() * 241): 0) - 70 + (axis < 50 && flipped >= 50 ? 240 : 0);
+                        let y = $('#' + folderId).offset().top + (axis < 50 ? Math.floor(Math.random() * 241): 0) - 70 + (axis >= 50 && flipped < 50 ? 240 : 0);
+                        addFullViewNode('/files/svg/document.svg', 'dashboard__card', c.name, c.id, x, y);
+                        registerCardClickEvent(c, '#' + c.id);
+                        let cardParent = cardItem.parent();
+                        cardItem.nextAll().css({
+                            transform: 'translateY(-100%)'
+                        });
+                        setTimeout(() => {
+                            let oldTransition = cardParent.children('.dashboard__modify-folder__card').css('transition');
+                            cardParent.children('.dashboard__modify-folder__card').css({
+                                transition: 'unset'
+                            });
+                            cardItem.remove();
+                            cardParent.children('.dashboard__modify-folder__card').css({
+                                transform: 'unset'
+                            });
+                            setTimeout(() => {
+                                cardParent.children('.dashboard__modify-folder__card').css({
+                                    transition: oldTransition
+                                });
+                            }, 50);
+                        }, 210);
+                    });
+                }
+            });
+        } else {
+            notify.me({
+                header: `Modify "${f.name}"`,
+                subheader: 'Enter a new name and description',
+                class: 'notify-popup dashboard__modify-popup',
+                body: `
+                <div class="dashboard__modify-popup__path-wrapper">
+                    <div class="dashboard__modify-popup__path">
+                        <div class="folder">${f.name}</div>
+                    </div>
+                </div>
+                <div class="dashboard__modify-folder-container">
+                    <div class="dashboard__modify-folder-name">
+                        <div class="textbox">
+                            <input type="text" name="name" autocomplete="off" required value="${f.name}">
+                            <label for="name">
+                                <span>Name</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="dashboard__modify-folder-description">
+                        <div class="textarea">
+                            <textarea id="description">${f.description}</textarea>
+                            <label for="description">
+                                <span>Description</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>`,
+                buttons: [ {
+                    text: 'Save', 
+                    close: true,
+                    action: () => {
+                        f.name = $('.dashboard__modify-folder-name input').attr('value');
+                        f.description = $('.dashboard__modify-folder-description textarea').attr('value');
+                        $('#' + f.id + ' .dashboard__text').text(f.name);
+                    }
+                }],
+                closeButton: true
+            }, () => {
+                initializeTextboxes();
+            });
+        }
     });
 }
 
@@ -161,7 +315,13 @@ const card = Object.freeze(new function() {
         };
         cards.push(c);
         return c;
-    }
+    };
+
+    obj.delete = cardId => {
+        let c = cards.findIndex(_ => _.id === cardId);
+        if (c >= 0)
+            cards.splice(c, 1);
+    };
 
     obj.find = id => cards.find(_ => _.id === id);
 
@@ -187,6 +347,36 @@ const folder = Object.freeze(new function() {
                 let c = card.find(cardId);
                 c.currentFolderId = f.id;
                 f.cards.push(c);
+                let contextOptions = contextly.find($folder).options;
+                if (contextOptions.length < 3) {
+                    contextOptions.push({
+                        id: c.id,
+                        text:
+                        `
+                            <div class="banner" cardId="${c.id}">
+                                ${c.name}
+                            </div>
+                        `,
+                        tooltip: '',
+                        action: () => { },
+                        onShow: $e => {
+                            $(`#${$e.attr('id')} .banner`).text(c.name);
+                            registerCardClickEvent(c, `#${$e.attr('id')}`);
+                        }
+                    });
+                } else if (contextOptions.length === 3) {
+                    contextOptions.push({
+                        text: 'View More',
+                        tooltip: '',
+                        action: () => {
+                            $('#' + f.id).click();
+                        }
+                    });
+                }
+                contextly.modify('#' + f.id, contextOptions, {
+                    heightFactor: 8,
+                    maxWidth: 300
+                });
             },
             removeCard: cardId => {
                 const $folder = $('#' + f.id);
@@ -198,14 +388,60 @@ const folder = Object.freeze(new function() {
                         counter.removeClass('show');
                 }
                 let c = card.find(cardId);
+                f.cards.splice(f.cards.findIndex(_ => _.id === cardId), 1);
                 c.currentFolderId = null;
-                f.cards.splice(card.find(cardId), 1);
+                let contextOptions = contextly.find($folder).options;
+                contextOptions.splice(0, contextOptions.length);
+                for (let card of f.cards) {
+                    if (contextOptions.length < 3) {
+                        contextOptions.push({
+                            id: card.id,
+                            text:
+                            `
+                                <div class="banner" cardId="${card.id}">
+                                    ${card.name}
+                                </div>
+                            `,
+                            tooltip: '',
+                            action: () => { },
+                            onShow: $e => {
+                                $(`#${$e.attr('id')} .banner`).text(card.name);
+                                registerCardClickEvent(card, `#${$e.attr('id')}`);
+                            }
+                        });
+                    } else break;
+                }
+                if (f.cards.length > 3) {
+                    contextOptions.push({
+                        text: 'View More',
+                        tooltip: '',
+                        action: () => {
+                            $('#' + f.id).click();
+                        }
+                    });
+                }
+                contextly.modify('#' + f.id, contextOptions, {
+                    heightFactor: 8,
+                    maxWidth: 300
+                });
             },
             findCard: id => f.cards.find(_ => _.id === id)
         };
         folders.push(f);
         return f;
-    }
+    };
+
+    obj.delete = folderId => {
+        let fIndex = folders.findIndex(_ => _.id === folderId);
+        if (fIndex >= 0) {
+            let f = folders[fIndex];
+            for (let innerCard of f.cards) {
+                card.delete(innerCard.id);
+            }
+            f.cards.splice(0, f.cards.length);
+            folders.splice(fIndex, 1);
+        }
+    };
 
     obj.find = id => folders.find(_ => _.id === id);
 
@@ -264,6 +500,11 @@ function returnNodesToView(viewWidth) {
 }
 
 $(function() {
+    if (user.backgroundTile) {
+        const backgroundImage = $('#dashboard__full-view .background img');
+        backgroundImage.attr('src', '');
+        backgroundImage.css('background', `url("${user.backgroundTile}") repeat`);
+    }
     const fullscreenBtn = $('#dashboard__fullscreen');
     const fullscreenAnim = lottie.loadAnimation({
         container: fullscreenBtn.get(0),
@@ -431,149 +672,8 @@ $(function() {
                         f.name = $('.dashboard__create-folder-name input').attr('value');
                         f.description = $('.dashboard__create-folder-description textarea').attr('value');
                         addFullViewNode('/files/svg/folder.svg', 'dashboard__folder', f.name, folderId, e.x, e.y);
-                        $('#' + folderId).click(function() {
-                            let dragging = $(this).attr('dragging');
-                            if (dragging && dragging === 'true')
-                            {
-                                $(this).attr('dragging', 'false');
-                                return;   
-                            }
-                            // Start building the "modify folder" pop-up.
-                            const f = folder.find(this.id);
-                            if (f.cards.length > 0) {
-                                notify.me({
-                                    header: `Modify "${f.name}"`,
-                                    subheader: 'Enter a new name and description',
-                                    class: 'notify-popup dashboard__modify-popup',
-                                    body: `
-                                    <div class="dashboard__modify-popup__path-wrapper">
-                                        <div class="dashboard__modify-popup__path">
-                                            <div class="folder">${f.name}</div>
-                                        </div>
-                                    </div>
-                                    <div class="dashboard__modify-folder-container">
-                                        <div class="dashboard__modify-folder-name">
-                                            <div class="textbox">
-                                                <input type="text" name="name" autocomplete="off" required value="${f.name}">
-                                                <label for="name">
-                                                    <span>Name</span>
-                                                </label>
-                                            </div>
-                                        </div>
-                                        <div class="dashboard__modify-folder-description-with-cards">
-                                            <div class="textarea">
-                                                <textarea id="description">${f.description}</textarea>
-                                                <label for="description">
-                                                    <span>Description</span>
-                                                </label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="cards-container">
-                                        <h5>Cards<span style="color:#ccc;font-style:italic"> - click <i style="padding: 0 0.2em" class="fas fa-arrow-alt-circle-right"></i> to remove from the folder</span></h5>
-                                    </div>
-                                    `,
-                                    buttons: [ {
-                                        text: 'Save', 
-                                        close: true,
-                                        action: () => {
-                                            f.name = $('.dashboard__modify-folder-name input').attr('value');
-                                            f.description = $('.dashboard__modify-folder-description-with-cards textarea').attr('value');
-                                            $('#' + f.id + ' .dashboard__text').text(f.name);
-                                        }
-                                    }],
-                                    closeButton: true
-                                }, n => {
-                                    initializeTextboxes();
-                                    let notifBody = n.$.find('.cards-container');
-                                    let cardsList = notifBody.find('.dashboard__modify-folder__cards ul');
-                                    if (!cardsList.length) {
-                                        notifBody.append('<div class="dashboard__modify-folder__cards"><ul></ul></div>');
-                                        cardsList = notifBody.find('.dashboard__modify-folder__cards ul');
-                                    }
-                                    for (let c of f.cards) {
-                                        let cardId = 'dashboard__modify-folder__card-' + Math.floor(Math.random() * 99999);
-                                        cardsList.append(`<div class="dashboard__modify-folder__card" id="${cardId}"><li>${c.name}</li><i class="fas fa-arrow-alt-circle-right"></i></div>`);
-                                        registerCardClickEvent(c, `#${cardId} li`, `#${cardId} li`);
-                                        $(`#${cardId} .fa-arrow-alt-circle-right`).click(function() {
-                                            let cardItem = $(this).parent();
-                                            cardItem.css({
-                                                transform: 'translateX(100%)',
-                                                opacity: 0
-                                            });
-                                            f.removeCard(c.id);
-                                            let axis = Math.ceil(Math.random() * 100);
-                                            let flipped = Math.ceil(Math.random() * 100);
-                                            let x = $('#' + folderId).offset().left + (axis >= 50 ? Math.floor(Math.random() * 241): 0) - 70 + (axis < 50 && flipped >= 50 ? 240 : 0);
-                                            let y = $('#' + folderId).offset().top + (axis < 50 ? Math.floor(Math.random() * 241): 0) - 70 + (axis >= 50 && flipped < 50 ? 240 : 0);
-                                            addFullViewNode('/files/svg/document.svg', 'dashboard__card', c.name, c.id, x, y);
-                                            registerCardClickEvent(c, '#' + c.id);
-                                            let cardParent = cardItem.parent();
-                                            cardItem.nextAll().css({
-                                                transform: 'translateY(-100%)'
-                                            });
-                                            setTimeout(() => {
-                                                let oldTransition = cardParent.children('.dashboard__modify-folder__card').css('transition');
-                                                cardParent.children('.dashboard__modify-folder__card').css({
-                                                    transition: 'unset'
-                                                });
-                                                cardItem.remove();
-                                                cardParent.children('.dashboard__modify-folder__card').css({
-                                                    transform: 'unset'
-                                                });
-                                                setTimeout(() => {
-                                                    cardParent.children('.dashboard__modify-folder__card').css({
-                                                        transition: oldTransition
-                                                    });
-                                                }, 50);
-                                            }, 210);
-                                        });
-                                    }
-                                });
-                            } else {
-                                notify.me({
-                                    header: `Modify "${f.name}"`,
-                                    subheader: 'Enter a new name and description',
-                                    class: 'notify-popup dashboard__modify-popup',
-                                    body: `
-                                    <div class="dashboard__modify-popup__path-wrapper">
-                                        <div class="dashboard__modify-popup__path">
-                                            <div class="folder">${f.name}</div>
-                                        </div>
-                                    </div>
-                                    <div class="dashboard__modify-folder-container">
-                                        <div class="dashboard__modify-folder-name">
-                                            <div class="textbox">
-                                                <input type="text" name="name" autocomplete="off" required value="${f.name}">
-                                                <label for="name">
-                                                    <span>Name</span>
-                                                </label>
-                                            </div>
-                                        </div>
-                                        <div class="dashboard__modify-folder-description">
-                                            <div class="textarea">
-                                                <textarea id="description">${f.description}</textarea>
-                                                <label for="description">
-                                                    <span>Description</span>
-                                                </label>
-                                            </div>
-                                        </div>
-                                    </div>`,
-                                    buttons: [ {
-                                        text: 'Done', 
-                                        close: true,
-                                        action: () => {
-                                            f.name = $('.dashboard__modify-folder-name input').attr('value');
-                                            f.description = $('.dashboard__modify-folder-description textarea').attr('value');
-                                            $('#' + f.id + ' .dashboard__text').text(f.name);
-                                        }
-                                    }],
-                                    closeButton: true
-                                }, () => {
-                                    initializeTextboxes();
-                                });
-                            }
-                        });
+                        contextly.init('#' + folderId, '#dashboard__full-view', []);
+                        registerFolderClickEvent(folderId);
                     }
                 }],
                 closeButton: false
@@ -582,12 +682,13 @@ $(function() {
             });
         }
     }], {
-        minHeight: 100
+        minHeight: 100,
+        showOnLeftClick: false
     });
     $(window).afterResize(function(e) {
         returnNodesToView(e.size.width);
     });
-    if (user.nightMode)
+    if (user.nightMode && !user.backgroundTile)
         $('#dashboard__full-view .background img').attr('src', '/files/svg/grid-black.svg');
 });
 

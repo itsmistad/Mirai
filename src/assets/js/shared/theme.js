@@ -37,12 +37,22 @@ const color = {
     accent: '#A589D1',
     darkAccent: '#8664BA',
     header: '#1e1b1e',
-    body: '#2B2B2B',
+    body: '#494848',
     links: '#68adef',
     highlighted: '#2191fb',
     background: '#F2F3F4',
     success: '#27BA56',
-    error: '#ba274a'
+    error: '#ba274a',
+    dark: {
+        header: '#2D2F2F',
+        mirai_glow: '#A589D1',
+        shadow: '#444444',
+        background: '#4D5050',
+        bodyText: '#E8EDED',
+        headerText: '#FFFFFF',
+        lightAccent: '#4335558',
+        headerButton: '#575B5B'
+    }
 };
 
 const font = {
@@ -97,14 +107,17 @@ function toggleScrollBar($e) {
     $e.toggleClass(classes.hideScroll);
 }
 
-// Set the "value" attributes and "required" formatting for any textbox on the page. Call this when you add any textbox through JS.
+// Set the "value" attributes and "required" formatting for any textbox on the page. Call th`is` when you add any textbox through JS.
 function initializeTextboxes() {
     const textBoxes = $('input[type="text"], input[type="email"], input[type="date"], input[type="time"], textarea');
+    textBoxes.off('change');
 
     // Initialized the value attribute if it's missing for each textbox.
     textBoxes.each(function() {
-        if (!$(this).attr('value'))
-            $(this).attr('value', '');
+        if ((!$(this).attr('value') || $(this).attr('value').trim() === '') && $(this).text && $(this).attr('value') !== $(this).text())
+            $(this).attr('value', $(this).text());
+        else if ((!$(this).attr('value') || $(this).attr('value').trim() === '') && $(this).val && $(this).attr('value') !== $(this).val())
+            $(this).attr('value', $(this).val());
     });
 
     // Updates the value attribute for each textbox on-change.
@@ -129,38 +142,7 @@ if (!config.theme.enableMobile && $(window).width() <= 800 && location.pathname 
 }
 
 if (user.googleId) {
-    const loginBtn = $('#header__button-login');
-    loginBtn.attr('href', '');
-    const phrases = ['Welcome', 'Howdy', 'Hi', 'Hey', 'Hello'];
-    const index = getRandomInt(0, phrases.length - 1);
-    phrase = phrases[index];
-    loginBtn.html(`<span>${phrase}, ${user.firstName}!</span><img src="${user.picture}">`);
-
-    contextly.init('#header__button-login', '#layout__main', [{
-        icon: 'menu-close',
-        text: 'Logout',
-        tooltip: '',
-        action: () => {
-            redirect('/auth/logout');
-        }
-    }, {
-        icon: 'settings',
-        text: 'Preferences',
-        tooltip: '',
-        action: () => {
-            redirect('/user/preferences');
-        }
-    }, {
-        icon: 'profile',
-        text: 'Profile',
-        speed: 1,
-        tooltip: '',
-        action: () => {
-            redirect(`/user/profile?googleId=${user.googleId}`);
-        }
-    }], {
-        showOnLeftClick: true
-    });
+    overrideLoading();
 }
 
 $(function() {
@@ -170,7 +152,7 @@ $(function() {
             subheader: `<a href="/">Read our cookie policy</a>`,
             body: 'Mirai uses cookies to provide you the best planning experience.<br/>By continuing to use our website, you accept our use of cookies.',
             buttons: [{
-                text: 'I accept',
+                text: 'Ok',
                 class: 'medium',
                 close: true,
                 action: () => {
@@ -215,9 +197,48 @@ $(function() {
     // Transitions templatized ".page" elements (h1 and .banner) in on page load.
     $('.page>h1').addClass('up');
     $('.page>.banner').addClass('up');
+
+    if (user.googleId) {
+        const loginBtn = $('#header__button-login');
+        loginBtn.removeAttr('href');
+        loginBtn.off('click');
+        loginBtn.attr('href', `/user/profile?googleId=${user.googleId}`);
+        const phrases = ['Welcome', 'Howdy', 'Hi', 'Hey', 'Hello'];
+        const index = getRandomInt(0, phrases.length - 1);
+        phrase = phrases[index];
+        loginBtn.html(`<span>${phrase}, ${user.firstName}!</span><img src="${user.picture}">`);
+    
+        contextly.init('#header__button-login', '#layout__main', [{
+            text: 'Logout',
+            href: '/auth/logout',
+            action: () => {
+                redirect('/auth/logout');
+            }
+        }, {
+            text: 'Preferences',
+            href: '/user/preferences',
+            action: () => {
+                redirect('/user/preferences');
+            }
+        }, {
+            text: 'Profile',
+            href: `/user/profile?googleId=${user.googleId}`,
+            action: () => {
+                redirect(`/user/profile?googleId=${user.googleId}`);
+            }
+        }, {
+            text: 'Dashboard',
+            href: '/dashboard',
+            action: () => {
+                redirect('/dashboard');
+            }
+        }], {
+            showOnLeftClick: true
+        });
+        finishLoading();
+    }
 });
 
-if (user.notifySound)
+if (user.notifySound || user.notifySound == null) {
     notify.initSound('default', '/files/notify.mp3');
-if (user.nightMode)
-    $('body').addClass('dark');
+}

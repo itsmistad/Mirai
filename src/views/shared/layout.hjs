@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="">
     <head>
         <title>{{ title }} | Mirai</title>
         <meta charset="utf-8">
@@ -28,7 +28,7 @@
             } catch(ex) {}
         </script>
     </head>
-    <body>
+    <body class="">
         {{> loading }}
         <header id="layout__header">
             {{> header }}
@@ -42,6 +42,12 @@
         <!-- Corner Notification Queue -->
         <div id="notify-queue"></div>
     </body>
+    <script>
+        if (user.nightMode) {
+            document.getElementsByTagName('body')[0].classList.add('dark');
+            document.getElementsByTagName('html')[0].classList.add('dark');
+        }
+    </script>
     <script src="https://code.jquery.com/jquery-3.4.1.min.js" 
                         integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
                         crossorigin="anonymous"></script>
@@ -55,7 +61,8 @@
     <script type="text/javascript" src="/js/dependencies/notify.js"></script>
     <script type="text/javascript" src="/js/dependencies/contextly.js"></script>
     <script type="text/javascript" src="/js/dependencies/lottie.min.js"></script>
-    <script type="text/javascript" src="/js/shared/theme.js"></script>
     <script type="text/javascript" src="/js/shared/loading.js"></script>
+    <script type="text/javascript" src="/js/shared/upload.js"></script>
+    <script type="text/javascript" src="/js/shared/theme.js"></script>
     {{{ yield-scripts }}}
 </html>

@@ -69,6 +69,34 @@ const network = new function() {
         return obj;
     };
 
+    obj.upload = (route, formSelector, xhr, func, async) => {
+        if (!func) func = () => {};
+        let formData = new FormData($(formSelector)[0]);
+        $.ajax({
+            type: "POST",
+            url: route,
+            data: formData,
+            xhr,
+            async: async || false,
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: response => {
+                log(JSON.stringify(response));
+                func(response);
+            },
+            failure: response => {
+                logErr(JSON.stringify(response));
+                func(response);
+            },
+            error: response => {
+                logErr(JSON.stringify(response));
+                func(response);
+            },
+            timeout: 60000
+        });  
+    };
+
     obj.post = (route, json, func, async) => {
         if (!func) func = () => {};
         $.ajax({

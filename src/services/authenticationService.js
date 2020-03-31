@@ -66,10 +66,11 @@ class AuthenticationService {
                 log.error(`Failed to authenticate user. Error: ${err}`);
                 return;
             }
-            let mongoFind = {id: user.id};
+            let mongoFind = {googleId: user.id};
             let retrievedUser = await mongo.find('users', mongoFind);
+            let userObj;
             if (retrievedUser == null) { 
-                const userObj = {
+                userObj = {
                     firstName: user.name.givenName,
                     lastName: user.name.familyName,
                     fullName: user.displayName,
@@ -77,10 +78,12 @@ class AuthenticationService {
                     email: user._json.email,
                     googleId: user.id
                 };
-    
                 mongo.save('users', userObj);
-                retrievedUser = userObj;
             }
+            userObj = {
+                googleId: user.id
+            };
+            retrievedUser = userObj;
             req.login(retrievedUser, (err) => {
                 if (err) {
                     log.error(`Failed to login user. Error: ${err}`);
@@ -88,9 +91,9 @@ class AuthenticationService {
                     return;
                 }
                 log.debug(`User logged in successfully: ${JSON.stringify(req.user)}`);
-                // From this point on, we can (on the server) use "req.isAuthenticated()" to check if the user is logged in and "req.user.*" to grab the user's data as defined above in userObj.
+                // From this point on, we can (on the server) use "req.isAuthenticated()" to check if the user is logged in and "req.user.googleId" to grab the user's googleId.
                 // We can also (within a view or client-side js file) use "user.*" to grab the user's data as defined above.
-                res.redirect('/dashboard');
+                res.redirect(req.session.redirect && !req.session.redirect.includes('/auth/google/callback') ? req.session.redirect : 'back'); // Redirect back to the previous page.
             });
         })(req, res);
     }

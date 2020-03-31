@@ -12,9 +12,6 @@
         max-width: 80em;
         position: relative;
         overflow: hidden;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
 
         div.switch {
             margin-bottom: 2em;
@@ -36,21 +33,32 @@
         }
 
         #preferences__background-browse-image {
-            width: 12em;
+            width: 15em;
         }
 
         #preferences__browse-label {
-            margin-right: 0.5em;
+            margin-top: 1em;
             display: flex;
             align-items: center;
         }
     
         #preferences__browse-button {
             align-self: flex-end;
+            justify-content: flex-end;
         }
     
         #preferences__reset-button {
             align-self: flex-end;
+        }
+
+        #preferences__switches {
+            min-height: 30em;
+            flex: 0 1 30em;
+        }
+
+        #preferences__background-upload {
+            min-height: 30em;
+            flex: 0 1 30em;
         }
     }
 }

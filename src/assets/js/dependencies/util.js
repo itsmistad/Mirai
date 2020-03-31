@@ -212,7 +212,7 @@ jQuery.fn.extend({
                 });
         });
     },
-    rightClick: function(callback) {
+    rightClick: function(callback, preventDefault = true) {
         return this.each(function() {
             $(this).contextmenu(function(e) {
                 const event = {
@@ -223,11 +223,14 @@ jQuery.fn.extend({
                     target: e.target
                 };
                 callback(event);
-                e.preventDefault();
+                if (preventDefault) {
+                    e.preventDefault(); 
+                    return false;
+                }
             });
         });
     },
-    leftClick: function(callback) {
+    leftClick: function(callback, preventDefault = true) {
         return this.each(function() {
             $(this).click(function(e) {
                 const event = {
@@ -235,9 +238,14 @@ jQuery.fn.extend({
                         x: mouse.x,
                         y: mouse.y
                     },
-                    target: e.target
+                    target: e.target,
+                    $this: $(this)
                 };
                 callback(event);
+                if (preventDefault) {
+                    e.preventDefault(); 
+                    return false;
+                }
             });
         });
     },

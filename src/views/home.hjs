@@ -38,7 +38,7 @@
         <div class="banner column text-center full-center stretch" style="flex:2">
             <h4>Here are some examples of the theme's elements.</h4>
             <div class="textbox">
-                <input type="email" name="textbox" autocomplete="off" required>
+                <input type="email" id="textbox" autocomplete="off" required>
                 <label for="textbox">
                     <span>Email</span>
                 </label>

@@ -276,7 +276,7 @@
         display: none;
         opacity: 0;
         top: unset;
-        bottom: 20px;
+        bottom: 0px;
         right: 0;
         &:active,
         &:hover {
@@ -313,7 +313,7 @@
     }
     & > span {
         margin-top: 0.2em;
-        text-shadow: -2px -2px 2px white, 2px 2px 2px rgba(0,0,0,0.3);
+        text-shadow: -1px -1px 1px rgba(255,255,255,0.3), -1px 1px 1px rgba(255,255,255,0.3), 1px 1px 1px rgba(255,255,255,0.3), 1px -1px 1px rgba(255,255,255,0.3);
         color: $color_body;
         text-align: center;
         font-weight: bold;
@@ -323,6 +323,7 @@
 
 .dashboard__card,
 .dashboard__folder {
+    max-width: 10em;
     height: 8em;
     width: 8em;
     border-radius: 50%;
@@ -347,8 +348,6 @@
 }
 
 .dashboard__card-wrapper {
-    max-width: 10em;
-
     &.can-drop .dashboard__card {
         background-color: $color_links;
         transform: scale(0.7);
@@ -368,7 +367,15 @@
 body.dark {
     .dashboard__card,
     .dashboard__folder {
-        background-color: $color_accent !important;
+        background-color: $color_accent;
+    }
+
+    .dashboard__modify-popup__path-wrapper {
+        .dashboard__modify-popup__path {
+            .folder, .card {
+                color: $color_dark_body_text;
+            }
+        }
     }
     
     .dashboard__card-wrapper,
@@ -384,8 +391,7 @@ body.dark {
                 background-color: $color_highlighted;
             }
             &.active {
-                opacity: 1 !important;
-                background-color: $color_highlighted !important;
+                background-color: $color_highlighted;
             }
         }
         .dashboard__remove {
@@ -396,13 +402,12 @@ body.dark {
                 background-color: darkred;
             }
             &.active {
-                opacity: 1 !important;
-                background-color: darkred !important;
+                background-color: darkred;
             }
         }
         & > span {
             color: $color_dark_body_text !important;
-            text-shadow: -2px -2px 2px $color_dark_shadow, 2px 2px 2px rgba(0,0,0,0.3) !important;
+            text-shadow: -1px -1px 1px rgba(0,0,0,0.3), -1px 1px 1px rgba(0,0,0,0.3), 1px 1px 1px rgba(0,0,0,0.3), 1px -1px 1px rgba(0,0,0,0.3);
         }
     }
 }

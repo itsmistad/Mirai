@@ -57,6 +57,7 @@
     border-radius: 4px;
     display: flex;
     flex-direction: column;
+    overflow-y: scroll;
   
     .header {
         font-size: 1.5em;

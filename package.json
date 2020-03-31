@@ -1,6 +1,6 @@
 {
   "name": "mirai",
-  "version": "0.2.2",
+  "version": "0.3.0",
   "description": "An intuitive web application for daily organizing.",
   "main": "src/app.js",
   "scripts": {
@@ -29,6 +29,7 @@
     "express-session": "^1.17.0",
     "hogan-express": "^0.5.2",
     "mongodb": "^3.5.2",
+    "multer": "^1.4.2",
     "nodemailer": "^6.4.3",
     "nodemailer-mailgun-transport": "^2.0.0",
     "passport": "^0.4.1",

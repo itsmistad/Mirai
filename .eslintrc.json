@@ -30,6 +30,7 @@
         "*.json",
         "*.mp3",
         "*.woff2",
+        "**/uploads/**",
         "**/assets/js/**/*.js"
     ],
     "rules": {

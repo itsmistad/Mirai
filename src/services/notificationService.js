@@ -1,6 +1,5 @@
 'use strict';
 
-const bodyParser = require('body-parser');
 const configKeys = require('./config/configKeys');
 
 let webpush = require('web-push');
@@ -25,7 +24,6 @@ class NotificationService {
         log.debug('Starting notification service...');
         if (notif_email && notif_private_key && notif_public_key) {
             webpush.setVapidDetails(notif_email, notif_public_key, notif_private_key);
-            app.use(bodyParser.json());
             app.use((req, res, next) => {
                 if (req.url.startsWith('/js/shared/serviceWorker.')) {
                     res.append('Service-Worker-Allowed', '/');

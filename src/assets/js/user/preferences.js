@@ -2,9 +2,17 @@ function setTheme(mode) {
     switch (mode) {
     case 0:
         $('body').addClass('dark');
+        if ($('#preferences__background-browse-image').attr('src') === '/files/svg/grid.svg') {
+            $('#preferences__background-browse-image').attr('src', '/files/svg/grid-black.svg');
+            $('#preferences__browse-label').text('Grid');
+        }
         break;
     case 1:
         $('body').removeClass('dark');
+        if ($('#preferences__background-browse-image').attr('src') === '/files/svg/grid-black.svg') {
+            $('#preferences__background-browse-image').attr('src', '/files/svg/grid.svg');
+            $('#preferences__browse-label').text('Grid');
+        }
         break;
     }
     saveToDatabase();
@@ -14,7 +22,8 @@ function saveToDatabase() {
     network.post(`/user/upload/preferences`, {
         priorityStyle: $('#preferences__priority-switch-checkbox').is(':checked'),
         nightMode: $('#preferences__night-switch-checkbox').is(':checked'),
-        notifySound: $('#preferences__sound-switch-checkbox').is(':checked')
+        notifySound: $('#preferences__sound-switch-checkbox').is(':checked'),
+        backgroundTileName: $('#preferences__browse-label').text()
     }, () => {}, true);
 }
 
@@ -25,6 +34,16 @@ $(function() {
         $('#preferences__sound-switch-checkbox').prop('checked', true);
     else
         $('#preferences__sound-switch-checkbox').prop('checked', user.notifySound);
+    if (user.backgroundTile) {
+        $('#preferences__background-browse-image').attr('src', user.backgroundTile);
+        $('#preferences__browse-label').text(user.backgroundTileName);
+    } else if (!user.nightMode) {
+        $('#preferences__background-browse-image').attr('src', '/files/svg/grid.svg');
+        $('#preferences__browse-label').text('Grid');
+    } else {
+        $('#preferences__background-browse-image').attr('src', '/files/svg/grid-black.svg');
+        $('#preferences__browse-label').text('Grid');
+    }
 
     $('#preferences__browse-button').click(function() {
         $('#preferences__background-browse').click();
@@ -32,6 +51,7 @@ $(function() {
 
     $('#preferences__background-browse').change(function() {
         let file = $(this)[0].files[0];
+        if (!file) return;
         $('#preferences__browse-label').text(file.name);
 
         let reader = new FileReader();
@@ -39,7 +59,21 @@ $(function() {
             $('#preferences__background-browse-image').attr('src', e.target.result);
         };
         reader.readAsDataURL(file);
-        // saveToDatabase();
+        saveToDatabase();
+        upload.form('/user/upload/preferences/bg', '#preferences__background-form', '#preferences__background-upload-progress', res => {
+            if (!res.filePath) {
+                notify.me({
+                    header: 'Uh oh',
+                    subheader: 'Something went wrong',
+                    body: 'We weren\'t able to upload and update your background tile. Please try again later.',
+                    buttons: [{
+                        text: 'Ok',
+                        class: 'small',
+                        close: true
+                    }]
+                })
+            }
+        });
     });
 
     $('#preference__priority-switch-checkbox').click(function() {
@@ -84,6 +118,14 @@ $(function() {
         $('#preferences__background-browse').val('');
         $('#preferences__background-browse-image').attr('src', '');
         $('#preferences__browse-label').text('');
+        upload.form('/user/upload/preferences/bg', '#preferences__background-form');
+        if (!user.nightMode) {
+            $('#preferences__background-browse-image').attr('src', '/files/svg/grid.svg');
+            $('#preferences__browse-label').text('Grid');
+        } else {
+            $('#preferences__background-browse-image').attr('src', '/files/svg/grid-black.svg');
+            $('#preferences__browse-label').text('Grid');
+        }
         saveToDatabase();
     });
 });

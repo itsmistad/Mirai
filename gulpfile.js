@@ -55,7 +55,7 @@ gulp.task('rev', function(done) {
                 '.css', '.js', '.png', '.jpg', '.svg', '.gif',
                 '.ttf', '.woff', '.eot'
             ],
-            dontRenameFile: [/favicon\.ico/g, /\.json/g]
+            dontRenameFile: [/favicon\.ico/g, /\.json/g, /\.mult/g]
         }))
         .on('error', function(error) {
             console.error('\x1b[31m\x1b[1m' + error + '\x1b[0m');

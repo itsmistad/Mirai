@@ -15,15 +15,11 @@ $(function() {
     });
 
     $('#home__tryit').click(function() {
-        if (!user.googleId) {
-            redirect('/auth/google/callback');
-        } else {
-            redirect('/dashboard');
-        }
+        redirect('/dashboard?login=1');
     });
 
     if (!isProd) {
-        $('#home__theme-examples').show();
+        $('#home__theme-examples').css('display', 'flex');
     }
 
     switch (badLogin) {
