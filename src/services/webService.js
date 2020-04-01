@@ -5,6 +5,7 @@ const express = require('express');
 const configKeys = require('./config/configKeys');
 const bodyParser = require('body-parser');
 const multer = require('multer');
+const multerS3 = require('multer-s3');
 const fs = require('fs');
 const crypto = require('crypto');
 let upload;
@@ -120,13 +121,28 @@ class WebService {
                 },
                 filename: function (req, file, cb) {
                     const extension = file.originalname.substring(file.originalname.lastIndexOf('.'), file.originalname.length);
-                    console.log(extension);
                     let customFileName = crypto.randomBytes(10).toString('hex');
                     cb(null, `${customFileName}-${Date.now() + extension}`);
                 }
             });
             
             upload = multer({ storage: storage });
+        } else {
+            upload = multer({
+                storage: multerS3({
+                    s3: root.s3._s3,
+                    bucket: root.s3._bucketName,
+                    acl: 'public-read',
+                    metadata: function (req, file, cb) {
+                        cb(null, {fieldName: file.fieldname});
+                    },
+                    key: function (req, file, cb) {
+                        const extension = file.originalname.substring(file.originalname.lastIndexOf('.'), file.originalname.length);
+                        let customFileName = crypto.randomBytes(10).toString('hex');
+                        cb(null, `uploads/${customFileName}-${Date.now() + extension}`);
+                    }
+                })
+            });
         }
 
         app = express();

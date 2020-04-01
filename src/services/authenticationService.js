@@ -5,28 +5,27 @@ const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const session = require('express-session');
 const configKeys = require('./config/configKeys');
 
-let log, config, mongo, env;
+let log, config, mongo;
 
 class AuthenticationService {
     constructor(root) {
         log = root.log;
         config = root.config;
         mongo = root.mongo;
-        env = root.env;
     }
 
     async start(app) {
         const session_secret = await config.get(configKeys.authentication.session_secret);
         log.debug(`Session secret retrieved from configuration: ${session_secret}`);
         // set up express-session
-        if (env.isProd)
-            app.set('trust proxy', 1); // Trust the AWS proxy the request is coming from.
+        //if (env.isProd)
+        //    app.set('trust proxy', 1); // Trust the AWS proxy the request is coming from.
         app.use(session({
             secret: session_secret,
             resave: false,
             saveUninitialized: true,
             cookie: {
-                secure: env.isProd,
+                //secure: env.isProd,
                 maxAge: 86400000 * 3 // 3 days
             }
         }));
