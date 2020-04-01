@@ -8,7 +8,7 @@ Mirai is an intuitive web application for daily organizing and planning.
 |   |`master` – what's deployed|`develop` – what's code-complete|
 |---|---|---|
 |Build|[![Build Status](https://travis-ci.com/itsmistad/Mirai.svg?branch=master)](https://travis-ci.com/itsmistad/Mirai)|[![Build Status](https://travis-ci.com/itsmistad/Mirai.svg?branch=develop)](https://travis-ci.com/itsmistad/Mirai)|
-|Version|0.3.0|0.3.0|
+|Version|0.3.1|0.3.1|
 |Live Url|https://miraiapp.co/|http://dev.miraiapp.co:3000/|
 
 Here's what it does:
