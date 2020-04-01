@@ -1,0 +1,413 @@
+@import "../shared/util.scss";
+@import "../shared/vars.scss";
+
+#dashboard__sneak-peek {
+    min-height: 20em;
+}
+
+#dashboard__full-view { 
+    position: relative;
+    overflow: hidden;
+    min-height: 80vh;
+
+    .background {
+        position: absolute;
+        margin: inherit;
+        top: -100px;
+        left: -100px;
+        right: -100px;
+        bottom: -100px;
+        pointer-events: none;
+        user-select: none;
+        
+        img {
+            pointer-events: none;
+            user-select: none;
+        }
+    }
+}
+
+#dashboard__content {
+    @include for-small-tablet-down {
+        display: none;
+    }
+}
+
+#dashboard__buttons {
+    display: flex;
+    position: absolute;
+    top: 0;
+    right: 0;
+    justify-content: flex-end;
+    align-items: center;
+    z-index: $layer_page_dashboard_full_view_buttons;
+    .dashboard__button {
+        padding: 0.4em;
+        margin: 0.4em 0.4em 0 0;
+        line-height: 0;
+        height: 40px;
+        width: 40px;
+        background-color: gray;
+        filter:invert(1);
+    }
+}
+
+.dashboard__view-title {
+    margin: 0;
+}
+
+.dashboard__create-card-popup {
+    width: 30em;
+    max-width: 80%;
+    height: 30em;
+    max-height: 80%;
+
+    .dashboard__create-card-container {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+
+        .dashboard__create-card-description {
+            .textarea textarea {
+                height: 15em;
+            }
+        }
+    }
+}
+
+.dashboard__create-folder-popup {
+    width: 30em;
+    max-width: 80%;
+    height: 30em;
+    max-height: 80%;
+
+    .dashboard__create-folder-container {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+
+        .dashboard__create-folder-description {
+            .textarea textarea {
+                height: 15em;
+            }
+        }
+    }
+}
+
+.dashboard__due-date-popup {
+    width: 30em;
+    max-width: 80%;
+    height: 30em;
+    max-height: 80%;
+
+    .dashboard__due-date-container {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+
+        .dashboard__due-date-time {
+            .textbox {
+                padding-top: 4em;
+            }
+        }
+
+        .dashboard__due-date-date {
+            .textbox {
+                padding-top: 4em;
+            }
+        }
+    }
+}
+
+.dashboard__modify-popup {
+    width: 40em;
+    max-width: 80%;
+    height: 53em;
+    max-height: 80%;
+
+    .dashboard__modify-card-container {
+        .dashboard__modify-card-description {
+            .textarea textarea {
+                height: 25em;
+            }
+        }
+    }
+
+    .dashboard__modify-folder-container {
+        .dashboard__modify-folder-description {
+            .textarea textarea {
+                height: 25em;
+            }
+        }
+        .dashboard__modify-folder-description-with-cards {
+            .textarea textarea {
+                height: 10em;
+            }
+        }
+    }
+
+    .cards-container {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: flex-start;
+        min-height: 8em;
+        h5 {
+            margin: 0 0 0.4em 0;
+        }
+        .dashboard__modify-folder__cards {
+            width: 100%;
+            display: flex;
+            flex: 1;
+            ul {
+                list-style-type: none;
+                position: relative;
+                margin: unset;
+                padding: unset;
+                width: 100%;
+                height: 15em;
+                overflow-y: scroll;
+                overflow-x: hidden;
+                .dashboard__modify-folder__card {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    transition: $transition_200;
+                    li {
+                        padding: 0.3em 0.4em;
+                        margin: 0.3em;
+                        text-align: left;
+                        border-radius: 2px;
+                        transition: $transition_200;
+                        flex: 1;
+                        &:hover {
+                            box-shadow: 0 0 4px -1px rgba(0,0,0,1);
+                            cursor: pointer;
+                        }
+                    }
+                    i {
+                        padding: 0 0.4em;
+                        color: #ccc;
+                        transition: $transition_200;
+                        &:hover {
+                            cursor: pointer;
+                            color: black;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+.dashboard__modify-popup__path-wrapper {
+    .dashboard__modify-popup__path {
+        position: absolute;
+        top: 0;
+        left: 0;
+        padding: 0.4em 0.6em;
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        .folder, .card {
+            font-weight: bold;
+            font-style: italic;
+            color: rgba(0,0,0,0.6);
+            user-select: none;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+        }
+        .folder + .card {
+            &::before {
+                content: '⮞';
+                font-style: normal;
+                margin: 0 10px;
+                font-size: 0.9em;
+                color: #ccc;
+            }
+        }
+    }
+}
+
+.dashboard__card-wrapper,
+.dashboard__folder-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    position: absolute;
+    z-index: $layer_page_dashboard_node;
+    .dashboard__counter,
+    .dashboard__remove,
+    .dashboard__pin {
+        display: flex;
+        opacity: 0;
+        position: absolute;
+        top: 0;
+        right: 0;
+        transition: all $transition_200;
+        width: 1.6em;
+        height: 1.6em;
+        color: white;
+        background-color: $color_body;
+        border-radius: 50%;
+        justify-content: center;
+        align-items: center;
+        z-index: 2;
+        cursor: pointer;
+        i {
+            transform: translate(0, 1px);
+            font-size: em(12);
+        }
+        &:hover { 
+            background-color: $color_links;
+        }
+        &:active {
+            background-color: $color_highlighted;
+        }
+        &.active {
+            opacity: 1 !important;
+            background-color: $color_highlighted !important;
+        }
+    }
+    .dashboard__counter {
+        display: none;
+        opacity: 0;
+        top: unset;
+        bottom: 0px;
+        right: 0;
+        &:active,
+        &:hover {
+            background-color: $color_body;
+        }
+        &.show {
+            display: flex;
+            opacity: 1;
+        }
+    }
+    .dashboard__remove {
+        right: unset;
+        left: 0;
+        i {
+            transform: unset;
+        }
+        &:hover {
+            background-color: crimson;
+        }
+        &:active {
+            background-color: darkred;
+        }
+        &.active {
+            opacity: 1 !important;
+            background-color: darkred !important;
+        }
+    }
+    &:hover {
+        z-index: 20;
+        .dashboard__remove,
+        .dashboard__pin {
+            opacity: 1;
+        }
+    }
+    & > span {
+        margin-top: 0.2em;
+        text-shadow: -1px -1px 1px rgba(255,255,255,0.3), -1px 1px 1px rgba(255,255,255,0.3), 1px 1px 1px rgba(255,255,255,0.3), 1px -1px 1px rgba(255,255,255,0.3);
+        color: $color_body;
+        text-align: center;
+        font-weight: bold;
+        font-family: $font_header;
+    }
+}
+
+.dashboard__card,
+.dashboard__folder {
+    max-width: 10em;
+    height: 8em;
+    width: 8em;
+    border-radius: 50%;
+    position: relative;
+    background-color: $color_light_accent;
+    justify-content: center;
+    display: flex;
+    align-items: center;
+    font-size: em(12);
+    text-transform: uppercase;
+    font-family: $font_header;
+    box-shadow: 0 0 12px -6px rgba(0,0,0,0.2);
+    transition: background-color $transition_200, box-shadow $transition_200,
+        transform $transition_200;
+    z-index: 1;
+    &:hover {
+        box-shadow: 3px 3px 4px 0 rgba(0,0,0,0.3);
+    }
+    img {
+        user-select: none;
+    }
+}
+
+.dashboard__card-wrapper {
+    &.can-drop .dashboard__card {
+        background-color: $color_links;
+        transform: scale(0.7);
+    }
+    img {
+        transform: translateX(-1px);
+    } 
+}
+
+.dashboard__folder-wrapper {
+    &.selected-dropzone .dashboard__folder {
+        background-color: $color_highlighted;
+        transform: scale(1.1);
+    }
+}
+
+body.dark {
+    .dashboard__card,
+    .dashboard__folder {
+        background-color: $color_accent;
+    }
+
+    .dashboard__modify-popup__path-wrapper {
+        .dashboard__modify-popup__path {
+            .folder, .card {
+                color: $color_dark_body_text;
+            }
+        }
+    }
+    
+    .dashboard__card-wrapper,
+    .dashboard__folder-wrapper {
+        .dashboard__counter,
+        .dashboard__remove,
+        .dashboard__pin {
+            background-color: $color_dark_header;
+            &:hover { 
+                background-color: $color_links;
+            }
+            &:active {
+                background-color: $color_highlighted;
+            }
+            &.active {
+                background-color: $color_highlighted;
+            }
+        }
+        .dashboard__remove {
+            &:hover {
+                background-color: crimson;
+            }
+            &:active {
+                background-color: darkred;
+            }
+            &.active {
+                background-color: darkred;
+            }
+        }
+        & > span {
+            color: $color_dark_body_text !important;
+            text-shadow: -1px -1px 1px rgba(0,0,0,0.3), -1px 1px 1px rgba(0,0,0,0.3), 1px 1px 1px rgba(0,0,0,0.3), 1px -1px 1px rgba(0,0,0,0.3);
+        }
+    }
+}

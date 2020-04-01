@@ -1,0 +1,63 @@
+<div class="page">
+    <h1 class="text-center hidden">{{ title }}</h1>
+    <div id="preferences__main" class="banner column full-center">
+        <div class="row full-width full-center">
+            <div id="preferences__switches" class="banner column">
+                <h4>Priorities:</h4>
+                <div class="switch" id="preferences__priority-switch">
+                    <input id="preferences__priority-switch-checkbox" type="checkbox" />
+                    <label for="preferences__priority-switch-checkbox">
+                        <div id="preferences__priority-switch__shapes">Shapes</div>
+                        <span></span>
+                        <div id="preferences__priority-switch__numbers">Numbers</div>
+                    </label>
+                </div>
+                <h4>Theme:</h4>
+                <div class="switch" id="preferences__night-switch">
+                    <input id="preferences__night-switch-checkbox" type="checkbox" />
+                    <label for="preferences__night-switch-checkbox">
+                        <div id="preferences__night-switch__day">Jedi</div>
+                        <span></span>
+                        <div id="preferences__night-switch__night">Sith</div>
+                    </label>
+                </div>
+                <h4>Sound:</h4>
+                <div class="switch" id="preferences__sound-switch">
+                    <input id="preferences__sound-switch-checkbox" type="checkbox" />
+                    <label for="preferences__sound-switch-checkbox">
+                        <div id="preferences__sound-switch__on">Off</div>
+                        <span></span>
+                        <div id="preferences__sound-switch__off">On</div>
+                    </label>
+                </div>
+            </div>
+            <div id="preferences__background-upload" class="banner column">
+                <h4>Full View Background Tile:</h4>
+                <div class="full-center column" style="flex:9;">
+                    <img id="preferences__background-browse-image">
+                    <label for="preferences__browse-button" id="preferences__browse-label"></label>
+                    <div id="preferences__background-upload-progress"></div>
+                </div>
+                <div class="row" style="justify-content: flex-end;align-items:flex-end;flex:1;">
+                    <form id="preferences__background-form" enctype="multipart/form-data">
+                        <input type="file" id="preferences__background-browse" style="display:none" name="file" accept="image/png, image/jpeg, image/webp">
+                    </form>
+                    <button id="preferences__browse-button" class="small">
+                        Browse
+                    </button>
+                </div>
+            </div>
+        </div>
+        <button id="preferences__reset-button" class="medium">
+            Reset to Default
+        </button>
+    </div>
+</div>
+
+{{#yield-styles}}
+    <link rel='stylesheet' href='/css/user/preferences.css' />
+{{/yield-styles}}
+ 
+{{#yield-scripts}}
+    <script type="text/javascript" src="/js/user/preferences.js"></script>
+{{/yield-scripts}}

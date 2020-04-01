@@ -88,7 +88,7 @@
         }
     
         #home__banner-img {
-            transition: $transition_smooth_slower;
+            transition: $transition_350;
             cursor: pointer;
     
             @include for-small-tablet-down {
@@ -116,6 +116,25 @@
             &:hover {
                 border: solid 3px $color_dark_accent;
             }
+        }
+    }
+}
+
+#home__theme-examples {
+    display: none; 
+}
+
+body.dark {
+    #home__background {
+        background-image: radial-gradient(circle at top left, $color_dark_light_accent 0%, $color_dark_background 40%, $color_dark_background 100%) !important;
+    }
+    #home__superscript {
+        color: $color_dark_body_text !important;
+    }
+    #home__github {
+        border: solid 3px $color_accent !important;
+        &:hover {
+            border: solid 3px $color_dark_accent !important;
         }
     }
 }

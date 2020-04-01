@@ -47,7 +47,9 @@ body {
 }
 
 hr {
-    color: #bbb;
+    color: #ddd;
+    width: 80%;
+    border-style: solid;
 }
 
 h6, h5, h4, h3, h2, h1 {
@@ -82,7 +84,7 @@ h1 {
 
 a {
     color: $color_links;
-    transition: all $transition_smooth;
+    transition: all $transition_200;
     font-weight: bold;
     cursor: pointer;
 
@@ -108,7 +110,7 @@ button {
     background-color: $color_links;
     font-weight: bold;
     cursor: pointer;
-    transition: all $transition_smooth;
+    transition: all $transition_200;
     font-size: em(20px);
     @include disable-selection;
 
@@ -175,18 +177,20 @@ div.textbox {
     width: 100%;
     padding: 0 0 1.4em;
 
+    input[type='date'],
+    input[type='time'],
     input[type='text'],
     input[type='email'] {
         font-family: $font_header;
         color: $color_body;
-        width: calc(100% - .8em);
+        width: calc(100%);
         height: calc(100% - .6em);
-        padding: 0.3em 0.4em;
+        padding: 0.3em 0;
         border: none;
         outline: none;
         background-color: $color_background;
-        font-size: em(18px);
-        transition: all $transition_smooth;
+        font-size: em(16px);
+        transition: all $transition_200;
         cursor: pointer;
 
         &:valid + label::after {
@@ -210,7 +214,6 @@ div.textbox {
             font-size: em(14px);
             color: $color_error;
         }
-    
     }
     
     input[value=''] {
@@ -228,6 +231,8 @@ div.textbox {
         }
     }
     
+    input[type='date'],
+    input[type='time'],
     input[type='text'],
     input[type='email'] {
         &:hover {
@@ -248,7 +253,7 @@ div.textbox {
         }
         
         &:focus + label span {
-            transform: translateY(170%);
+            transform: translateY(150%);
             font-size: em(14px);
             color: $color_highlighted;
         }
@@ -256,6 +261,18 @@ div.textbox {
         &:focus + label::after {
             transform: translateX(0%);
             border-bottom: 3px solid $color_highlighted;
+        }
+    }
+
+    input[type='date'][value=''] {
+        & + label span {
+            transform: translateY(150%) !important;
+        }
+    }
+
+    input[type='time'][value=''] {
+        & + label span {
+            transform: translateY(150%) !important;
         }
     }
     
@@ -278,14 +295,14 @@ div.textbox {
             height: 100%;
             width: 100%;
             transform: translateX(-100%);
-            transition: all $transition_smooth;
+            transition: all $transition_200;
         }
     
         span {
             position: absolute;
             bottom: 5px;
             left: 0px;
-            transition: all $transition_smooth;
+            transition: all $transition_200;
         }
     }
 }
@@ -306,7 +323,7 @@ div.switch {
         align-items: center;
         color: $color_header;
         font-weight: bold;
-        transition: background-color $transition_smooth;
+        transition: background-color $transition_200;
         cursor: pointer;
         @include disable-selection;
         text-align: left;
@@ -327,7 +344,7 @@ div.switch {
                 width: 1.6em;
                 left: 0.2em;
                 bottom: .21em;
-                transition: transform $transition_smooth;
+                transition: transform $transition_200;
                 background-color: white;
                 border-radius: 50%;
             }
@@ -370,7 +387,7 @@ div.checkbox {
         align-items: center;
         color: $color_header;
         font-weight: bold;
-        transition: $transition_smooth;
+        transition: $transition_200;
         cursor: pointer;
         @include disable-selection;
         text-align: left;
@@ -387,13 +404,13 @@ div.checkbox {
         border: 2px solid $color_body;
         border-radius: 2px;
         cursor: pointer;  
-        transition: all $transition_smooth;
+        transition: all $transition_200;
     }
     
     input[type='checkbox']:checked + label > span {
         border: 2px solid $color_links;
         background-color: $color_links;
-        animation: shrink-bounce $transition_smooth;
+        animation: shrink-bounce $transition_200;
     }
     
     input[type='checkbox']:checked + label > span:before {
@@ -405,7 +422,7 @@ div.checkbox {
         border-bottom: 3px solid transparent;
         transform: rotate(45deg);
         transform-origin: 0% 100%;
-        animation: checkbox-check 125ms $transition_smooth forwards;
+        animation: checkbox-check 125ms $transition_200 forwards;
     }
     
     @keyframes shrink-bounce {
@@ -462,7 +479,7 @@ div.textarea {
         outline: none;
         background-color: $color_background;
         cursor: pointer;
-        transition: all $transition_smooth;
+        transition: all $transition_200;
         font-size: em(18px);
 
         &:valid + label::after {
@@ -552,22 +569,137 @@ div.textarea {
             height: 100%;
             width: 100%;
             transform: translateX(-100%);
-            transition: all $transition_smooth;
+            transition: all $transition_200;
         }
     
         span {
             position: absolute;
             bottom: 5px;
             left: 0px;
-            transition: all $transition_smooth;
+            transition: all $transition_200;
         }
     }
 }
+
 // ------------------- Ids --------------------
 
 #layout__main {
     display: flex;
     flex-direction: column;
+}
+
+$header_height: 4em;
+/* Header classes */
+#layout__header {
+    background-color: rgba(242, 243, 244, 0.9);
+    display: flex;
+    position: absolute;
+    justify-content: space-between;
+    align-items: center;
+    flex-direction: row;
+    z-index: $layer_page_header_and_footer;
+    width: 100%;
+    height: $header_height;
+
+    #header__left-container {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        width: 100%;
+        height: 100%;
+
+        #header__button-logo {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            margin: 0 20px;
+            text-decoration: none;
+            &:hover {
+                color: $color_dark_accent;
+            }
+        }
+    }
+    #header__right-container {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        width: 100%;
+        height: 100%;
+
+        .header__button {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            margin: 0 0 0 0.4em;
+            padding: 0 0.8em;
+            text-decoration: none;
+            user-select: none;
+            &:hover {
+                background-color: #ddd;
+            }
+        }   
+
+        #header__button-login {
+            img {
+                width: 2em;
+                height: 2em;
+                margin-left: 0.4em;
+                border-radius: 50%;
+            }
+        }
+    }
+}
+
+/* Taskbar Classes */
+#layout__taskbar {
+    position: absolute;
+    height: 45px;
+}
+
+/* Footer classes */
+#layout__footer {
+    background-color: $color_light_accent;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-direction: row;
+    z-index: $layer_page_header_and_footer;
+    width: 100%;
+    height: 4em;
+
+    #footer__left-container {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        height: 100%;
+        width: 100%;
+        p {
+            margin: 0 20px;
+        }
+    }
+    #footer__right-container {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        height: 100%;
+        width: 100%;
+        
+        #footer__button-github {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            margin: 0 0 0 0.4em;
+            padding: 0 0.8em;
+            text-decoration: none;
+            user-select: none;
+            &:hover {
+                background-color: #D4C4EE;
+            }
+        }
+    }
 }
 
 .hide-scroll {
@@ -581,6 +713,7 @@ div.textarea {
 
 ::-webkit-scrollbar {
     width: 6px;
+    height: 4px;
 }
 
 ::-webkit-scrollbar-track {
@@ -606,7 +739,7 @@ div.textarea {
     margin: 15px 15px;
     padding: 20px 20px;
     border-radius: 10px;
-    transition: $transition_smooth;
+    transition: $transition_200;
     @include embossed;
 }
 
@@ -649,6 +782,11 @@ div.textarea {
 
 }
 
+.draggable {
+    user-select: none;
+    touch-action: none;
+}
+
 .full-center { // Fully center aligns the children of a container.
     display: flex;
     justify-content: center;
@@ -678,13 +816,17 @@ div.textarea {
 
 .logo {
     color: $color_accent;
-    font-size: em(80px);
     margin-top: 0;
+    font-size: em(40px);
     margin-bottom: 0.5em;
-    transition: $transition_smooth_slower;
+    transition: $transition_350;
     text-shadow: 0 0 6px $color_light_accent;
     cursor: pointer;
     @include disable-selection;
+
+    &.home {
+        font-size: em(80px);
+    }
 
     .no-margin {
         margin: 0;
@@ -693,6 +835,45 @@ div.textarea {
 
 .lower { // Forces any child text or text directly within to lowercase.
     text-transform: lowercase;
+}
+
+.page {
+    margin: $header_height 0 2em;
+    min-height: 100vh; 
+
+    & > div.background {
+        z-index: $layer_page_background;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        min-height: 100%;
+    }
+
+    & > h1 {
+        margin: 30px;
+        transform: translateY(1em) scale(0.8);
+        opacity: 0;
+        transition: all $transition_500;
+
+        &.up {
+            transform: translateY(0) scale(1);
+            opacity: 1;
+        }
+    }
+ 
+    & > .banner {
+        min-height: 100%;
+        flex: 1;
+        opacity: 0;
+        box-shadow: none;
+        transition: all $transition_800;
+        
+        &.up {
+            @include embossed;
+            opacity: 1;
+        }
+    }
 }
 
 .row { // Rowizes the children of the container.
@@ -737,7 +918,7 @@ div.textarea {
     &.right { // Right aligns the children.
         justify-content: flex-end;
     }
-
+ 
     &.stretch { // Stretches the container to the full width of the parent container.
         justify-self: stretch;
     }
@@ -748,7 +929,7 @@ div.textarea {
 }
 
 .text-center { // Center aligns any child text and text directly within.
-    text-align: center;
+    text-align: center; 
 }
 
 .text-left { // Left aligns any child text and text directly within.
@@ -761,4 +942,254 @@ div.textarea {
 
 .upper { // Forces any child text or text directly within to uppercase.
     text-transform: uppercase;
+}
+
+// ----------------- Global Selectors ------------------
+// These are classes/ids you should not use to modify your elements.
+
+.required {
+    position: absolute !important;
+    right: 0 !important;
+    left: unset !important;
+    color: $color_error !important;
+}
+
+.notify-popup {
+    .subheader, .header {
+        font-family: 'Montserrat', Arial;
+    }
+    .body {
+        text-align: center;
+    }
+}
+
+#notify-queue {
+    z-index: $layer_notify_queue;
+}
+
+.contextly-menu {
+    font-size: em(16);
+    font-weight: bold;
+    position: absolute;
+    opacity: 0;
+    max-height: 0;
+    background-color: white;
+    border-radius: 8px;
+    z-index: $layer_context_menu;
+    box-shadow: 6px 6px 8px 0px rgba(0,0,0,0.3);
+    overflow: hidden;
+
+    ul {
+        color: $color_body;
+        list-style-type: none; 
+        font-family: $font_header;
+        padding: 0;
+        margin: 0;
+        li {
+            padding: 0.6em 0.8em;
+            margin: 0;
+            cursor: pointer;
+            transition: all $transition_200;
+            user-select: none;
+            display:flex;
+            justify-content: left;
+
+            span.icon {
+                margin-right: 0.6em;
+                width: 2em;
+                height: 2em;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+
+            span.text {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+
+            &:hover {
+                background-color: $color_light_accent;
+            }
+        }
+    }
+
+    &.show {
+        opacity: 1;
+    }
+}
+  
+.progress-bar {
+    height: 100%;
+    border-radius: 3px;
+    background-color: $color_light_accent;
+    width: 0;
+    height: 1em;
+}
+
+body.dark {
+    background-color: $color_dark_background !important;
+
+    #layout__footer {
+        background-color: $color_dark_header !important;
+        #footer__right-container {
+            #footer__button-github {
+                &:hover {
+                    background-color: $color_dark_header_button;
+                }
+            }   
+        }
+    }
+    
+    .logo {
+        color: $color_dark_mirai_glow !important;
+        text-shadow: 0 0 6px $color_dark_light_accent !important; 
+    }
+    
+    .contextly-menu {
+        background-color: $color_dark_background !important;
+        ul {
+            color: $color_dark_body_text !important;
+            li {
+                .icon {
+                    filter: invert(1);
+                }
+                &:hover {
+                    background-color: $color_accent !important;
+                }
+            }
+        }
+    }
+    
+    div.switch {
+        input[type='checkbox'] + label {
+            color: $color_dark_header_text !important;
+            span {
+                background-color: $color_dark_shadow;
+                &:before {
+                    background-color: $color_dark_header !important;
+                }
+            }
+        }
+        input[type='checkbox']:checked + label > span {
+            background-color: $color_success;
+        }
+    }
+
+    div.checkbox {
+        input[type='checkbox'] + label {
+            color: $color_dark_header_text !important;
+        }
+        input[type='checkbox'] + label > span {
+            border: 2px solid $color_dark_header !important;
+        }
+        input[type='checkbox']:checked + label > span:before {
+            animation: checkbox-check 125ms $transition_200 forwards !important;
+        }
+
+        @keyframes checkbox-check {
+            0% {
+                width: 0;
+                height: 0;
+                border-color: $color_dark_header;
+                transform: translate3d(0,0,0) rotate(45deg);
+            }
+            33% {
+                width: .2em;
+                height: .4em;
+                transform: translate3d(0,0,0) rotate(45deg);
+            }
+            100% {    
+                width: .2em;
+                height: 1em;    
+                border-color: $color_dark_header;
+                transform: translate3d(0,-.5em,0) rotate(45deg);
+            }
+        }
+    }
+    
+    h6, h5, h4, h3, h2, h1 {
+        color: $color_dark_header_text !important;
+    }
+
+    p, span, div, label, input {
+        color: $color_dark_body_text;
+    }
+
+    button {
+        &.outline {
+            background-color: $color_dark_background !important;
+            color: $color_dark_body_text !important;
+            border: solid 3px $color_links !important;
+            &:hover {
+                background-color: $color_dark_shadow !important;
+            }
+        }
+        &:hover {
+            box-shadow: -3px 3px $color_dark_shadow !important;
+        }
+    }
+    
+    blockquote {
+        color: $color_dark_body_text !important;
+    }
+
+    div.textbox {
+        input[type='date'],
+        input[type='time'],
+        input[type='text'],
+        input[type='email'] {
+            background-color: $color_dark_background !important;
+            color: $color_dark_body_text !important;
+        }
+    }
+
+    div.textarea {
+        textarea {
+            background-color: $color_dark_background !important;
+            color: $color_dark_body_text !important;
+        }
+    }
+
+    .banner {
+        background-color: $color_dark_background !important;
+        box-shadow: 6px 6px 10px rgba(0,0,0,0.2),
+        -6px -6px 10px rgba(44,44,44,1) !important;
+    } 
+
+    #layout__header {
+        background-color: rgba(45, 45, 47, 0.9) !important;
+        #header__right-container {
+            .header__button {
+                &:hover {
+                    background-color: $color_dark_header_button;
+                }
+            }   
+        }
+    }
+
+    a {
+        &:hover {
+            text-shadow: -1px 1px 0 $color_dark_shadow;
+        }
+    }
+
+    .notify-popup {
+        background-color: $color_dark_shadow !important;
+    }
+}
+
+html.dark {
+    ::-webkit-scrollbar-track {
+        background: $color_dark_background !important;
+    }
+    
+    ::-webkit-scrollbar-thumb {
+        background: $color_accent !important;
+    }
+    
+    ::-webkit-scrollbar-thumb:hover {
+        background: $color_dark_accent !important;
+    }
 }

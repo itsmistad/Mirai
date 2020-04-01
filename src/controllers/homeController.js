@@ -2,21 +2,23 @@
 
 const View = require('../views/shared/view');
 const configKeys = require('../services/config/configKeys');
-let config;
+let config, root;
 
 class HomeController {
-    constructor(root) {
+    constructor(_root) {
         this.name = 'Home';
-        config = root.config;
+        config = _root.config;
+        root = _root;
     }
 
     async run(route, req, res) {
-        const v = new View(res, 'home');
+        const v = new View(root, res, 'home');
         const slogan = await config.get(configKeys.theme.slogan);
-        v.render({
+        await v.render({
             title: 'Home',
-            slogan
-        });
+            slogan,
+            badLogin: req.query['badLogin'] || 0
+        }, req.user);
     }
 }
 

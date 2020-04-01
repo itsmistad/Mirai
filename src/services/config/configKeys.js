@@ -39,8 +39,20 @@ const configKeys = Object.freeze({
         api_key: new ConfigKey('Mailgun.ApiKey', ''), // Mirai's API key for Mailgun; any string value
         domain: new ConfigKey('Mailgun.Domain', '') // Mirai's domain for Mailgun; any string value
     },
+    notifications: {
+        email: new ConfigKey('Notifications.Email', 'mailto:mirai@mistad.net'), // Mirai's email to use for VAPID key; any string value
+        public_key: new ConfigKey('Notifications.PublicKey', ''), // Mirai's public VAPID key for sending notifications; any string value
+        private_key: new ConfigKey('Notifications.PrivateKey', '') // Mirai's private VAPID key for sending notifications; any string value
+    },
+    authentication: {
+        session_secret: new ConfigKey('Authentication.SessionSecret', 'default_session_secret'), // Secret key used for express-session
+        passport_google_clientid: new ConfigKey('Authentication.Passport.Google.ClientID', ''), // Client ID used for Passport
+        passport_google_clientsecret: new ConfigKey('Authentication.Passport.Google.ClientSecret', ''),
+        passport_google_redirect: new ConfigKey('Authentication.Passport.Google.Redirect', '') 
+    },
     theme: {
-        slogan: new ConfigKey('Theme.Slogan', 'Plan it your way.') // The html for the "slogan" partial; any string value
+        slogan: new ConfigKey('Theme.Slogan', 'Plan it your way.'), // The html for the "slogan" partial; any string value
+        enableMobile: new ConfigKey('Theme.EnableMobile', false) // Toggles devices that fit our "for-small-tablet-down" sizes; true/false
     }
 });
 

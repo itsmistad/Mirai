@@ -1,22 +1,41 @@
-let ready;
+/*
+ * loading.js
+ * 
+ * This script contains a handler that fades in the interface when the document is ready.
+ */
 
+let ready, loadingOverriden;
+
+// If the document is still not ready after 500 ms, show the loading animation.
 setTimeout(() => {
     if (!ready) {
-        $(selectors.loading.img).removeClass(classes.hidden);
+        $(selector.loading.img).removeClass(classes.hidden);
     }
 }, 500);
 
-$(function() {
+// Marks the loading screen as "overridden." The loading screen will now only disappear once "finishLoading()" is called.
+// Call this outside of a script's "$(function() {})" section to manage your own loading.
+function overrideLoading() {
+    loadingOverriden = true;
+}
+
+// Clears out the loading screen and animation.
+function finishLoading() {
     ready = true;
-    if ($(selectors.loading.container).is(':visible')) {
+    if ($(selector.loading.container).is(':visible')) {
         setTimeout(() => {
             setTimeout(() => {
-                $(selectors.loading.img).addClass(classes.hidden);
+                $(selector.loading.img).addClass(classes.hidden);
             }, 200);
             setTimeout(() => {
-                $(selectors.loading.container).hide();
+                $(selector.loading.container).hide();
             }, 360);
-            $(selectors.loading.container).addClass(classes.hidden);
+            $(selector.loading.container).addClass(classes.hidden);
         }, 100);
     }
+}
+
+$(function() {
+    if (!loadingOverriden)
+        finishLoading();
 });

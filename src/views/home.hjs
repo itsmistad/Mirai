@@ -11,7 +11,7 @@
                 <div class="column">
                     <span>
                         <h3 id="home__superscript">Plan with</h3>
-                        <h1 id="home__mirai" class="logo">Mirai</h1>
+                        <h1 id="home__mirai" class="logo home">Mirai</h1>
                     </span>
                     <button id="home__tryit" class="medium">Try it for free</button>
                     <button id="home__github" class="medium outline">See the code</button>
@@ -22,7 +22,7 @@
             </h4>
         </div>
     </div>
-    <div class="banner row stack-when-large-tablet stretch">
+    <div id="home__theme-examples" class="banner row stack-when-large-tablet stretch">
         <div class="banner column left" style="flex:3">
             <h1>Header 1</h1>
             <h2>Header 2</h2>
@@ -38,7 +38,7 @@
         <div class="banner column text-center full-center stretch" style="flex:2">
             <h4>Here are some examples of the theme's elements.</h4>
             <div class="textbox">
-                <input type="email" name="textbox" autocomplete="off" required>
+                <input type="email" id="textbox" autocomplete="off" required>
                 <label for="textbox">
                     <span>Email</span>
                 </label>
@@ -83,5 +83,8 @@
 {{/yield-styles}}
  
 {{#yield-scripts}}
+    <script type="text/javascript">
+        const badLogin = {{ badLogin }};
+    </script>
     <script type="text/javascript" src="/js/home.js"></script>
 {{/yield-scripts}}
