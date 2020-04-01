@@ -30,6 +30,7 @@
     "hogan-express": "^0.5.2",
     "mongodb": "^3.5.2",
     "multer": "^1.4.2",
+    "multer-s3": "^2.9.0",
     "nodemailer": "^6.4.3",
     "nodemailer-mailgun-transport": "^2.0.0",
     "passport": "^0.4.1",
