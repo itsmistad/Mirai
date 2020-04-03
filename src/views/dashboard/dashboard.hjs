@@ -15,6 +15,7 @@
                 <button id="dashboard__return-nodes" class="dashboard__button"></button>
                 <button id="dashboard__fullscreen" class="dashboard__button"></button>
             </div>
+            <div id="dashboard__saved"></div>
         </div>
     </div>
 </div>

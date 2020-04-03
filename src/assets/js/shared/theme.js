@@ -242,3 +242,5 @@ $(function() {
 if (user.notifySound || user.notifySound == null) {
     notify.initSound('default', '/files/notify.mp3');
 }
+
+notify.initNetwork();
