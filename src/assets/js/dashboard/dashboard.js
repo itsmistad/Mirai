@@ -1,3 +1,13 @@
+let dashboardHasChanges = false;
+let startSaving = false;
+let dashboardTryingToSave = false;
+let savedIcon, savedAnim, savedFadeOut, dragging;
+
+function setFlagForChanges() {
+    dashboardHasChanges = true;
+    savedIcon.fadeOut(200);
+}
+
 function limitText(text) {
     return text.replace(/^(.{30}[^\s]*).*/, '$1...');
 }
@@ -20,6 +30,9 @@ function addFullViewNode(iconPath, nodeClass, text, id, x = mouse.x, y = mouse.y
     $(`#${id} .dashboard__pin`).click(function(e) {
         e.preventDefault();
         $(this).toggleClass('active');
+        let node = card.find(id);
+        if (!node) node = folder.find(id);
+        node.pinned = $(this).hasClass('active');
         return false;
     });
     $(`#${id} .dashboard__remove`).click(function(e) {
@@ -106,6 +119,7 @@ function registerFolderClickEvent(folderId) {
                         f.name = $('.dashboard__modify-folder-name input').attr('value');
                         f.description = $('.dashboard__modify-folder-description-with-cards textarea').attr('value');
                         $('#' + f.id + ' .dashboard__text').text(f.name);
+                        if (startSaving) setFlagForChanges();
                     }
                 }],
                 closeButton: true
@@ -192,6 +206,7 @@ function registerFolderClickEvent(folderId) {
                         f.name = $('.dashboard__modify-folder-name input').attr('value');
                         f.description = $('.dashboard__modify-folder-description textarea').attr('value');
                         $('#' + f.id + ' .dashboard__text').text(f.name);
+                        if (startSaving) setFlagForChanges();
                     }
                 }],
                 closeButton: true
@@ -279,6 +294,7 @@ function registerCardClickEvent(c, selector, customTextSelector) {
                             action: () => {
                                 c.date = $('.dashboard__due-date-date input').attr('value'); // Get the value of $('.dashboard__create-due-date-date input')
                                 c.time = $('.dashboard__due-date-time input').attr('value'); // Get the value of $('.dashboard__create-due-date-time input')
+                                if (startSaving) setFlagForChanges();
                             }
                         }],
                         closeButton: false
@@ -296,6 +312,7 @@ function registerCardClickEvent(c, selector, customTextSelector) {
                         $('#' + c.id + ' .dashboard__text').text(c.name);
                     else
                         $(customTextSelector).text(c.name);
+                    if (startSaving) setFlagForChanges();
                 }
             }],
             closeButton: true
@@ -308,19 +325,24 @@ function registerCardClickEvent(c, selector, customTextSelector) {
 const card = Object.freeze(new function() {
     let obj = {}, cards = [];
 
+    obj.cards = cards;
+
     obj.create = cardId => {
         let c = {
             id: cardId,
             name: 'New Card'
         };
         cards.push(c);
+        if (startSaving) setFlagForChanges();
         return c;
     };
 
     obj.delete = cardId => {
         let c = cards.findIndex(_ => _.id === cardId);
-        if (c >= 0)
+        if (c >= 0) {
             cards.splice(c, 1);
+            if (startSaving) setFlagForChanges();
+        }
     };
 
     obj.find = id => cards.find(_ => _.id === id);
@@ -330,6 +352,8 @@ const card = Object.freeze(new function() {
 
 const folder = Object.freeze(new function() {
     let obj = {}, folders = [];
+
+    obj.folders = folders;
 
     obj.create = folderId => {
         let f = {
@@ -377,6 +401,7 @@ const folder = Object.freeze(new function() {
                     heightFactor: 8,
                     maxWidth: 300
                 });
+                if (startSaving) setFlagForChanges();
             },
             removeCard: cardId => {
                 const $folder = $('#' + f.id);
@@ -424,10 +449,12 @@ const folder = Object.freeze(new function() {
                     heightFactor: 8,
                     maxWidth: 300
                 });
+                if (startSaving) setFlagForChanges();
             },
             findCard: id => f.cards.find(_ => _.id === id)
         };
         folders.push(f);
+        if (startSaving) setFlagForChanges();
         return f;
     };
 
@@ -440,6 +467,7 @@ const folder = Object.freeze(new function() {
             }
             f.cards.splice(0, f.cards.length);
             folders.splice(fIndex, 1);
+            if (startSaving) setFlagForChanges();
         }
     };
 
@@ -449,7 +477,7 @@ const folder = Object.freeze(new function() {
 });
 
 function returnNodesToView(viewWidth) {
-    if (viewWidth >= 800)
+    if (viewWidth >= 800) {
         $('.dashboard__draggable').each(function() {
             let parent = $('#dashboard__full-view');
             let _ = $(this);
@@ -470,33 +498,40 @@ function returnNodesToView(viewWidth) {
                 _.attr('data-x', newX);
                 _.attr('data-y', newY);
                 _.css('transform', `translate(${newX}px, ${newY}px)`);
+                if (startSaving) setFlagForChanges();
             } else if (relativeY + height > parent.innerHeight()) {
                 let newY = parent.innerHeight() - height - top;
                 _.attr('data-y', newY);
                 _.css('transform', `translate(${x}px, ${newY}px)`);
+                if (startSaving) setFlagForChanges();
             } else if (relativeX + width > parent.innerWidth()) {
                 let newX = parent.innerWidth() - width - left;
                 _.attr('data-x', newX);
                 console.log(`translate(${newX}px, ${y}px)`)
                 _.css('transform', `translate(${newX}px, ${y}px)`);
+                if (startSaving) setFlagForChanges();
             } else if (relativeY < 0 && relativeX < 0) {
                 let newX = -1 * left;
                 let newY = -1 * top;
                 _.attr('data-x', newX);
                 _.attr('data-y', newY);
                 _.css('transform', `translate(${newX}px, ${newY}px)`);
+                if (startSaving) setFlagForChanges();
             } else if (relativeY < 0) {
                 let newY = -1 * top;
                 _.attr('data-y', newY);
                 _.css('transform', `translate(${x}px, ${newY}px)`);
+                if (startSaving) setFlagForChanges();
             } else if (relativeX < 0) {
                 let newX = -1 * left;
                 _.attr('data-x', newX);
                 console.log(`translate(${newX}px, ${y}px)`)
                 _.css('transform', `translate(${newX}px, ${y}px)`);
+                if (startSaving) setFlagForChanges();
             }
             setTimeout(() => _.css('transition', 'unset'), 210);
         });
+    }
 }
 
 $(function() {
@@ -505,6 +540,17 @@ $(function() {
         backgroundImage.attr('src', '');
         backgroundImage.css('background', `url("${user.backgroundTile}") repeat`);
     }
+    savedIcon = $('#dashboard__saved');
+    savedIcon.hide();
+    savedAnim = lottie.loadAnimation({
+        container: savedIcon.get(0),
+        renderer: 'svg',
+        loop: false,
+        autoplay: false,
+        path: '/lottie/done.json'
+    });
+    savedAnim.setDirection(1);
+    savedAnim.setSpeed(1);
     const fullscreenBtn = $('#dashboard__fullscreen');
     const fullscreenAnim = lottie.loadAnimation({
         container: fullscreenBtn.get(0),
@@ -553,7 +599,7 @@ $(function() {
         tooltip: '',
         action: e => {
             const id = 'dashboard__card-' + Math.floor(Math.random() * 99999);
-            let c = card.create(id);
+            let date, time;
             notify.me({
                 header: `Create a Card`,
                 subheader: 'Enter a name and description',
@@ -610,8 +656,8 @@ $(function() {
                                 text: 'Done',
                                 close: true,
                                 action: () => {
-                                    c.date = $('.dashboard__due-date-date input').attr('value'); // Get the value of $('.dashboard__create-due-date-date input')
-                                    c.time = $('.dashboard__due-date-time input').attr('value'); // Get the value of $('.dashboard__create-due-date-time input')
+                                    date = $('.dashboard__due-date-date input').attr('value'); // Get the value of $('.dashboard__create-due-date-date input')
+                                    time = $('.dashboard__due-date-time input').attr('value'); // Get the value of $('.dashboard__create-due-date-time input')
                                 }
                             }],
                             closeButton: false
@@ -623,8 +669,11 @@ $(function() {
                     text: 'Create',
                     close: true,
                     action: () => {
+                        let c = card.create(id);
                         c.name = $('.dashboard__create-card-name input').attr('value');
                         c.description = $('.dashboard__create-card-description textarea').attr('value');
+                        c.date = date;
+                        c.time = time;
                         addFullViewNode('/files/svg/document.svg', 'dashboard__card', c.name, id, e.x, e.y);
                         registerCardClickEvent(c, '#' + id);
                     }
@@ -640,7 +689,6 @@ $(function() {
         tooltip: '',
         action: e => {
             let folderId = 'dashboard__folder-' + Math.floor(Math.random() * 99999);
-            let f = folder.create(folderId);
             notify.me({
                 header: 'Create a Folder',
                 subheader: 'Enter a name and description.',
@@ -669,6 +717,7 @@ $(function() {
                     text: 'Create', 
                     close: true,
                     action: () => {
+                        let f = folder.create(folderId);
                         f.name = $('.dashboard__create-folder-name input').attr('value');
                         f.description = $('.dashboard__create-folder-description textarea').attr('value');
                         addFullViewNode('/files/svg/folder.svg', 'dashboard__folder', f.name, folderId, e.x, e.y);
@@ -746,7 +795,10 @@ interact('.draggable').draggable({
         move: dragMoveListener,
         end (event) {
             var target = event.target;
-            setTimeout(() => target.setAttribute('dragging', 'false'), 50);
+            setTimeout(() => {
+                target.setAttribute('dragging', 'false');
+                dragging = false;
+            }, 50);
         }
     }
 });
@@ -757,6 +809,7 @@ function dragMoveListener (event) {
         return;
 
     target.setAttribute('dragging', 'true');
+    dragging = true;
 
     // keep the dragged position in the data-x/data-y attributes
     const x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx;
@@ -769,7 +822,113 @@ function dragMoveListener (event) {
     // update the posiion attributes
     target.setAttribute('data-x', x);
     target.setAttribute('data-y', y);
+    
+    if (!dashboardHasChanges && startSaving)
+        setFlagForChanges();
 }
 
 // this function is used later in the resizing and gesture demos
 window.dragMoveListener = dragMoveListener;
+
+network.on('dashboardLoadComplete', dashboard => {
+    let setPos = ($e, pos) => {
+        if ($e.length) {
+            $e.css({
+                left: pos.left,
+                top: pos.top,
+                transform: `translate(${pos.x}px, ${pos.y}px)` 
+            });
+            $e.attr('data-x', pos.x);
+            $e.attr('data-y', pos.y);
+        }
+    };
+    for (let c of dashboard.cards) {
+        if (!c.currentFolderId) {
+            console.log(c.name);
+            addFullViewNode('/files/svg/document.svg', 'dashboard__card', c.name, c.id, c.left, c.top);
+            setPos($(`#${c.id}`), c.pos);
+            registerCardClickEvent(c, '#' + c.id);
+        }
+        let cRef = card.create(c.id);
+        cRef.name = c.name;
+        cRef.description = c.description;
+        cRef.date = c.date;
+        cRef.time = c.time;
+        cRef.pinned = c.pinned;
+        if (cRef.pinned)
+            $(`#${cRef.id}`).find('.dashboard__card .dashboard__pin').addClass('active');
+    }
+    for (let f of dashboard.folders) {
+        addFullViewNode('/files/svg/folder.svg', 'dashboard__folder', f.name, f.id, f.left, f.top);
+        setPos($(`#${f.id}`), f.pos);
+        let fRef = folder.create(f.id);
+        fRef.name = f.name;
+        fRef.description = f.description;
+        fRef.pinned = f.pinned;
+        if (fRef.pinned)
+            $(`#${f.id}`).find('.dashboard__folder .dashboard__pin').addClass('active');
+        contextly.init('#' + f.id, '#dashboard__full-view', []);
+        registerFolderClickEvent(f.id);
+        if (f.cards.length) {
+            let $folder = $(`#${f.id}`);
+            for (let c of f.cards) {
+                fRef.addCard(c.id);
+            }
+        }
+    }
+    startSaving = true;
+}).on('dashboardLoadFailed', json => {
+    notify.me({
+        header: 'Uh oh',
+        subheader: 'Something went wrong',
+        body: 'Looks like we weren\'t able to load your dashboard.<br>Please try refreshing.',
+        buttons:[{
+            text: 'Ok',
+            class: 'medium',
+            close: true
+        }]
+    })
+}).on('dashboardSaveRequest', () => {
+    let dashboard = {
+        folders: folder.folders || [],
+        cards: card.cards || []
+    };
+    let getPos = $e => {
+        if ($e.length) {
+            return {
+                left: $e.css('left'),
+                top: $e.css('top'),
+                x: $e.attr('data-x'),
+                y: $e.attr('data-y')
+            };
+        }
+        return null;
+    };
+    for (let i = 0; i < dashboard.folders.length; i++) {
+        let f = dashboard.folders[i];
+        let $f = $(`#${f.id}`);
+        f.pos = getPos($f);
+    }
+    for (let i = 0; i < dashboard.cards.length; i++) {
+        let c = dashboard.cards[i];
+        let $c = $(`#${c.id}`);
+        c.pos = getPos($c);
+    }
+    if (dashboardHasChanges && !dashboardTryingToSave) {
+        dashboardTryingToSave = true;
+        network.send('dashboardSave', dashboard);
+    }
+}).on('dashboardSaveComplete', () => {
+    dashboardHasChanges = false;
+    dashboardTryingToSave = false;
+    if (!dragging) {
+        savedIcon.fadeIn(200);
+        savedAnim.goToAndPlay(0, true);
+        if (savedFadeOut)
+            clearTimeout(savedFadeOut);
+        savedFadeOut = setTimeout(() => {
+            savedIcon.fadeOut(200);
+        }, 3000);
+    }
+}).on('dashboardSaveFailed', () => {
+}).send('dashboardLoad');
