@@ -272,7 +272,6 @@ function registerCardClickEvent(cardId, cardSelector, customTextSelector) {
             return;   
         }
         // Start building the "modify card" pop-up.
-        console.log($(this));
         const c = card.find(cardId);
         notify.me({
             header: `Modify "${c.name}"`,
@@ -456,7 +455,7 @@ const folder = Object.freeze(new function() {
                         action: () => { },
                         onShow: $e => {
                             $(`#${$e.attr('id')} .banner`).text(c.name);
-                            registerCardClickEvent($e.attr('id'));
+                            registerCardClickEvent($e.find('.banner').attr('cardId'), $e.attr('id'));
                         }
                     });
                 } else if (contextOptions.length === 3) {
@@ -502,7 +501,7 @@ const folder = Object.freeze(new function() {
                             action: () => { },
                             onShow: $e => {
                                 $(`#${$e.attr('id')} .banner`).text(card.name);
-                                registerCardClickEvent($e.attr('id'));
+                                registerCardClickEvent($e.find('.banner').attr('cardId'), $e.attr('id'));
                             }
                         });
                     } else break;
@@ -985,7 +984,7 @@ network.on('dashboardLoadComplete', dashboard => {
         fRef.pinned = f.pinned;
         if (fRef.pinned)
             $(`#${f.id}`).find('.dashboard__folder .dashboard__pin').addClass('active');
-        contextly.init('#' + fRef.id, '#dashboard__full-view', []);
+            contextly.init('#' + fRef.id, '#dashboard__full-view', []);
         registerFolderClickEvent(fRef.id);
         if (f.cards.length) {
             let $folder = $(`#${f.id}`);
