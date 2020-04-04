@@ -68,9 +68,8 @@
 }
 
 .dashboard__create-card-popup {
-    width: 30em;
+    width: 45em;
     max-width: 80%;
-    height: 30em;
     max-height: 80%;
 
     .dashboard__create-card-container {
@@ -87,9 +86,8 @@
 }
 
 .dashboard__create-folder-popup {
-    width: 30em;
+    width: 45em;
     max-width: 80%;
-    height: 30em;
     max-height: 80%;
 
     .dashboard__create-folder-container {
@@ -131,9 +129,8 @@
 }
 
 .dashboard__modify-popup {
-    width: 40em;
+    width: 45em;
     max-width: 80%;
-    height: 53em;
     max-height: 80%;
 
     .dashboard__modify-card-container {
@@ -179,6 +176,9 @@
                 height: 15em;
                 overflow-y: scroll;
                 overflow-x: hidden;
+                @supports (-ms-ime-align:auto) {
+                    -ms-overflow-style: none;
+                }
                 .dashboard__modify-folder__card {
                     display: flex;
                     justify-content: space-between;

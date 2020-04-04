@@ -124,7 +124,9 @@ const notify = new function() {
      */
     obj.me = (options, callback) => {
         let idSuffix = Math.ceil(Math.random() * 99999);
-        let mergedOptions = { ...defaultOptions, ...options };
+        let mergedOptions = [];
+        Object.assign(mergedOptions, defaultOptions);
+        Object.assign(mergedOptions, options);
         for (const [key, value] of Object.entries(defaultOptions)) {
             // If the new option is null/undefined or if the new option is not the same type as the default, override with the default.
             if (mergedOptions[key] == null || typeof mergedOptions[key] !== typeof defaultOptions[key])

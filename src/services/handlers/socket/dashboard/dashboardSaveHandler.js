@@ -19,7 +19,8 @@ class DashboardSaveHandler {
             });  
             return;
         }
-        let result = {...dataFormat};
+        let result = [];
+        Object.assign(result, dataFormat);
         for (let key in data) {
             if (dataFormat[key] == null) {
                 client.emit('dashboardSaveFailed', {
