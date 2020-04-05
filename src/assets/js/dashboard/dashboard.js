@@ -9,7 +9,11 @@ function setFlagForChanges() {
 }
 
 function limitText(text) {
-    return text.replace(/^(.{30}[^\s]*).*/, '$1...');
+    return text.length > 30 ? text.replace(/^(.{30}[^\s]*).*/, '$1...') : text;
+}
+
+function limitText80(text) {
+    return text.length > 80 ? text.replace(/^(.{80}[^\s]*).*/, '$1...') : text;
 }
 
 function addFullViewNode(iconPath, nodeClass, text, id, x = mouse.x, y = mouse.y) {
@@ -87,7 +91,7 @@ function registerFolderClickEvent(folderId) {
                 body: `
                 <div class="dashboard__modify-popup__path-wrapper">
                     <div class="dashboard__modify-popup__path">
-                        <div class="folder">${f.name}</div>
+                        <div class="folder">${limitText80(f.name)}</div>
                     </div>
                 </div>
                 <div class="dashboard__modify-folder-container">
@@ -141,7 +145,7 @@ function registerFolderClickEvent(folderId) {
                     action: () => {
                         f.name = $('.dashboard__modify-folder-name input').attr('value');
                         f.description = $('.dashboard__modify-folder-description-with-cards .quill-wrapper .quill .ql-editor').html();
-                        $('#' + f.id + ' .dashboard__text').text(f.name);
+                        $('#' + f.id + ' .dashboard__text').text(limitText(f.name));
                         if (startSaving) setFlagForChanges();
                     }
                 }],
@@ -201,7 +205,7 @@ function registerFolderClickEvent(folderId) {
                 body: `
                 <div class="dashboard__modify-popup__path-wrapper">
                     <div class="dashboard__modify-popup__path">
-                        <div class="folder">${f.name}</div>
+                        <div class="folder">${limitText80(f.name)}</div>
                     </div>
                 </div>
                 <div class="dashboard__modify-folder-container">
@@ -251,7 +255,7 @@ function registerFolderClickEvent(folderId) {
                     action: () => {
                         f.name = $('.dashboard__modify-folder-name input').attr('value');
                         f.description = $('.dashboard__modify-folder-description .quill-wrapper .quill .ql-editor').html();
-                        $('#' + f.id + ' .dashboard__text').text(f.name);
+                        $('#' + f.id + ' .dashboard__text').text(limitText(f.name));
                         if (startSaving) setFlagForChanges();
                     }
                 }],
@@ -280,7 +284,7 @@ function registerCardClickEvent(cardId, cardSelector, customTextSelector) {
             body: `
             <div class="dashboard__modify-popup__path-wrapper">
                 <div class="dashboard__modify-popup__path">
-                    ${c.currentFolderId ? '<div class="folder">' + folder.find(c.currentFolderId).name + '</div>' : ''}<div class="card">${c.name}</div>
+                    ${c.currentFolderId ? '<div class="folder">' + limitText80(folder.find(c.currentFolderId).name) + '</div>' : ''}<div class="card">${limitText80(c.name)}</div>
                 </div>
             </div>
             <div class="dashboard__modify-card-container">
@@ -336,7 +340,7 @@ function registerCardClickEvent(cardId, cardSelector, customTextSelector) {
                         body: `
                         <div class="dashboard__modify-popup__path-wrapper">
                             <div class="dashboard__modify-popup__path">
-                            ${c.currentFolderId ? '<div class="folder">' + folder.find(c.currentFolderId).name + '</div>' : ''}<div class="card">${c.name}</div>
+                            ${c.currentFolderId ? '<div class="folder">' + limitText80(folder.find(c.currentFolderId).name) + '</div>' : ''}<div class="card">${limitText80(c.name)}</div>
                             </div>
                         </div>
                         <div class="dashboard__due-date-container">
@@ -379,7 +383,7 @@ function registerCardClickEvent(cardId, cardSelector, customTextSelector) {
                     c.name = $('.dashboard__modify-card-name input').attr('value');
                     c.description = $('.dashboard__modify-card-description .quill-wrapper .quill .ql-editor').html();
                     if (!customTextSelector)
-                        $('#' + c.id + ' .dashboard__text').text(c.name);
+                        $('#' + c.id + ' .dashboard__text').text(limitText(c.name));
                     else
                         $(customTextSelector).text(c.name);
                     if (startSaving) setFlagForChanges();

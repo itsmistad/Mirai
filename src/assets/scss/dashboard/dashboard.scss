@@ -132,6 +132,7 @@
     width: 45em;
     max-width: 80%;
     max-height: 80%;
+    padding-top: 2.5em;
 
     .dashboard__modify-card-container {
         .dashboard__modify-card-description {
@@ -220,6 +221,7 @@
         display: flex;
         justify-content: flex-start;
         align-items: center;
+        max-width: 50em;
         .folder, .card {
             font-weight: bold;
             font-style: italic;
@@ -400,6 +402,9 @@ body.dark {
             &.active {
                 background-color: $color_highlighted;
             }
+        }
+        .dashboard__text {
+            max-width: 16em;
         }
         .dashboard__remove {
             &:hover {
