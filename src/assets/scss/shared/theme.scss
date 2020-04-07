@@ -1095,6 +1095,11 @@ body.dark {
     #layout__footer {
         background-color: $color_dark_header !important;
         #footer__right-container {
+            .footer__button-policy {
+                &:hover {
+                    background-color: $color_dark_header_button;
+                }
+            }
             #footer__button-github {
                 &:hover {
                     background-color: $color_dark_header_button;

@@ -1,0 +1,11 @@
+@import "../shared/util.scss";
+@import "../shared/vars.scss";
+.page {
+    .policy_main {
+        max-width: 90%;
+        border-radius: 2em;
+        padding: 2em;
+        margin: auto;
+        background-color: $color_light_accent;
+    }
+}
