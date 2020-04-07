@@ -1,12 +1,9 @@
 <div id="footer__left-container">
-    <a id="terms_policy" href="/policies/terms">Terms and Conditions</a>
-    <p>&emsp;</p>
-    <a id="privacy_policy" href="/policies/privacy">Privacy Policy</a>
-    <p>&emsp;</p>
-    <a id="cookie_policy" href="/policies/cookies">Cookies Policy</a>
-    <p>&ensp;</p>
     <p>&copy; 2020, <b>Mirai</b></p>
 </div>
 <div id="footer__right-container">
+    <a class="footer__button-policy" href="/policies/terms">Terms and Conditions</a>
+    <a class="footer__button-policy" href="/policies/privacy">Privacy Policy</a>
+    <a class="footer__button-policy" href="/policies/cookies">Cookies Policy</a>
     <a id="footer__button-github" href="//github.com/itsmistad/Mirai">GitHub</a>
 </div>

@@ -736,7 +736,19 @@ $header_height: 4em;
         align-items: center;
         height: 100%;
         width: 100%;
-        
+        .footer__button-policy {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            margin: 0 0 0 0.4em;
+            padding: 0 0.8em;
+            text-decoration: none;
+            user-select: none;
+            &:hover {
+                background-color: #D4C4EE;
+            }
+        }
         #footer__button-github {
             display: flex;
             justify-content: center;
