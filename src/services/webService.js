@@ -25,7 +25,10 @@ let routes = [
     ['/user/upload/banner', '/user/userController', 'POST'],
     ['/user/upload/about', '/user/userController', 'POST'],
     ['/user/upload/preferences', '/user/userController', 'POST'],
-    ['/user/upload/preferences/bg', '/user/userController', 'POST']
+    ['/user/upload/preferences/bg', '/user/userController', 'POST'],
+    ['/policies/privacy', '/policies/policiesController', 'GET'],
+    ['/policies/terms', '/policies/policiesController', 'GET'],
+    ['/policies/cookies', '/policies/policiesController', 'GET']
 ];
 
 function setStaticRoutes() {
