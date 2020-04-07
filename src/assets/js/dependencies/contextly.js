@@ -191,9 +191,11 @@ const contextly = new function() {
             return;
         }
         let resultOptions = [];
-        let resultMenuSettings = {...baseMenuSettings};
+        let resultMenuSettings = [];
+        Object.assign(resultMenuSettings, baseMenuSettings);
         for (let optionSet of options) {
-            let resultSet = {...baseOptionSet};
+            let resultSet = [];
+            Object.assign(resultSet, baseOptionSet);
             for (let key in optionSet) {
                 if (baseOptionSet[key] == null) {
                     console.error(`Failed to parse options. Unknown key "${key}".`);
@@ -239,9 +241,11 @@ const contextly = new function() {
             return;
         }
         let resultOptions = [];
-        let resultMenuSettings = {...baseMenuSettings};
+        let resultMenuSettings = [];
+        Object.assign(resultMenuSettings, baseMenuSettings);
         for (let optionSet of options) {
-            let resultSet = {...baseOptionSet};
+            let resultSet = [];
+            Object.assign(resultSet, baseOptionSet);
             for (let key in optionSet) {
                 if (baseOptionSet[key] == null) {
                     console.error(`Failed to parse options. Unknown key "${key}".`);
