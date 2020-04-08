@@ -180,7 +180,7 @@ $(function() {
     if (!hasAcceptedCookies()) {
         notify.me({
             header: 'Cookie Policy',
-            subheader: `<a href="/">Read our cookie policy</a>`,
+            subheader: `<a href="/policies/cookies">Read our cookie policy</a>`,
             body: 'Mirai uses cookies to provide you the best planning experience.<br/>By continuing to use our website, you accept our use of cookies.',
             buttons: [{
                 text: 'Ok',
