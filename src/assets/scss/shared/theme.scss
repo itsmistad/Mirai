@@ -730,13 +730,34 @@ $header_height: 4em;
             margin: 0 20px;
         }
     }
+    #footer_middle-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: row;
+        height: 100%;
+        width: 100%;
+        .footer__button-policy {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            margin: 0 0.4em;
+            padding: 0 0.8em;
+            text-decoration: none;
+            user-select: none;
+            font-size: em(12);
+            &:hover {
+                background-color: #D4C4EE;
+            }
+        }
+    }
     #footer__right-container {
         display: flex;
         justify-content: flex-end;
         align-items: center;
         height: 100%;
         width: 100%;
-        
         #footer__button-github {
             display: flex;
             justify-content: center;
@@ -1082,6 +1103,13 @@ body.dark {
 
     #layout__footer {
         background-color: $color_dark_header !important;
+        #footer_middle-container {
+            .footer__button-policy {
+                &:hover {
+                    background-color: $color_dark_header_button;
+                }
+            }
+        }
         #footer__right-container {
             #footer__button-github {
                 &:hover {
