@@ -1,1 +1,1 @@
-.page .policy_main{max-width:90%;border-radius:2em;padding:2em;margin:auto;background-color:#ddd0f1}
+.page{display:flex;flex-direction:column;justify-content:stretch;align-items:center}.page .policy__container{padding:4em 4em;width:70%;max-width:80em;position:relative;overflow:hidden}

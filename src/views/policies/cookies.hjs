@@ -1,6 +1,6 @@
 <div class="page">
-    <div class="policy_main">
-        <h2>COOKIE POLICY</h2>
+    <h1 class="text-center hidden">{{ title }}</h1>
+    <div class="policy__container banner column">
         <h3>Last updated April 07, 2020</h3>
         <p>This Cookie Policy explains how Mirai uses cookies and similar technologies to recognize you when you visit our websites at <a href="/">https://miraiapp.co</a>. It explains what these technologies are and why we use them, as well as your rights to control our use of them.</p>
         <p>In some cases we may use cookies to collect personal information, or that becomes personal information if we combine it with other information.</p>

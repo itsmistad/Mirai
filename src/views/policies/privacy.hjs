@@ -1,6 +1,6 @@
 <div class="page">
-    <div class="policy_main">
-        <h2>PRIVACY POLICY</h2>
+    <h1 class="text-center hidden">{{ title }}</h1>
+    <div class="policy__container banner column">
         <h3>Last updated April 07, 2020</h3>
         <p>Thank you for choosing to use Mirai in your everyday routine. We are committed to protecting your personal information and your right to privacy. If you have any questions or concerns about our policy, or our practices with regards to your personal information, please contact us at <a href="mailto:support@miraiapp.co">support@miraiapp.co</a>.</p>
         <p>When you visit <a href="/">https://miraiapp.co</a> and use our services, you trust us with your personal information. The purpose of this privacy policy is to explain to you what information we collect, how we use it and what rights you have in relation to it. We hope you take the time to read through it, as this information is important. If there are any terms in this privacy policy you do not agree with, please discontinue use of our services through <a href="/">https://miraiapp.co</a>.</p>

@@ -1,6 +1,6 @@
 <div class="page">
-    <div class="policy_main">
-        <h2>Terms and Conditions</h2>
+    <h1 class="text-center hidden">{{ title }}</h1>
+    <div class="policy__container banner column">
         <h3>Last updated April 07, 2020</h3>
         <h3>Agreement to terms</h3>
         <p>These Terms and Conditions constitute a legally binding agreement made between you, whether personally or on behalf of an entity (“you”) and Mirai (“we”, “us”, or “our”), concerning your access to and use of the Mirai website as well as any other media form, media channel, mobile website or mobile application related, linked, or otherwise connected thereto. You agree that by accessing Mirai, you have read, understood, and agreed to be bound by all of these Terms and Conditions. IF YOU DO NOT AGREE WITH ALL OF THESE TERMS AND CONDITIONS, THEN YOU ARE EXPRESSLY PROHIBITED FROM USING MIRAI AND YOU MUST DISCONTINUE USE IMMEDIATELY.</p>
