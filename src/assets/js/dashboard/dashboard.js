@@ -1,5 +1,19 @@
+let dashboardHasChanges = false;
+let startSaving = false;
+let dashboardTryingToSave = false;
+let savedIcon, savedAnim, savedFadeOut, dragging;
+
+function setFlagForChanges() {
+    dashboardHasChanges = true;
+    savedIcon.fadeOut(200);
+}
+
 function limitText(text) {
-    return text.replace(/^(.{30}[^\s]*).*/, '$1...');
+    return text.length > 30 ? text.replace(/^(.{30}[^\s]*).*/, '$1...') : text;
+}
+
+function limitText80(text) {
+    return text.length > 80 ? text.replace(/^(.{80}[^\s]*).*/, '$1...') : text;
 }
 
 function addFullViewNode(iconPath, nodeClass, text, id, x = mouse.x, y = mouse.y) {
@@ -20,6 +34,9 @@ function addFullViewNode(iconPath, nodeClass, text, id, x = mouse.x, y = mouse.y
     $(`#${id} .dashboard__pin`).click(function(e) {
         e.preventDefault();
         $(this).toggleClass('active');
+        let node = card.find(id);
+        if (!node) node = folder.find(id);
+        node.pinned = $(this).hasClass('active');
         return false;
     });
     $(`#${id} .dashboard__remove`).click(function(e) {
@@ -45,7 +62,7 @@ function addFullViewNode(iconPath, nodeClass, text, id, x = mouse.x, y = mouse.y
                     }
                 },
                 close: true
-            }, {
+            }, { 
                 text: 'No',
                 class: 'medium',
                 action: () => {},
@@ -74,7 +91,7 @@ function registerFolderClickEvent(folderId) {
                 body: `
                 <div class="dashboard__modify-popup__path-wrapper">
                     <div class="dashboard__modify-popup__path">
-                        <div class="folder">${f.name}</div>
+                        <div class="folder">${limitText80(f.name)}</div>
                     </div>
                 </div>
                 <div class="dashboard__modify-folder-container">
@@ -87,11 +104,34 @@ function registerFolderClickEvent(folderId) {
                         </div>
                     </div>
                     <div class="dashboard__modify-folder-description-with-cards">
-                        <div class="textarea">
-                            <textarea id="description">${f.description}</textarea>
-                            <label for="description">
-                                <span>Description</span>
-                            </label>
+                        <div class="quill-wrapper" id="${f.id}-description-wrapper">
+                            <div class="toolbar" id="${f.id}-toolbar">
+                                <span class="ql-formats">
+                                    <button class="ql-bold"></button>
+                                    <button class="ql-italic"></button>
+                                    <button class="ql-underline"></button>
+                                    <button class="ql-strike"></button>
+                                    <button class="ql-link"></button>
+                                    <button class="ql-script" value="sub"></button>
+                                    <button class="ql-script" value="super"></button>
+                                </span>
+                                <span class="ql-formats">
+                                    <button class="ql-header" value="1"></button>
+                                    <button class="ql-header" value="2"></button>
+                                    <button class="ql-blockquote"></button>
+                                    <button class="ql-code-block"></button>
+                                </span>
+                                <span class="ql-formats">
+                                    <button class="ql-list" value="ordered"></button>
+                                    <button class="ql-list" value="bullet"></button>
+                                    <button class="ql-indent" value="-1"></button>
+                                    <button class="ql-indent" value="+1"></button>
+                                </span>
+                                <span class="ql-formats">
+                                    <button class="ql-clean"></button>
+                                </span>
+                            </div>
+                            <div class="quill" id="${f.id}-description">${f.description}</div>
                         </div>
                     </div>
                 </div>
@@ -104,8 +144,9 @@ function registerFolderClickEvent(folderId) {
                     close: true,
                     action: () => {
                         f.name = $('.dashboard__modify-folder-name input').attr('value');
-                        f.description = $('.dashboard__modify-folder-description-with-cards textarea').attr('value');
-                        $('#' + f.id + ' .dashboard__text').text(f.name);
+                        f.description = $('.dashboard__modify-folder-description-with-cards .quill-wrapper .quill .ql-editor').html();
+                        $('#' + f.id + ' .dashboard__text').text(limitText(f.name));
+                        if (startSaving) setFlagForChanges();
                     }
                 }],
                 closeButton: true
@@ -120,7 +161,7 @@ function registerFolderClickEvent(folderId) {
                 for (let c of f.cards) {
                     let cardId = 'dashboard__modify-folder__card-' + Math.floor(Math.random() * 99999);
                     cardsList.append(`<div class="dashboard__modify-folder__card" id="${cardId}"><li>${c.name}</li><i class="fas fa-arrow-alt-circle-right"></i></div>`);
-                    registerCardClickEvent(c, `#${cardId} li`, `#${cardId} li`);
+                    registerCardClickEvent(c.id, `${cardId} li`, `#${cardId} li`);
                     $(`#${cardId} .fa-arrow-alt-circle-right`).click(function() {
                         let cardItem = $(this).parent();
                         cardItem.css({
@@ -133,7 +174,7 @@ function registerFolderClickEvent(folderId) {
                         let x = $('#' + folderId).offset().left + (axis >= 50 ? Math.floor(Math.random() * 241): 0) - 70 + (axis < 50 && flipped >= 50 ? 240 : 0);
                         let y = $('#' + folderId).offset().top + (axis < 50 ? Math.floor(Math.random() * 241): 0) - 70 + (axis >= 50 && flipped < 50 ? 240 : 0);
                         addFullViewNode('/files/svg/document.svg', 'dashboard__card', c.name, c.id, x, y);
-                        registerCardClickEvent(c, '#' + c.id);
+                        registerCardClickEvent(c.id);
                         let cardParent = cardItem.parent();
                         cardItem.nextAll().css({
                             transform: 'translateY(-100%)'
@@ -164,7 +205,7 @@ function registerFolderClickEvent(folderId) {
                 body: `
                 <div class="dashboard__modify-popup__path-wrapper">
                     <div class="dashboard__modify-popup__path">
-                        <div class="folder">${f.name}</div>
+                        <div class="folder">${limitText80(f.name)}</div>
                     </div>
                 </div>
                 <div class="dashboard__modify-folder-container">
@@ -177,11 +218,34 @@ function registerFolderClickEvent(folderId) {
                         </div>
                     </div>
                     <div class="dashboard__modify-folder-description">
-                        <div class="textarea">
-                            <textarea id="description">${f.description}</textarea>
-                            <label for="description">
-                                <span>Description</span>
-                            </label>
+                        <div class="quill-wrapper" id="${f.id}-description-wrapper">
+                            <div class="toolbar"id="${f.id}-toolbar">
+                                <span class="ql-formats">
+                                    <button class="ql-bold"></button>
+                                    <button class="ql-italic"></button>
+                                    <button class="ql-underline"></button>
+                                    <button class="ql-strike"></button>
+                                    <button class="ql-link"></button>
+                                    <button class="ql-script" value="sub"></button>
+                                    <button class="ql-script" value="super"></button>
+                                </span>
+                                <span class="ql-formats">
+                                    <button class="ql-header" value="1"></button>
+                                    <button class="ql-header" value="2"></button>
+                                    <button class="ql-blockquote"></button>
+                                    <button class="ql-code-block"></button>
+                                </span>
+                                <span class="ql-formats">
+                                    <button class="ql-list" value="ordered"></button>
+                                    <button class="ql-list" value="bullet"></button>
+                                    <button class="ql-indent" value="-1"></button>
+                                    <button class="ql-indent" value="+1"></button>
+                                </span>
+                                <span class="ql-formats">
+                                    <button class="ql-clean"></button>
+                                </span>
+                            </div>
+                            <div class="quill" id="${f.id}-description">${f.description}</div>
                         </div>
                     </div>
                 </div>`,
@@ -190,8 +254,9 @@ function registerFolderClickEvent(folderId) {
                     close: true,
                     action: () => {
                         f.name = $('.dashboard__modify-folder-name input').attr('value');
-                        f.description = $('.dashboard__modify-folder-description textarea').attr('value');
-                        $('#' + f.id + ' .dashboard__text').text(f.name);
+                        f.description = $('.dashboard__modify-folder-description .quill-wrapper .quill .ql-editor').html();
+                        $('#' + f.id + ' .dashboard__text').text(limitText(f.name));
+                        if (startSaving) setFlagForChanges();
                     }
                 }],
                 closeButton: true
@@ -202,8 +267,8 @@ function registerFolderClickEvent(folderId) {
     });
 }
 
-function registerCardClickEvent(c, selector, customTextSelector) {
-    $(selector).click(function() {
+function registerCardClickEvent(cardId, cardSelector, customTextSelector) {
+    $('#' + (cardSelector || cardId)).click(function() {
         let dragging = $(this).attr('dragging');
         if (dragging && dragging === 'true')
         {
@@ -211,6 +276,7 @@ function registerCardClickEvent(c, selector, customTextSelector) {
             return;   
         }
         // Start building the "modify card" pop-up.
+        const c = card.find(cardId);
         notify.me({
             header: `Modify "${c.name}"`,
             subheader: 'Enter a new name and description',
@@ -218,7 +284,7 @@ function registerCardClickEvent(c, selector, customTextSelector) {
             body: `
             <div class="dashboard__modify-popup__path-wrapper">
                 <div class="dashboard__modify-popup__path">
-                    ${c.currentFolderId ? '<div class="folder">' + folder.find(c.currentFolderId).name + '</div>' : ''}<div class="card">${c.name}</div>
+                    ${c.currentFolderId ? '<div class="folder">' + limitText80(folder.find(c.currentFolderId).name) + '</div>' : ''}<div class="card">${limitText80(c.name)}</div>
                 </div>
             </div>
             <div class="dashboard__modify-card-container">
@@ -231,11 +297,34 @@ function registerCardClickEvent(c, selector, customTextSelector) {
                     </div>
                 </div>
                 <div class="dashboard__modify-card-description">
-                    <div class="textarea">
-                        <textarea id="description">${c.description}</textarea>
-                        <label for="description">
-                            <span>Description</span>
-                        </label>
+                    <div class="quill-wrapper" id="${c.id}-description-wrapper">
+                        <div class="toolbar" id="${c.id}-toolbar">
+                            <span class="ql-formats">
+                                <button class="ql-bold"></button>
+                                <button class="ql-italic"></button>
+                                <button class="ql-underline"></button>
+                                <button class="ql-strike"></button>
+                                <button class="ql-link"></button>
+                                <button class="ql-script" value="sub"></button>
+                                <button class="ql-script" value="super"></button>
+                            </span>
+                            <span class="ql-formats">
+                                <button class="ql-header" value="1"></button>
+                                <button class="ql-header" value="2"></button>
+                                <button class="ql-blockquote"></button>
+                                <button class="ql-code-block"></button>
+                            </span>
+                            <span class="ql-formats">
+                                <button class="ql-list" value="ordered"></button>
+                                <button class="ql-list" value="bullet"></button>
+                                <button class="ql-indent" value="-1"></button>
+                                <button class="ql-indent" value="+1"></button>
+                            </span>
+                            <span class="ql-formats">
+                                <button class="ql-clean"></button>
+                            </span>
+                        </div>
+                        <div class="quill" id="${c.id}-description">${c.description}</div>
                     </div>
                 </div>
             </div>
@@ -251,7 +340,7 @@ function registerCardClickEvent(c, selector, customTextSelector) {
                         body: `
                         <div class="dashboard__modify-popup__path-wrapper">
                             <div class="dashboard__modify-popup__path">
-                            ${c.currentFolderId ? '<div class="folder">' + folder.find(c.currentFolderId).name + '</div>' : ''}<div class="card">${c.name}</div>
+                            ${c.currentFolderId ? '<div class="folder">' + limitText80(folder.find(c.currentFolderId).name) + '</div>' : ''}<div class="card">${limitText80(c.name)}</div>
                             </div>
                         </div>
                         <div class="dashboard__due-date-container">
@@ -279,6 +368,7 @@ function registerCardClickEvent(c, selector, customTextSelector) {
                             action: () => {
                                 c.date = $('.dashboard__due-date-date input').attr('value'); // Get the value of $('.dashboard__create-due-date-date input')
                                 c.time = $('.dashboard__due-date-time input').attr('value'); // Get the value of $('.dashboard__create-due-date-time input')
+                                if (startSaving) setFlagForChanges();
                             }
                         }],
                         closeButton: false
@@ -291,11 +381,12 @@ function registerCardClickEvent(c, selector, customTextSelector) {
                 close: true,
                 action: () => {
                     c.name = $('.dashboard__modify-card-name input').attr('value');
-                    c.description = $('.dashboard__modify-card-description textarea').attr('value');
+                    c.description = $('.dashboard__modify-card-description .quill-wrapper .quill .ql-editor').html();
                     if (!customTextSelector)
-                        $('#' + c.id + ' .dashboard__text').text(c.name);
+                        $('#' + c.id + ' .dashboard__text').text(limitText(c.name));
                     else
                         $(customTextSelector).text(c.name);
+                    if (startSaving) setFlagForChanges();
                 }
             }],
             closeButton: true
@@ -308,19 +399,24 @@ function registerCardClickEvent(c, selector, customTextSelector) {
 const card = Object.freeze(new function() {
     let obj = {}, cards = [];
 
+    obj.cards = cards;
+
     obj.create = cardId => {
         let c = {
             id: cardId,
             name: 'New Card'
         };
         cards.push(c);
+        if (startSaving) setFlagForChanges();
         return c;
     };
 
     obj.delete = cardId => {
         let c = cards.findIndex(_ => _.id === cardId);
-        if (c >= 0)
+        if (c >= 0) {
             cards.splice(c, 1);
+            if (startSaving) setFlagForChanges();
+        }
     };
 
     obj.find = id => cards.find(_ => _.id === id);
@@ -330,6 +426,8 @@ const card = Object.freeze(new function() {
 
 const folder = Object.freeze(new function() {
     let obj = {}, folders = [];
+
+    obj.folders = folders;
 
     obj.create = folderId => {
         let f = {
@@ -361,7 +459,7 @@ const folder = Object.freeze(new function() {
                         action: () => { },
                         onShow: $e => {
                             $(`#${$e.attr('id')} .banner`).text(c.name);
-                            registerCardClickEvent(c, `#${$e.attr('id')}`);
+                            registerCardClickEvent($e.find('.banner').attr('cardId'), $e.attr('id'));
                         }
                     });
                 } else if (contextOptions.length === 3) {
@@ -377,6 +475,7 @@ const folder = Object.freeze(new function() {
                     heightFactor: 8,
                     maxWidth: 300
                 });
+                if (startSaving) setFlagForChanges();
             },
             removeCard: cardId => {
                 const $folder = $('#' + f.id);
@@ -406,7 +505,7 @@ const folder = Object.freeze(new function() {
                             action: () => { },
                             onShow: $e => {
                                 $(`#${$e.attr('id')} .banner`).text(card.name);
-                                registerCardClickEvent(card, `#${$e.attr('id')}`);
+                                registerCardClickEvent($e.find('.banner').attr('cardId'), $e.attr('id'));
                             }
                         });
                     } else break;
@@ -424,10 +523,12 @@ const folder = Object.freeze(new function() {
                     heightFactor: 8,
                     maxWidth: 300
                 });
+                if (startSaving) setFlagForChanges();
             },
             findCard: id => f.cards.find(_ => _.id === id)
         };
         folders.push(f);
+        if (startSaving) setFlagForChanges();
         return f;
     };
 
@@ -440,6 +541,7 @@ const folder = Object.freeze(new function() {
             }
             f.cards.splice(0, f.cards.length);
             folders.splice(fIndex, 1);
+            if (startSaving) setFlagForChanges();
         }
     };
 
@@ -449,7 +551,7 @@ const folder = Object.freeze(new function() {
 });
 
 function returnNodesToView(viewWidth) {
-    if (viewWidth >= 800)
+    if (viewWidth >= 800) {
         $('.dashboard__draggable').each(function() {
             let parent = $('#dashboard__full-view');
             let _ = $(this);
@@ -470,33 +572,38 @@ function returnNodesToView(viewWidth) {
                 _.attr('data-x', newX);
                 _.attr('data-y', newY);
                 _.css('transform', `translate(${newX}px, ${newY}px)`);
+                if (startSaving) setFlagForChanges();
             } else if (relativeY + height > parent.innerHeight()) {
                 let newY = parent.innerHeight() - height - top;
                 _.attr('data-y', newY);
                 _.css('transform', `translate(${x}px, ${newY}px)`);
+                if (startSaving) setFlagForChanges();
             } else if (relativeX + width > parent.innerWidth()) {
                 let newX = parent.innerWidth() - width - left;
                 _.attr('data-x', newX);
-                console.log(`translate(${newX}px, ${y}px)`)
                 _.css('transform', `translate(${newX}px, ${y}px)`);
+                if (startSaving) setFlagForChanges();
             } else if (relativeY < 0 && relativeX < 0) {
                 let newX = -1 * left;
                 let newY = -1 * top;
                 _.attr('data-x', newX);
                 _.attr('data-y', newY);
                 _.css('transform', `translate(${newX}px, ${newY}px)`);
+                if (startSaving) setFlagForChanges();
             } else if (relativeY < 0) {
                 let newY = -1 * top;
                 _.attr('data-y', newY);
                 _.css('transform', `translate(${x}px, ${newY}px)`);
+                if (startSaving) setFlagForChanges();
             } else if (relativeX < 0) {
                 let newX = -1 * left;
                 _.attr('data-x', newX);
-                console.log(`translate(${newX}px, ${y}px)`)
                 _.css('transform', `translate(${newX}px, ${y}px)`);
+                if (startSaving) setFlagForChanges();
             }
             setTimeout(() => _.css('transition', 'unset'), 210);
         });
+    }
 }
 
 $(function() {
@@ -505,6 +612,17 @@ $(function() {
         backgroundImage.attr('src', '');
         backgroundImage.css('background', `url("${user.backgroundTile}") repeat`);
     }
+    savedIcon = $('#dashboard__saved');
+    savedIcon.hide();
+    savedAnim = lottie.loadAnimation({
+        container: savedIcon.get(0),
+        renderer: 'svg',
+        loop: false,
+        autoplay: false,
+        path: '/lottie/done.json'
+    });
+    savedAnim.setDirection(1);
+    savedAnim.setSpeed(1);
     const fullscreenBtn = $('#dashboard__fullscreen');
     const fullscreenAnim = lottie.loadAnimation({
         container: fullscreenBtn.get(0),
@@ -553,7 +671,7 @@ $(function() {
         tooltip: '',
         action: e => {
             const id = 'dashboard__card-' + Math.floor(Math.random() * 99999);
-            let c = card.create(id);
+            let date, time;
             notify.me({
                 header: `Create a Card`,
                 subheader: 'Enter a name and description',
@@ -569,11 +687,34 @@ $(function() {
                         </div>
                     </div>
                     <div class="dashboard__create-card-description">
-                        <div class="textarea">
-                            <textarea id="description"></textarea>
-                            <label for="description">
-                                <span>Description</span>
-                            </label>
+                        <div class="quill-wrapper" id="${id}-description-wrapper">
+                            <div class="toolbar"id="${id}-toolbar">
+                                <span class="ql-formats">
+                                    <button class="ql-bold"></button>
+                                    <button class="ql-italic"></button>
+                                    <button class="ql-underline"></button>
+                                    <button class="ql-strike"></button>
+                                    <button class="ql-link"></button>
+                                    <button class="ql-script" value="sub"></button>
+                                    <button class="ql-script" value="super"></button>
+                                </span>
+                                <span class="ql-formats">
+                                    <button class="ql-header" value="1"></button>
+                                    <button class="ql-header" value="2"></button>
+                                    <button class="ql-blockquote"></button>
+                                    <button class="ql-code-block"></button>
+                                </span>
+                                <span class="ql-formats">
+                                    <button class="ql-list" value="ordered"></button>
+                                    <button class="ql-list" value="bullet"></button>
+                                    <button class="ql-indent" value="-1"></button>
+                                    <button class="ql-indent" value="+1"></button>
+                                </span>
+                                <span class="ql-formats">
+                                    <button class="ql-clean"></button>
+                                </span>
+                            </div>
+                            <div class="quill" id="${id}-description"></div>
                         </div>
                     </div>
                 </div>
@@ -590,7 +731,7 @@ $(function() {
                             <div class="dashboard__due-date-container">
                                 <div class="dashboard__due-date-time">
                                     <div class="textbox">
-                                            <input type="time" name="time" autocomplete="off" required value="${c.time ? c.time : ""}">
+                                            <input type="time" name="time" autocomplete="off" required value="${time ? time : ""}">
                                             <label for="time">
                                                 <span>Time</span>
                                             </label>
@@ -598,7 +739,7 @@ $(function() {
                                     </div>
                                 <div class="dashboard__due-date-date">
                                     <div class="textbox">
-                                        <input type="date" name="date" autocomplete="off" required value="${c.date ? c.date : ""}">
+                                        <input type="date" name="date" autocomplete="off" required value="${date ? date : ""}">
                                         <label for="date">
                                             <span>Date</span>
                                         </label>
@@ -610,8 +751,10 @@ $(function() {
                                 text: 'Done',
                                 close: true,
                                 action: () => {
-                                    c.date = $('.dashboard__due-date-date input').attr('value'); // Get the value of $('.dashboard__create-due-date-date input')
-                                    c.time = $('.dashboard__due-date-time input').attr('value'); // Get the value of $('.dashboard__create-due-date-time input')
+                                    if ($('.dashboard__due-date-date input').attr('value') && $('.dashboard__due-date-time input').attr('value')) {
+                                        date = $('.dashboard__due-date-date input').attr('value');
+                                        time = $('.dashboard__due-date-time input').attr('value');
+                                    }
                                 }
                             }],
                             closeButton: false
@@ -623,10 +766,13 @@ $(function() {
                     text: 'Create',
                     close: true,
                     action: () => {
+                        let c = card.create(id);
                         c.name = $('.dashboard__create-card-name input').attr('value');
-                        c.description = $('.dashboard__create-card-description textarea').attr('value');
+                        c.description = $('.dashboard__create-card-description .quill-wrapper .quill .ql-editor').html();
+                        c.date = date;
+                        c.time = time;
                         addFullViewNode('/files/svg/document.svg', 'dashboard__card', c.name, id, e.x, e.y);
-                        registerCardClickEvent(c, '#' + id);
+                        registerCardClickEvent(c.id);
                     }
                 }],
                 closeButton: false
@@ -640,7 +786,6 @@ $(function() {
         tooltip: '',
         action: e => {
             let folderId = 'dashboard__folder-' + Math.floor(Math.random() * 99999);
-            let f = folder.create(folderId);
             notify.me({
                 header: 'Create a Folder',
                 subheader: 'Enter a name and description.',
@@ -656,11 +801,34 @@ $(function() {
                         </div>
                     </div>
                     <div class="dashboard__create-folder-description">
-                        <div class="textarea">
-                            <textarea id="description"></textarea>
-                            <label for="description">
-                                <span>Description</span>
-                            </label>
+                        <div class="quill-wrapper" id="${folderId}-description-wrapper">
+                            <div class="toolbar" id="${folderId}-toolbar">
+                                <span class="ql-formats">
+                                    <button class="ql-bold"></button>
+                                    <button class="ql-italic"></button>
+                                    <button class="ql-underline"></button>
+                                    <button class="ql-strike"></button>
+                                    <button class="ql-link"></button>
+                                    <button class="ql-script" value="sub"></button>
+                                    <button class="ql-script" value="super"></button>
+                                </span>
+                                <span class="ql-formats">
+                                    <button class="ql-header" value="1"></button>
+                                    <button class="ql-header" value="2"></button>
+                                    <button class="ql-blockquote"></button>
+                                    <button class="ql-code-block"></button>
+                                </span>
+                                <span class="ql-formats">
+                                    <button class="ql-list" value="ordered"></button>
+                                    <button class="ql-list" value="bullet"></button>
+                                    <button class="ql-indent" value="-1"></button>
+                                    <button class="ql-indent" value="+1"></button>
+                                </span>
+                                <span class="ql-formats">
+                                    <button class="ql-clean"></button>
+                                </span>
+                            </div>
+                            <div class="quill" id="${folderId}-description"></div>
                         </div>
                     </div>
                 </div>
@@ -669,8 +837,9 @@ $(function() {
                     text: 'Create', 
                     close: true,
                     action: () => {
+                        let f = folder.create(folderId);
                         f.name = $('.dashboard__create-folder-name input').attr('value');
-                        f.description = $('.dashboard__create-folder-description textarea').attr('value');
+                        f.description = $('.dashboard__create-folder-description .quill-wrapper .quill .ql-editor').html();
                         addFullViewNode('/files/svg/folder.svg', 'dashboard__folder', f.name, folderId, e.x, e.y);
                         contextly.init('#' + folderId, '#dashboard__full-view', []);
                         registerFolderClickEvent(folderId);
@@ -746,7 +915,10 @@ interact('.draggable').draggable({
         move: dragMoveListener,
         end (event) {
             var target = event.target;
-            setTimeout(() => target.setAttribute('dragging', 'false'), 50);
+            setTimeout(() => {
+                target.setAttribute('dragging', 'false');
+                dragging = false;
+            }, 50);
         }
     }
 });
@@ -757,6 +929,7 @@ function dragMoveListener (event) {
         return;
 
     target.setAttribute('dragging', 'true');
+    dragging = true;
 
     // keep the dragged position in the data-x/data-y attributes
     const x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx;
@@ -769,7 +942,114 @@ function dragMoveListener (event) {
     // update the posiion attributes
     target.setAttribute('data-x', x);
     target.setAttribute('data-y', y);
+    
+    if (!dashboardHasChanges && startSaving)
+        setFlagForChanges();
 }
 
 // this function is used later in the resizing and gesture demos
 window.dragMoveListener = dragMoveListener;
+
+network.on('dashboardLoadComplete', dashboard => {
+    let setPos = ($e, pos) => {
+        if ($e.length) {
+            $e.css({
+                left: pos.left,
+                top: pos.top,
+                transform: `translate(${pos.x}px, ${pos.y}px)` 
+            });
+            $e.attr('data-x', pos.x);
+            $e.attr('data-y', pos.y);
+        }
+    };
+    for (let i = 0; i < dashboard.cards.length; i++) {
+        let c = dashboard.cards[i];
+        let cRef = card.create(c.id);
+        cRef.name = c.name;
+        cRef.description = c.description;
+        cRef.date = c.date;
+        cRef.time = c.time;
+        cRef.pinned = c.pinned;
+        if (!c.currentFolderId) {
+            addFullViewNode('/files/svg/document.svg', 'dashboard__card', c.name, c.id, c.left, c.top);
+            setPos($(`#${c.id}`), c.pos);
+            registerCardClickEvent(cRef.id);
+        }
+        if (cRef.pinned)
+            $(`#${cRef.id}`).find('.dashboard__card .dashboard__pin').addClass('active');
+    }
+    for (let i = 0; i < dashboard.folders.length; i++) {
+        let f = dashboard.folders[i];
+        addFullViewNode('/files/svg/folder.svg', 'dashboard__folder', f.name, f.id, f.left, f.top);
+        setPos($(`#${f.id}`), f.pos);
+        let fRef = folder.create(f.id);
+        fRef.name = f.name;
+        fRef.description = f.description;
+        fRef.pinned = f.pinned;
+        if (fRef.pinned)
+            $(`#${f.id}`).find('.dashboard__folder .dashboard__pin').addClass('active');
+            contextly.init('#' + fRef.id, '#dashboard__full-view', []);
+        registerFolderClickEvent(fRef.id);
+        if (f.cards.length) {
+            let $folder = $(`#${f.id}`);
+            for (let c of f.cards) {
+                fRef.addCard(c.id);
+            }
+        }
+    }
+    startSaving = true;
+}).on('dashboardLoadFailed', json => {
+    notify.me({
+        header: 'Uh oh',
+        subheader: 'Something went wrong',
+        body: 'Looks like we weren\'t able to load your dashboard.<br>Please try refreshing.',
+        buttons:[{
+            text: 'Ok',
+            class: 'medium',
+            close: true
+        }]
+    })
+}).on('dashboardSaveRequest', () => {
+    let dashboard = {
+        folders: folder.folders || [],
+        cards: card.cards || []
+    };
+    let getPos = $e => {
+        if ($e.length) {
+            return {
+                left: $e.css('left'),
+                top: $e.css('top'),
+                x: $e.attr('data-x'),
+                y: $e.attr('data-y')
+            };
+        }
+        return null;
+    };
+    for (let i = 0; i < dashboard.folders.length; i++) {
+        let f = dashboard.folders[i];
+        let $f = $(`#${f.id}`);
+        f.pos = getPos($f);
+    }
+    for (let i = 0; i < dashboard.cards.length; i++) {
+        let c = dashboard.cards[i];
+        let $c = $(`#${c.id}`);
+        c.pos = getPos($c);
+    }
+    if (dashboardHasChanges && !dashboardTryingToSave) {
+        dashboardTryingToSave = true;
+        network.send('dashboardSave', dashboard);
+    }
+}).on('dashboardSaveComplete', () => {
+    dashboardHasChanges = false;
+    dashboardTryingToSave = false;
+    if (!dragging) {
+        savedIcon.fadeIn(200);
+        savedAnim.goToAndPlay(0, true);
+        if (savedFadeOut)
+            clearTimeout(savedFadeOut);
+        savedFadeOut = setTimeout(() => {
+            savedIcon.fadeOut(200);
+        }, 3000);
+    }
+}).on('dashboardSaveFailed', () => {
+}).send('dashboardLoad');

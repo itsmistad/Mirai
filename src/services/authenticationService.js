@@ -4,30 +4,57 @@ const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const session = require('express-session');
 const configKeys = require('./config/configKeys');
+const passportSocketIO = require('passport.socketio');
+const sessionstore = require('sessionstore');
 
-let log, config, mongo;
+let log, config, mongo, socket;
 
 class AuthenticationService {
     constructor(root) {
         log = root.log;
         config = root.config;
         mongo = root.mongo;
+        socket = root.socket;
     }
 
     async start(app) {
         const session_secret = await config.get(configKeys.authentication.session_secret);
         log.debug(`Session secret retrieved from configuration: ${session_secret}`);
-        // set up express-session
+        const passport_google_clientid = await config.get(configKeys.authentication.passport_google_clientid);
+        log.debug(`Passport Google Client ID retrieved from configuration: ${passport_google_clientid}`);
+        const passport_google_clientsecret = await config.get(configKeys.authentication.passport_google_clientsecret);
+        log.debug(`Passport Google Client Secret retrieved from configuration: ${passport_google_clientsecret}`);
+        const passport_google_redirect = await config.get(configKeys.authentication.passport_google_redirect);
+        log.debug(`Passport Google Client Secret retrieved from configuration: ${passport_google_redirect}`);
         //if (env.isProd)
         //    app.set('trust proxy', 1); // Trust the AWS proxy the request is coming from.
+        let mongoConfig = config['database']['mongo'];
+        let sessionStore = sessionstore.createSessionStore({
+            type: 'mongodb',
+            host: mongoConfig.host,
+            port: mongoConfig.port,
+            dbName: 'mirai',
+            collectionName: 'sessions',
+            timeout: 10000,
+            username: mongoConfig.user,
+            password: mongoConfig.pass
+        });
         app.use(session({
+            key: 'express.sid',
             secret: session_secret,
             resave: false,
             saveUninitialized: true,
+            store: sessionStore,
             cookie: {
                 //secure: env.isProd,
                 maxAge: 86400000 * 3 // 3 days
             }
+        }));
+        socket._io.use(passportSocketIO.authorize({
+            cookieParser: require('cookie-parser'),
+            key: 'express.sid', 
+            secret: session_secret,
+            store: sessionStore
         }));
         // set up passport
         app.use(passport.initialize());  
@@ -38,12 +65,6 @@ class AuthenticationService {
         passport.deserializeUser((user, done) => {  
             done(null, user);
         });
-        const passport_google_clientid = await config.get(configKeys.authentication.passport_google_clientid);
-        log.debug(`Passport Google Client ID retrieved from configuration: ${passport_google_clientid}`);
-        const passport_google_clientsecret = await config.get(configKeys.authentication.passport_google_clientsecret);
-        log.debug(`Passport Google Client Secret retrieved from configuration: ${passport_google_clientsecret}`);
-        const passport_google_redirect = await config.get(configKeys.authentication.passport_google_redirect);
-        log.debug(`Passport Google Client Secret retrieved from configuration: ${passport_google_redirect}`);
         passport.use(new GoogleStrategy(  
             {
                 clientID: passport_google_clientid,

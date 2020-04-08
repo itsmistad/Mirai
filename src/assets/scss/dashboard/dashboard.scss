@@ -33,6 +33,17 @@
     }
 }
 
+#dashboard__saved {
+    position: absolute;
+    top: 3.5em;
+    right: 0;
+    z-index: $layer_page_dashboard_full_view_buttons;
+    width: 7.8em;
+    height: 7.8em;
+    pointer-events: none;
+    user-select: none;
+}
+
 #dashboard__buttons {
     display: flex;
     position: absolute;
@@ -45,8 +56,8 @@
         padding: 0.4em;
         margin: 0.4em 0.4em 0 0;
         line-height: 0;
-        height: 40px;
-        width: 40px;
+        height: 2.5em;
+        width: 2.5em;
         background-color: gray;
         filter:invert(1);
     }
@@ -57,9 +68,8 @@
 }
 
 .dashboard__create-card-popup {
-    width: 30em;
+    width: 45em;
     max-width: 80%;
-    height: 30em;
     max-height: 80%;
 
     .dashboard__create-card-container {
@@ -76,9 +86,8 @@
 }
 
 .dashboard__create-folder-popup {
-    width: 30em;
+    width: 45em;
     max-width: 80%;
-    height: 30em;
     max-height: 80%;
 
     .dashboard__create-folder-container {
@@ -120,10 +129,10 @@
 }
 
 .dashboard__modify-popup {
-    width: 40em;
+    width: 45em;
     max-width: 80%;
-    height: 53em;
     max-height: 80%;
+    padding-top: 2.5em;
 
     .dashboard__modify-card-container {
         .dashboard__modify-card-description {
@@ -168,6 +177,9 @@
                 height: 15em;
                 overflow-y: scroll;
                 overflow-x: hidden;
+                @supports (-ms-ime-align:auto) {
+                    -ms-overflow-style: none;
+                }
                 .dashboard__modify-folder__card {
                     display: flex;
                     justify-content: space-between;
@@ -209,6 +221,7 @@
         display: flex;
         justify-content: flex-start;
         align-items: center;
+        max-width: 50em;
         .folder, .card {
             font-weight: bold;
             font-style: italic;
@@ -258,7 +271,6 @@
         z-index: 2;
         cursor: pointer;
         i {
-            transform: translate(0, 1px);
             font-size: em(12);
         }
         &:hover { 
@@ -290,9 +302,6 @@
     .dashboard__remove {
         right: unset;
         left: 0;
-        i {
-            transform: unset;
-        }
         &:hover {
             background-color: crimson;
         }
@@ -393,6 +402,9 @@ body.dark {
             &.active {
                 background-color: $color_highlighted;
             }
+        }
+        .dashboard__text {
+            max-width: 16em;
         }
         .dashboard__remove {
             &:hover {

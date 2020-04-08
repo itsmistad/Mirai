@@ -58,6 +58,9 @@
     display: flex;
     flex-direction: column;
     overflow-y: scroll;
+    @supports (-ms-ime-align:auto) {
+        -ms-overflow-style: none;
+    }
   
     .header {
         font-size: 1.5em;
@@ -81,6 +84,9 @@
         width: 100%;
         display: flex;
         justify-content: space-evenly;
+        @supports (-ms-ime-align:auto) {
+            justify-content: space-around;
+        }
     }
   
     .close {

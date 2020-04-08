@@ -17,7 +17,7 @@ $(function() {
     $('#home__tryit').click(function() {
         redirect('/dashboard?login=1');
     });
-
+    
     if (!isProd) {
         $('#home__theme-examples').css('display', 'flex');
     }

@@ -17,6 +17,7 @@ const EmailService = require('./emailService');
 const AuthenticationService = require('./authenticationService');
 const NotificationService = require('./notificationService');
 const WebService = require('./webService');
+const SocketService = require('./socketService');
 
 class RootService {
     constructor() {
@@ -29,6 +30,7 @@ class RootService {
         this.s3 = new S3Persister(this);
         this.email = new EmailService(this);
         this.notification = new NotificationService(this);
+        this.socket = new SocketService(this);
         this.auth = new AuthenticationService(this);
         this.web = new WebService(this);
     }

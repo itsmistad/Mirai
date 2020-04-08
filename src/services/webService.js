@@ -10,7 +10,7 @@ const fs = require('fs');
 const crypto = require('crypto');
 let upload;
 
-let log, app, config, root, controllers = [], env;
+let log, app, config, root, controllers = [], env, socket;
 let notification, auth;
 let routes = [
 //  ['/route/to/page', '<page>Controller', 'GET' or 'POST']
@@ -25,7 +25,10 @@ let routes = [
     ['/user/upload/banner', '/user/userController', 'POST'],
     ['/user/upload/about', '/user/userController', 'POST'],
     ['/user/upload/preferences', '/user/userController', 'POST'],
-    ['/user/upload/preferences/bg', '/user/userController', 'POST']
+    ['/user/upload/preferences/bg', '/user/userController', 'POST'],
+    ['/policies/privacy', '/policies/policiesController', 'GET'],
+    ['/policies/terms', '/policies/policiesController', 'GET'],
+    ['/policies/cookies', '/policies/policiesController', 'GET']
 ];
 
 function setStaticRoutes() {
@@ -89,9 +92,11 @@ function setRoutes() {
 
 async function hookServices() {
     // Insert any networking services here (push notifications, socket.io, etc.).
-    log.info('Starting notification service...');
+    log.info('Setting up notification service...');
     await notification.start(app);
-    log.info('Starting authentication service...');
+    log.info('Setting up socket.io service...');
+    socket.setup(app);
+    log.info('Setting up authentication service...');
     await auth.start(app);
 }
 
@@ -103,6 +108,7 @@ class WebService {
         notification = _root.notification;
         auth = _root.auth;
         env = _root.env;
+        socket = _root.socket;
     }
 
     async start() {
@@ -149,7 +155,7 @@ class WebService {
         setStaticRoutes();
         await hookServices();
         setRoutes();
-        app.listen(port, () => {
+        socket.listen(port, () => {
             log.info(`Successfully started web service! Listening on port ${port}.`);
         });
     }

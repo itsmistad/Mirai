@@ -107,10 +107,41 @@ function toggleScrollBar($e) {
     $e.toggleClass(classes.hideScroll);
 }
 
-// Set the "value" attributes and "required" formatting for any textbox on the page. Call th`is` when you add any textbox through JS.
+// Converts an HTML string into plaintext format
+function htmlToPlainText(html) {
+    let result = html;
+    result = result.replace(/<style([\s\S]*?)<\/style>/gi, '');
+    result = result.replace(/<script([\s\S]*?)<\/script>/gi, '');
+    result = result.replace(/<\/div>/ig, '\n');
+    result = result.replace(/<\/li>/ig, '\n');
+    result = result.replace(/<ul>/ig, '');
+    result = result.replace(/<\/ul>/ig, '');
+    result = result.replace(/<ol>/ig, '');
+    result = result.replace(/<\/ol>/ig, '');
+    result = result.replace(/<li>/ig, '  *  ');
+    result = result.replace(/<\/ul>/ig, '\n');
+    result = result.replace(/<\/p>/ig, '\n');
+    result = result.replace(/<br\s*[\/]?>/gi, "\n");
+    result = result.replace(/<[^>]+>/ig, '');
+    return result;
+}
+
+// Set the "value" attributes and "required" formatting for any textbox on the page. Call this when you add any textbox through JS.
 function initializeTextboxes() {
     const textBoxes = $('input[type="text"], input[type="email"], input[type="date"], input[type="time"], textarea');
     textBoxes.off('change');
+
+    // Observe all Quill containers.
+    $('.quill').each(function() {
+        let options = {
+            theme: 'snow',
+            modules: {
+                syntax: true,
+                toolbar: `#${$(this).siblings('.toolbar').attr('id')}`
+            }
+        };
+        let quill = new Quill(`#${$(this).attr('id')}`, options);
+    });
 
     // Initialized the value attribute if it's missing for each textbox.
     textBoxes.each(function() {
@@ -149,7 +180,7 @@ $(function() {
     if (!hasAcceptedCookies()) {
         notify.me({
             header: 'Cookie Policy',
-            subheader: `<a href="/">Read our cookie policy</a>`,
+            subheader: `<a href="/policies/cookies">Read our cookie policy</a>`,
             body: 'Mirai uses cookies to provide you the best planning experience.<br/>By continuing to use our website, you accept our use of cookies.',
             buttons: [{
                 text: 'Ok',
@@ -206,7 +237,7 @@ $(function() {
         const phrases = ['Welcome', 'Howdy', 'Hi', 'Hey', 'Hello'];
         const index = getRandomInt(0, phrases.length - 1);
         phrase = phrases[index];
-        loginBtn.html(`<span>${phrase}, ${user.firstName}!</span><img src="${user.picture}">`);
+        loginBtn.html(`<div>${phrase}, ${user.firstName}!</div><img src="${user.picture}">`);
     
         contextly.init('#header__button-login', '#layout__main', [{
             text: 'Logout',
@@ -242,3 +273,5 @@ $(function() {
 if (user.notifySound || user.notifySound == null) {
     notify.initSound('default', '/files/notify.mp3');
 }
+
+notify.initNetwork();
