@@ -1,7 +1,7 @@
 'use strict';
 
 const configKeys = require('./config/configKeys');
-let mongo, config;
+let mongo, config, _loggingLevel;
 
 /*
  * This service implements 3 methods for logging: info, error, and debug.
@@ -13,6 +13,7 @@ class LogService {
     constructor(root) {
         mongo = root.mongo;
         config = root.config;
+        _loggingLevel = 3;
         this.colors = {
             reset: '\x1b[0m',
             bright: '\x1b[1m',
@@ -38,6 +39,9 @@ class LogService {
             bg_cyan: '\x1b[46m',
             bg_white: '\x1b[47m'
         };
+        config.get(configKeys.logging.level).then(result => {
+            _loggingLevel = result;
+        });
     }
 
     filterColorTags(message) {
@@ -54,8 +58,8 @@ class LogService {
         return message;
     }
 
-    async error(message, skipDbSave) {
-        const loggingLevel = !skipDbSave ? await config.get(configKeys.logging.level) : 3;
+    error(message, skipDbSave) {
+        const loggingLevel = !skipDbSave ? _loggingLevel: 3;
         return new Promise((resolve, reject) => {
             try {
                 if (loggingLevel >= 1) {
@@ -74,8 +78,8 @@ class LogService {
         });
     }
     
-    async info(message, skipDbSave) {
-        const loggingLevel = !skipDbSave ? await config.get(configKeys.logging.level) : 3;
+    info(message, skipDbSave) {
+        const loggingLevel = !skipDbSave ? _loggingLevel : 3;
         return new Promise((resolve, reject) => {
             try {
                 if (loggingLevel >= 2) {
@@ -94,8 +98,8 @@ class LogService {
         });
     }
     
-    async debug(message, skipDbSave) {
-        const loggingLevel = !skipDbSave ? await config.get(configKeys.logging.level) : 3;
+    debug(message, skipDbSave) {
+        const loggingLevel = !skipDbSave ? _loggingLevel : 3;
         return new Promise((resolve, reject) => {
             try {
                 if (config['log']['debug'] && loggingLevel >= 3) {

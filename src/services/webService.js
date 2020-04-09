@@ -95,7 +95,7 @@ async function hookServices() {
     log.info('Setting up notification service...');
     await notification.start(app);
     log.info('Setting up socket.io service...');
-    socket.setup(app);
+    await socket.setup(app);
     log.info('Setting up authentication service...');
     await auth.start(app);
 }
@@ -112,6 +112,9 @@ class WebService {
     }
 
     async start() {
+        log.info('Current directory: ' + __dirname);
+        log.info('Current working directory: ' + process.cwd());
+
         const port = parseInt(process.env.PORT || await config.get(configKeys.web.port));
         log.debug(`Port retrieved from configuration: ${port}`);
 

@@ -2,14 +2,14 @@
 
 let saveIntervals = [], mongo, log;
 
-function startSaveInterval(client, dashboard) {
+function startSaveInterval(client, user, dashboard) {
     client.emit('dashboardLoadComplete', {
         folders: dashboard.folders,
         cards: dashboard.cards
     });  
 
     saveIntervals.push({
-        googleId: client.request.user.googleId,
+        googleId: user.googleId,
         interval: setInterval(() => {
             client.emit('dashboardSaveRequest');
         }, 3000)
@@ -25,25 +25,25 @@ class DashboardLoadHandler {
     }
 
     // eslint-disable-next-line no-unused-vars
-    async handle(io, client, data) {
-        if (!client.request.user.logged_in) {
+    async handle(io, client, user, data) {
+        if (!user.googleId) {
             client.emit('dashboardLoadFailed', {
                 message: 'You must be logged in to load a dashboard.'
             });  
             return;
         }
 
-        let previousInterval = saveIntervals.find(_ => _.googleId === client.request.user.googleId);
+        let previousInterval = saveIntervals.find(_ => _.googleId === user.googleId);
         if (previousInterval) 
             clearInterval(previousInterval.interval);
 
-        let user = await mongo.find('users', {
-            googleId: client.request.user.googleId
+        let userObj = await mongo.find('users', {
+            googleId: user.googleId
         });
 
         log.debug('Loading dashboard for user: ' + user.googleId);
 
-        if (!user.dashboardId) {
+        if (!userObj.dashboardId) {
             let dashboard = {
                 ownerGoogleId: user.googleId,
                 folders: [],
@@ -61,12 +61,12 @@ class DashboardLoadHandler {
                     }
                 });
             });
-            startSaveInterval(client, dashboard);
+            startSaveInterval(client, user, dashboard);
         } else {
             // Load the user's personal dashboard.
-            mongo.get('dashboards', user.dashboardId)
+            mongo.get('dashboards', userObj.dashboardId)
                 .then(dashboard => {
-                    startSaveInterval(client, dashboard);
+                    startSaveInterval(client, user, dashboard);
                 })
                 .catch(() => {
                     // If the user has a dashboard id but no dashboard entry, something is very wrong. Clear the id and warn the user.
