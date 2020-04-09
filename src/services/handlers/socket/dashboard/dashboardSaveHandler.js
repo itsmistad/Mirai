@@ -12,8 +12,8 @@ class DashboardSaveHandler {
         mongo = root.mongo;
     }
 
-    async handle(io, client, data) {
-        if (!client.request.user.logged_in) {
+    async handle(io, client, user, data) {
+        if (!user.googleId) {
             client.emit('dashboardSaveFailed', {
                 message: 'You must be logged in to save a dashboard.'
             });  
@@ -36,11 +36,11 @@ class DashboardSaveHandler {
             }
             result[key] = data[key];
         }
-        let user = await mongo.find('users', {
-            googleId: client.request.user.googleId
+        let userObj = await mongo.find('users', {
+            googleId: user.googleId
         });
         mongo.update('dashboards', {
-            _id: user.dashboardId
+            _id: userObj.dashboardId
         }, {
             $set: {
                 folders: result.folders,

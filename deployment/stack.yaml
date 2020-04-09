@@ -25,7 +25,7 @@ Resources:
       - Namespace: aws:autoscaling:launchconfiguration
         OptionName: IamInstanceProfile
         Value: aws-elasticbeanstalk-ec2-role # This role is one you must create in IAM (and it must have the following policies attached: AWSElasticBeanstalkWebTier, AWSElasticBeanstalkMulticontainerDocker, and AWSElasticBeanstalkWorkerTier).
-      SolutionStackName: 64bit Amazon Linux 2018.03 v4.13.1 running Node.js
+      SolutionStackName: 64bit Amazon Linux 2018.03 v4.14.1 running Node.js
   MiraiApplicationVersion:
     Type: AWS::ElasticBeanstalk::ApplicationVersion
     Properties:

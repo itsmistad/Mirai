@@ -30,15 +30,21 @@ class ConfigService {
         }
     }
 
-    async get(entry) {
-        try {
-            const result = await this.root.mongo.find('config', {
-                key: entry.key
-            }); 
-            return result.value;
-        } catch (ex) {
-            return entry.defaultValue;
-        }
+    get(entry) {
+        return new Promise(resolve => {
+            try {
+                this.root.mongo.find('config', {
+                    key: entry.key
+                }).then(result => {
+                    if (result && result.value)
+                        resolve(result.value);
+                    else
+                        resolve(entry.defaultValue);
+                });
+            } catch (ex) {
+                resolve(entry.defaultValue);
+            }
+        });
     }
 }
 

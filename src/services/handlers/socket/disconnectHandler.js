@@ -9,8 +9,8 @@ class DisconnectHandler {
     }
 
     // eslint-disable-next-line no-unused-vars
-    handle(io, client, data) {
-        log.debug('Disconnected a client: ' + JSON.stringify(client.request.user));
+    handle(io, client, user, data) {
+        log.debug('Disconnected a client: ' + JSON.stringify(user));
     }
 }
 
