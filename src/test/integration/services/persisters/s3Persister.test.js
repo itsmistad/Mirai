@@ -9,31 +9,33 @@ let s3;
 describe('[INTEGRATION] s3Persister', function() {
     before(function() {
         IntegrationTest.Setup();
-        s3 = IntegrationTest.Root._s3;
+        s3 = IntegrationTest.Root.s3;
     });
     describe('#save()', function() {
-        // This test is temporarily disabled. Enable it once our code deploys to production and the S3 bucket "mirai-app" exists.
-        it.skip('should save a file to an S3 bucket', function(done) {
-            s3.save('TestFile', {
-                Body: 'Body'
-            }).then(() => {
+        it('should save a file to an S3 bucket', function(done) {
+            let timeout;
+            timeout = setTimeout(() => done('Failed to save the test file within 10 seconds. Is our S3 bucket online?'), 9950);
+            s3.save('TestFile', 'content').then(() => {
+                clearTimeout(timeout);
+                timeout = null;
                 done();
             }).catch(err => {
                 done(err);
             });
-            setTimeout(done('Failed to save the test file within 5 seconds. Is our S3 bucket online?'), 4950);
         });
     });
 
     describe('#get()', function() {
-        // This test is temporarily disabled. Enable it once our code deploys to production and the S3 bucket "mirai-app" exists.
-        it.skip('should retrieve a file from an S3 bucket', function(done) {
+        it('should retrieve a file from an S3 bucket', function(done) {
+            let timeout;
+            timeout = setTimeout(() => done('Failed to retrieve the test file within 10 seconds. Is our S3 bucket online?'), 9950);
             s3.get('TestFile').then(() => {
+                clearTimeout(timeout);
+                timeout = null;
                 done();
             }).catch(err => {
                 done(err);
             });
-            setTimeout(done('Failed to retrieve the test file within 5 seconds. Is our S3 bucket online?'), 4950);
         });
     });
 });

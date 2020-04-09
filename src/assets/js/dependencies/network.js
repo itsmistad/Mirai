@@ -22,13 +22,14 @@ const network = new function() {
     const log = m => obj.debug ? console.log(m) : {};
     const logErr = e => obj.debug ? console.error(e) : {};
 
-    obj.debug = false;
+    obj.debug = true;
 
     obj.on = (event, func) => {
         if (!connection && io) {
             const baseUrl = window.location.href.split('/').length > 2 ? window.location.href.replace(window.location.href.split('/')[3], '') : window.location.href;
             if (baseUrl.endsWith('3001/'))
                 baseUrl.replace('3001/', '3000');
+            baseUrl.replace('https://', '');
             log(`Connecting to ${baseUrl}...`);
             connection = io.connect(baseUrl);
             if (connection) {

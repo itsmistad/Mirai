@@ -22,8 +22,6 @@ describe('[UNIT] logService', function() {
         });
         UnitTest.Root.mongo = new MongoDbPersister(UnitTest.Root);
         saveStub = sinon.stub(UnitTest.Root.mongo, 'save').callsFake(() => {});
-        log = new LogService(UnitTest.Root);
-        logStub = sinon.stub(log, 'log').callsFake(() => {});
     });
 
     it('should export service', function() {
@@ -37,6 +35,8 @@ describe('[UNIT] logService', function() {
                 key: configKeys.logging.level.key,
                 value: 3
             }]);
+            log = new LogService(UnitTest.Root);
+            logStub = sinon.stub(log, 'log').callsFake(() => {});
             // execute
             log.debug('debug').then(data => {
                 // assert
@@ -58,6 +58,8 @@ describe('[UNIT] logService', function() {
                 key: configKeys.logging.level.key,
                 value: 2
             }]);
+            log = new LogService(UnitTest.Root);
+            logStub = sinon.stub(log, 'log').callsFake(() => {});
             // execute
             log.info('info').then(data => {
                 // assert
@@ -79,6 +81,8 @@ describe('[UNIT] logService', function() {
                 key: configKeys.logging.level.key,
                 value: 1
             }]);
+            log = new LogService(UnitTest.Root);
+            logStub = sinon.stub(log, 'log').callsFake(() => {});
             // execute
             log.error('error').then(data => {
                 // assert

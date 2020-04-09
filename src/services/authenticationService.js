@@ -4,10 +4,9 @@ const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const session = require('express-session');
 const configKeys = require('./config/configKeys');
-const passportSocketIO = require('passport.socketio');
-const sessionstore = require('sessionstore');
+const MongoStore = require('connect-mongo')(session);
 
-let log, config, mongo, socket;
+let log, config, mongo, socket, env;
 
 class AuthenticationService {
     constructor(root) {
@@ -15,6 +14,7 @@ class AuthenticationService {
         config = root.config;
         mongo = root.mongo;
         socket = root.socket;
+        env = root.env;
     }
 
     async start(app) {
@@ -26,36 +26,26 @@ class AuthenticationService {
         log.debug(`Passport Google Client Secret retrieved from configuration: ${passport_google_clientsecret}`);
         const passport_google_redirect = await config.get(configKeys.authentication.passport_google_redirect);
         log.debug(`Passport Google Client Secret retrieved from configuration: ${passport_google_redirect}`);
-        //if (env.isProd)
-        //    app.set('trust proxy', 1); // Trust the AWS proxy the request is coming from.
+        if (env.isProd)
+            app.set('trust proxy', 1); // Trust the AWS proxy the request is coming from.
         let mongoConfig = config['database']['mongo'];
-        let sessionStore = sessionstore.createSessionStore({
-            type: 'mongodb',
-            host: mongoConfig.host,
-            port: mongoConfig.port,
-            dbName: 'mirai',
-            collectionName: 'sessions',
-            timeout: 10000,
-            username: mongoConfig.user,
-            password: mongoConfig.pass
+        let mongoStore = new MongoStore({
+            url: `mongodb://${mongoConfig.user && mongoConfig.pass ? mongoConfig.user + ':' + mongoConfig.pass + '@' : ''}${mongoConfig.host}:${mongoConfig.port}/`,
+            ttl: 7 * 24 * 60 * 60, // 7 days
+            dbName: 'mirai'
         });
-        app.use(session({
+        let sessionMiddleware = session({
             key: 'express.sid',
             secret: session_secret,
             resave: false,
             saveUninitialized: true,
-            store: sessionStore,
+            store: mongoStore,
             cookie: {
-                //secure: env.isProd,
-                maxAge: 86400000 * 3 // 3 days
+                secure: env.isProd,
+                maxAge: 86400000 * 7 // 7 days
             }
-        }));
-        socket._io.use(passportSocketIO.authorize({
-            cookieParser: require('cookie-parser'),
-            key: 'express.sid', 
-            secret: session_secret,
-            store: sessionStore
-        }));
+        });
+        app.use(sessionMiddleware);
         // set up passport
         app.use(passport.initialize());  
         app.use(passport.session()); 
@@ -76,6 +66,9 @@ class AuthenticationService {
                 return cb(null, profile);
             },
         ));
+        socket._io.use(function(socket, next) {
+            sessionMiddleware(socket.request, {}, next);
+        });
         this.passport = passport;
         log.info('Successfully started authentication service!');
     }

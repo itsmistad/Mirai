@@ -321,9 +321,9 @@
         }
     }
     & > span {
-        margin-top: 0.2em;
-        text-shadow: -1px -1px 1px rgba(255,255,255,0.3), -1px 1px 1px rgba(255,255,255,0.3), 1px 1px 1px rgba(255,255,255,0.3), 1px -1px 1px rgba(255,255,255,0.3);
-        color: $color_body;
+        margin-top: 0.2em; 
+        text-shadow: -1px -1px 1px rgba(0,0,0,0.5), -1px 1px 1px rgba(0,0,0,0.5), 1px 1px 1px rgba(0,0,0,0.5), 1px -1px 1px rgba(0,0,0,0.5);
+        color: whitesmoke;
         text-align: center;
         font-weight: bold;
         font-family: $font_header;

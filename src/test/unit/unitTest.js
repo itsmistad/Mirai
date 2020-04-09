@@ -2,16 +2,18 @@
 
 const MockRootService = require('../mocks/mockRootService');
 const ConfigService = require('../../services/config/configService');
+const EnvironmentService = require('../../services/environmentService');
 const sinon = require('sinon');
 let configStub, dbConfigValues = {};
 
 class UnitTest {
     static Setup() {
         this.Root = new MockRootService();
-        this.Root.config = new ConfigService(this);
+        this.Root.config = new ConfigService(this.Root);
         this.Root.config.load();
+        this.Root.env = new EnvironmentService(this.Root);
         configStub = sinon.stub(this.Root.config, 'get');
-        configStub.callsFake(configKey => dbConfigValues[configKey.key]);
+        configStub.callsFake(configKey => Promise.resolve(dbConfigValues[configKey.key]));
     }
 
     static SetJsonConfig(config) {

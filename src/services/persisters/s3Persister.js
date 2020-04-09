@@ -6,9 +6,9 @@ let log;
 class S3Persister {
     constructor(root) {
         this._s3 = new AWS.S3();
-        this._bucketName = 'mirai-app-prod';
+        this._bucketName = root.env.isProd ? 'mirai-app-prod' : 'mirai-app-dev';
         log = root.log;
-    }
+    } 
 
     /*
      * contentEncoding is an optional flag that defaults to "utf-8". Another acceptable value is "binary", for example.
@@ -37,7 +37,7 @@ class S3Persister {
         var putObjectPromise = this._s3.putObject(params).promise();
         return putObjectPromise.then(data => {
             return data;
-        }).catch(err => log.error(`Failed to retrieve item with key "${key}" to bucket "${this._bucketName}". Error: ${err}`));
+        }).catch(err => log.error(`Failed to save item with key "${key}" to bucket "${this._bucketName}". Error: ${err}`));
     }
 
     delete(key) {
