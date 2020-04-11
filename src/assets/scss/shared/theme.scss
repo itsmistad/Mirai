@@ -719,6 +719,10 @@ $header_height: 4em;
     z-index: $layer_page_header_and_footer;
     width: 100%;
     height: 4em;
+    
+    #footer__version {
+        font-size: em(12);
+    }
 
     #footer__left-container {
         display: flex;
