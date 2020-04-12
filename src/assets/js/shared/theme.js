@@ -237,7 +237,7 @@ $(function() {
         const phrases = ['Welcome', 'Howdy', 'Hi', 'Hey', 'Hello'];
         const index = getRandomInt(0, phrases.length - 1);
         phrase = phrases[index];
-        loginBtn.html(`<div>${phrase}, ${user.firstName}!</div><img src="${user.picture}">`);
+        loginBtn.html(`<div>${phrase}, ${user.displayName || user.firstName}!</div><img src="${user.picture}">`);
     
         contextly.init('#header__button-login', '#layout__main', [{
             text: 'Logout',

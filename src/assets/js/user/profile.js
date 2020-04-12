@@ -25,9 +25,9 @@ $(function() {
         $('#profile__display-name').text(paramUser.displayName);
     } else 
         $('#profile__display-name').addClass('full-hidden');
-    $('#profile__cards').html(`<p>${paramUser.googleId === user.googleId ? 'You aren\'t' : paramUser.firstName + ' isn\'t'} currently working on any cards.</p>`);
-    $('#profile__projects').html(`<p>${paramUser.googleId === user.googleId ? 'You aren\'t' : paramUser.firstName + ' isn\'t'} currently working on any projects.</p>`);
-    $('#profile__groups').html(`<p>${paramUser.googleId === user.googleId ? 'You aren\'t' : paramUser.firstName + ' isn\'t'} currently in any groups.</p>`);
+    $('#profile__cards').html(`<p>${paramUser.googleId === user.googleId ? 'You aren\'t' : (paramUser.displayName || paramUser.firstName) + ' isn\'t'} currently working on any cards.</p>`);
+    $('#profile__projects').html(`<p>${paramUser.googleId === user.googleId ? 'You aren\'t' : (paramUser.displayName || paramUser.firstName) + ' isn\'t'} currently working on any projects.</p>`);
+    $('#profile__groups').html(`<p>${paramUser.googleId === user.googleId ? 'You aren\'t' : (paramUser.displayName || paramUser.firstName) + ' isn\'t'} currently in any groups.</p>`);
     if (paramUser.friends && paramUser.friends.length) { // If the paramUser has friends...
         if (paramUser.googleId === user.googleId) { // If we are the paramUser...
             // Populate list of friends by picture icons.
@@ -38,13 +38,13 @@ $(function() {
                 // Populate list of mutuals between us and the paramUser.
                 // Icon functionality should be exactly the same as the normal friends list.
             } else {
-                $('#profile__friends-text').text(`You have no mutuals with ${paramUser.firstName}.`);
+                $('#profile__friends-text').text(`You have no mutuals with ${paramUser.displayName || paramUser.firstName}.`);
             }
         }
     } else if (paramUser.googleId === user.googleId)
         $('#profile__friends-text').text('You currently have no friends. 🙁');
     else 
-        $('#profile__friends-text').text(`You have no mutuals with ${paramUser.firstName}.`);
+        $('#profile__friends-text').text(`You have no mutuals with ${paramUser.displayName || paramUser.firstName}.`);
 
     if (!user.googleId || paramUser.googleId !== user.googleId) {
         $('#profile__edit-button').attr('disabled', true);

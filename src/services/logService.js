@@ -64,7 +64,7 @@ class LogService {
             try {
                 if (loggingLevel >= 1) {
                     const obj = {
-                        time: new Date().toISOString(),
+                        time: new Date(),
                         type: 'ERROR',
                         message: this.filterColorTags(message)
                     };
@@ -84,7 +84,7 @@ class LogService {
             try {
                 if (loggingLevel >= 2) {
                     const obj = {
-                        time: new Date().toISOString(),
+                        time: new Date(),
                         type: 'INFO',
                         message: this.filterColorTags(message)
                     };
@@ -104,7 +104,7 @@ class LogService {
             try {
                 if (config['log']['debug'] && loggingLevel >= 3) {
                     const obj = {
-                        time: new Date().toISOString(),
+                        time: new Date(),
                         type: 'DEBUG',
                         message: this.filterColorTags(message)
                     };

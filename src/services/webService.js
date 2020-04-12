@@ -53,7 +53,6 @@ function setRoutes() {
     app.set('partials', {
         loading: 'shared/loading',
         header: 'shared/header',
-       
         footer: 'shared/footer'
     });
     app.engine('hjs', require('hogan-express'));
