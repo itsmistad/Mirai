@@ -455,7 +455,7 @@ const folder = Object.freeze(new function() {
                                 ${c.name}
                             </div>
                         `,
-                        tooltip: '',
+                        tooltip: 'Modify Card',
                         action: () => { },
                         onShow: $e => {
                             $(`#${$e.attr('id')} .banner`).text(c.name);
@@ -465,7 +465,7 @@ const folder = Object.freeze(new function() {
                 } else if (contextOptions.length === 3) {
                     contextOptions.push({
                         text: 'View More',
-                        tooltip: '',
+                        tooltip: 'View More',
                         action: () => {
                             $('#' + f.id).click();
                         }
@@ -501,7 +501,7 @@ const folder = Object.freeze(new function() {
                                     ${card.name}
                                 </div>
                             `,
-                            tooltip: '',
+                            tooltip: 'Modify Card',
                             action: () => { },
                             onShow: $e => {
                                 $(`#${$e.attr('id')} .banner`).text(card.name);
@@ -513,7 +513,7 @@ const folder = Object.freeze(new function() {
                 if (f.cards.length > 3) {
                     contextOptions.push({
                         text: 'View More',
-                        tooltip: '',
+                        tooltip: 'View More',
                         action: () => {
                             $('#' + f.id).click();
                         }
@@ -668,7 +668,7 @@ $(function() {
     contextly.init('#dashboard__full-view', '#dashboard__full-view', [{
         icon: 'document',
         text: 'Create a card',
-        tooltip: '',
+        tooltip: 'Create Card',
         action: e => {
             const id = 'dashboard__card-' + Math.floor(Math.random() * 99999);
             let date, time;
@@ -783,7 +783,7 @@ $(function() {
     }, {
         icon: 'add-folder',
         text: 'Create a folder',
-        tooltip: '',
+        tooltip: 'Create Folder',
         action: e => {
             let folderId = 'dashboard__folder-' + Math.floor(Math.random() * 99999);
             notify.me({

@@ -12,8 +12,8 @@
                 <img src="/files/svg/grid.svg" width="100%" height="100%"/>
             </div>
             <div id="dashboard__buttons">
-                <button id="dashboard__return-nodes" class="dashboard__button"></button>
-                <button id="dashboard__fullscreen" class="dashboard__button"></button>
+                <button id="dashboard__return-nodes" class="dashboard__button" title="Return lost nodes"></button>
+                <button id="dashboard__fullscreen" class="dashboard__button" title="Fullscreen"></button>
             </div>
             <div id="dashboard__saved"></div>
         </div>

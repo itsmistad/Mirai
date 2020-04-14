@@ -102,9 +102,9 @@ const contextly = new function() {
             optionId = `${currentContext.menu.id}-${Math.round(Math.random() * Math.floor(99999))}`;
             let menuItem;
             if (o.href !== '')
-                ul.append(`<a href="${o.href}" style="text-decoration:none"><li id="${optionId}">${o.icon !== '' ? '<span class="icon ' + o.icon + '">' : ''}</span><span class="text">${o.text}</span></li></a>`);
+                ul.append(`<a href="${o.href}" ${o.tooltip !== '' ? 'title="' + o.tooltip + '"' : ''} style="text-decoration:none"><li id="${optionId}">${o.icon !== '' ? '<span class="icon ' + o.icon + '">' : ''}</span><span class="text">${o.text}</span></li></a>`);
             else {
-                ul.append(`<li id="${optionId}">${o.icon !== '' ? '<span class="icon ' + o.icon + '">' : ''}</span><span class="text">${o.text}</span></li>`);
+                ul.append(`${o.tooltip !== '' ? '<a href="#" title="' + o.tooltip + '">' : ''}<li id="${optionId}">${o.icon !== '' ? '<span class="icon ' + o.icon + '">' : ''}</span><span class="text">${o.text}</span></li>${o.tooltip !== '' ? '</a>' : ''}`);
                 menuItem = $('#' + optionId);
                 menuItem.rightClick(() => {});
             }
