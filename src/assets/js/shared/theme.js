@@ -241,24 +241,28 @@ $(function() {
     
         contextly.init('#header__button-login', '#layout__main', [{
             text: 'Logout',
+            tooltip: 'Adios!',
             href: '/auth/logout',
             action: () => {
                 redirect('/auth/logout');
             }
         }, {
             text: 'Preferences',
+            tooltip: 'Lets sort things out.',
             href: '/user/preferences',
             action: () => {
                 redirect('/user/preferences');
             }
         }, {
             text: 'Profile',
+            tooltip: 'Identify Yourself!',
             href: `/user/profile?googleId=${user.googleId}`,
             action: () => {
                 redirect(`/user/profile?googleId=${user.googleId}`);
             }
         }, {
             text: 'Dashboard',
+            tooltip: 'Lets get to it!',
             href: '/dashboard',
             action: () => {
                 redirect('/dashboard');
