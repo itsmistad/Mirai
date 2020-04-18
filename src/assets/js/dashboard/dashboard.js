@@ -1,3 +1,6 @@
+
+overrideLoading('dashboard');
+
 let dashboardHasChanges = false;
 let startSaving = false;
 let dashboardTryingToSave = false;
@@ -859,6 +862,7 @@ $(function() {
     });
     if (user.nightMode && !user.backgroundTile)
         $('#dashboard__full-view .background img').attr('src', '/files/svg/grid-black.svg');
+    finishLoading('dashboard');
 });
 
 interact('.dashboard__folder-wrapper').dropzone({

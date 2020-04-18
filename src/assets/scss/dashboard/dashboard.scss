@@ -1,8 +1,25 @@
 @import "../shared/util.scss";
 @import "../shared/vars.scss";
 
-#dashboard__sneak-peek {
-    min-height: 20em;
+#dashboard__sneak-peek-wrapper {
+    display: flex;
+    flex: 1;
+    justify-content: center;
+    margin-bottom: 2em;
+
+    #dashboard__sneak-peek {
+        min-height: 20em;
+        width: 80em;
+        max-width: 80%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: flex-start;
+
+        #dashboard__sneak-peek__nothing-due {
+            align-self: center;
+        }
+    }
 }
 
 #dashboard__full-view { 
@@ -68,9 +85,13 @@
 }
 
 .dashboard__create-card-popup {
-    width: 45em;
+    width: 60em;
+    height: 80%;
     max-width: 80%;
-    max-height: 80%;
+
+    div.quill-wrapper .quill .ql-editor {
+        min-height: 55em;
+    }
 
     .dashboard__create-card-container {
         display: flex;
@@ -86,9 +107,13 @@
 }
 
 .dashboard__create-folder-popup {
-    width: 45em;
+    width: 60em;
+    height: 80%;
     max-width: 80%;
-    max-height: 80%;
+
+    div.quill-wrapper .quill .ql-editor {
+        min-height: 55em;
+    }
 
     .dashboard__create-folder-container {
         display: flex;
@@ -129,10 +154,14 @@
 }
 
 .dashboard__modify-popup {
-    width: 45em;
+    width: 70em;
+    height: 80%;
     max-width: 80%;
-    max-height: 80%;
     padding-top: 2.5em;
+
+    div.quill-wrapper .quill .ql-editor {
+        min-height: 55em;
+    }
 
     .dashboard__modify-card-container {
         .dashboard__modify-card-description {
