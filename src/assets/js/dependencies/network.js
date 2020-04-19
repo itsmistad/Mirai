@@ -22,7 +22,7 @@ const network = new function() {
     const log = m => obj.debug ? console.log(m) : {};
     const logErr = e => obj.debug ? console.error(e) : {};
 
-    obj.debug = true;
+    obj.debug = false;
 
     obj.on = (event, func) => {
         if (!connection && io) {
