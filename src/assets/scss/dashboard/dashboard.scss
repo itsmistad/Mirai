@@ -3,21 +3,54 @@
 
 #dashboard__sneak-peek-wrapper {
     display: flex;
-    flex: 1;
     justify-content: center;
     margin-bottom: 2em;
+    overflow-y: scroll;
+    height: 18em;
 
     #dashboard__sneak-peek {
-        min-height: 20em;
         width: 80em;
         max-width: 80%;
         display: flex;
         flex-direction: column;
-        justify-content: center;
-        align-items: flex-start;
+        justify-content: flex-start;
 
         #dashboard__sneak-peek__nothing-due {
             align-self: center;
+            display: none;
+        }
+
+        &.nothing-due {
+            justify-content: center;
+            #dashboard__sneak-peek__nothing-due {
+                display: block;
+            }
+        }
+
+        .dashboard__sneak-peek__node {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-direction: row;
+            margin: 0.8em;
+            padding: 0.4em;
+            border-radius: 6px;
+            transition: $transition_200;
+
+            &:hover {
+                cursor: pointer;
+                transform: scale(1.01);
+            }
+
+            .name {
+                text-align: left;
+                flex: 3;
+            }
+            .due-date-time {
+                text-align: right;
+                color: #aaa;
+                flex: 2;
+            }
         }
     }
 }
@@ -313,6 +346,9 @@
             background-color: $color_highlighted !important;
         }
     }
+    .dashboard__text {
+        max-width: 16em;
+    }
     .dashboard__counter {
         display: none;
         opacity: 0;
@@ -383,6 +419,9 @@
     img {
         user-select: none;
     }
+    &.hovered {
+        background: $color_dark_accent;
+    }
 }
 
 .dashboard__card-wrapper {
@@ -406,6 +445,9 @@ body.dark {
     .dashboard__card,
     .dashboard__folder {
         background-color: $color_accent;
+        &.hovered {
+            background: $color_dark_accent;
+        }
     }
 
     .dashboard__modify-popup__path-wrapper {
@@ -431,9 +473,6 @@ body.dark {
             &.active {
                 background-color: $color_highlighted;
             }
-        }
-        .dashboard__text {
-            max-width: 16em;
         }
         .dashboard__remove {
             &:hover {

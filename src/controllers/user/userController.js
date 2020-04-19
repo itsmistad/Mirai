@@ -80,7 +80,8 @@ class UserController {
                     priorityStyle: req.body.priorityStyle,
                     nightMode: req.body.nightMode,
                     notifySound: req.body.notifySound,
-                    backgroundTileName: req.body.backgroundTileName
+                    backgroundTileName: req.body.backgroundTileName,
+                    cardsInProfile: req.body.cardsInProfile
                 }
             });
             res.send({

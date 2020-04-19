@@ -4,7 +4,7 @@
  * This script contains a handler that fades in the interface when the document is ready.
  */
 
-let ready, loading = [];
+let ready, loading = ['default'];
 
 // If the document is still not ready after 500 ms, show the loading animation.
 setTimeout(() => {
@@ -21,8 +21,6 @@ function overrideLoading(key) {
 
 // Clears out the loading screen and animation.
 function finishLoading(key) {
-    console.log(key);
-    console.log(loading);
     if (loading.includes(key)) {
         loading.splice(loading.findIndex(_ => _ === key), 1);
         if (loading.length !== 0) return;
@@ -42,6 +40,5 @@ function finishLoading(key) {
 }
 
 $(function() {
-    if (loading.length === 0)
-        finishLoading('default');
+    finishLoading('default');
 });

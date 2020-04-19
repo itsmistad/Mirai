@@ -12,11 +12,13 @@ function setFlagForChanges() {
 }
 
 function limitText(text) {
-    return text.length > 30 ? text.replace(/^(.{30}[^\s]*).*/, '$1...') : text;
+    let newText = text.length > 30 ? text.replace(/^(.{30}[^\s]*).*/, '$1...') : text;
+    return newText.replace('...', '') === text ? text : newText;
 }
 
 function limitText80(text) {
-    return text.length > 80 ? text.replace(/^(.{80}[^\s]*).*/, '$1...') : text;
+    let newText = text.length > 80 ? text.replace(/^(.{80}[^\s]*).*/, '$1...') : text;
+    return newText.replace('...', '') === text ? text : newText;
 }
 
 function addFullViewNode(iconPath, nodeClass, text, id, x = mouse.x, y = mouse.y) {
@@ -56,6 +58,9 @@ function addFullViewNode(iconPath, nodeClass, text, id, x = mouse.x, y = mouse.y
                 action: () => {
                     let nodeWrapper = $(this).parent().parent();
                     nodeWrapper.fadeOut(200, 'swing', () => nodeWrapper.remove());
+                    $(`#dashboard__sneak-peek__node__${nodeWrapper.attr('id')}`).remove();
+                    if (!$('#dashboard__sneak-peek').children().not('#dashboard__sneak-peek__nothing-due').length)
+                        $('#dashboard__sneak-peek').addClass('nothing-due');
                     let f = folder.find(nodeWrapper.attr('id'));
                     let c = card.find(nodeWrapper.attr('id'));
                     if (f) { // If the node we're removing is a folder...
@@ -74,6 +79,105 @@ function addFullViewNode(iconPath, nodeClass, text, id, x = mouse.x, y = mouse.y
         });
         return false;
     });
+}
+
+function getDateFromCardDateTime(cardId) {
+    let c = card.find(cardId);
+    if (c.date) {
+        let dateArray = c.date.split(/\D/);
+        let timeArray = c.time.split(':');
+        let date;
+        if (c.time)
+            date = new Date(dateArray[0], --dateArray[1], dateArray[2], timeArray[0], timeArray[1], 0);
+        else
+            date = new Date(dateArray[0], --dateArray[1], dateArray[2], 10, 0, 0);
+
+        return date;
+    }
+    return null;
+}
+
+function setSneakPeekNodeDateTime(cardId) {
+    let c = card.find(cardId);
+    if (c.date) {
+        let date = getDateFromCardDateTime(cardId);
+
+        let tomorrowDate = new Date();
+        let todayDate = new Date(tomorrowDate);
+        tomorrowDate.setDate(tomorrowDate.getDate() + 1);
+        let isDueToday = date.getFullYear() === todayDate.getFullYear() &&
+            date.getMonth() === todayDate.getMonth() &&
+            date.getDate() === todayDate.getDate();
+        let isDueTomorrow = date.getFullYear() === tomorrowDate.getFullYear() &&
+            date.getMonth() === tomorrowDate.getMonth() &&
+            date.getDate() === tomorrowDate.getDate();
+        let time;
+        let minutes = date.getMinutes() + '';
+        if (date.getMinutes() < 10)
+            minutes = '0' + minutes;
+        if (date.getHours() === 0)
+            time = `12:${minutes} AM`;
+        else if (date.getHours() < 12 && date.getHours() > 0)
+            time = `${date.getHours()}:${minutes} AM`;
+        if (date.getHours() >= 12) 
+            time = `${date.getHours() - 12}:${minutes} PM`;
+        $(`#dashboard__sneak-peek__node__${cardId} .due-date-time`).text(`${isDueToday ? 'Today' : (isDueTomorrow ? 'Tomorrow' : (date.getMonth() + 1) + '/' + date.getDate() + '/' + date.getFullYear())}${c.time ? ' at ' + time : ''}`);
+        if (!$('#dashboard__sneak-peek').hasClass('nothing-due') && $('#dashboard__sneak-peek').children().length > 1) {
+            let originalHtml;
+            if ($(`#dashboard__sneak-peek__node__${cardId}`).length) {
+                originalHtml = $(`#dashboard__sneak-peek__node__${cardId}`).html();
+                $(`#dashboard__sneak-peek__node__${cardId}`).remove();
+            }
+            let addingDate = new Date(date);
+            let previousNode;
+            let children = $('#dashboard__sneak-peek').children('.dashboard__sneak-peek__node').not('#dashboard__sneak-peek__nothing-due').not(`#dashboard__sneak-peek__node__${cardId}`);
+            children.each(function() {
+                let cardFromNodeId = card.find($(this).attr('id').replace('dashboard__sneak-peek__node__', ''));
+                let targetDate = getDateFromCardDateTime(cardFromNodeId.id);
+                if (addingDate >= targetDate) {
+                    previousNode = $(this).attr('id');
+                }
+            });
+            if (originalHtml) {
+                if (previousNode)
+                    $('#' + previousNode).after(`
+                    <div id="dashboard__sneak-peek__node__${cardId}" class="dashboard__sneak-peek__node">
+                        ${originalHtml}
+                    </div>`);
+                else
+                    $('#dashboard__sneak-peek').prepend(`
+                    <div id="dashboard__sneak-peek__node__${cardId}" class="dashboard__sneak-peek__node">
+                        ${originalHtml}
+                    </div>`);
+                $(`#dashboard__sneak-peek__node__${cardId}`).hover(function() {
+                    $(this).addClass('banner'); 
+                    $('#' + $(this).attr('id').replace('dashboard__sneak-peek__node__', '') + ' .dashboard__card').addClass('hovered');
+                }, function() {
+                    $(this).removeClass('banner');
+                    $('#' + $(this).attr('id').replace('dashboard__sneak-peek__node__', '') + ' .dashboard__card').removeClass('hovered');
+                });
+                registerCardClickEvent(cardId, `dashboard__sneak-peek__node__${cardId}`);
+            }
+        }
+    }
+}
+
+function addSneakPeekNode(cardId) {
+    let c = card.find(cardId);
+    if (c.date) {
+        $('#dashboard__sneak-peek').removeClass('nothing-due');
+
+        $('#dashboard__sneak-peek').append(`
+            <div id="dashboard__sneak-peek__node__${cardId}" class="dashboard__sneak-peek__node">
+                <span class="name">
+                    ${c.name}
+                </span>
+                <span class="due-date-time">
+                </span>
+            </div>
+        `);
+        setSneakPeekNodeDateTime(cardId, true);
+    }
 }
 
 function registerFolderClickEvent(folderId) {
@@ -372,6 +476,7 @@ function registerCardClickEvent(cardId, cardSelector, customTextSelector) {
                                 c.date = $('.dashboard__due-date-date input').attr('value'); // Get the value of $('.dashboard__create-due-date-date input')
                                 c.time = $('.dashboard__due-date-time input').attr('value'); // Get the value of $('.dashboard__create-due-date-time input')
                                 if (startSaving) setFlagForChanges();
+                                setSneakPeekNodeDateTime(c.id);
                             }
                         }],
                         closeButton: false
@@ -385,10 +490,10 @@ function registerCardClickEvent(cardId, cardSelector, customTextSelector) {
                 action: () => {
                     c.name = $('.dashboard__modify-card-name input').attr('value');
                     c.description = $('.dashboard__modify-card-description .quill-wrapper .quill .ql-editor').html();
-                    if (!customTextSelector)
-                        $('#' + c.id + ' .dashboard__text').text(limitText(c.name));
-                    else
+                    if (customTextSelector)
                         $(customTextSelector).text(c.name);
+                    $('#' + c.id + ' .dashboard__text').text(limitText(c.name));
+                    $('#dashboard__sneak-peek__node__' + c.id + ' .name').text(limitText80(c.name));
                     if (startSaving) setFlagForChanges();
                 }
             }],
@@ -556,6 +661,7 @@ const folder = Object.freeze(new function() {
 function returnNodesToView(viewWidth) {
     if (viewWidth >= 800) {
         $('.dashboard__draggable').each(function() {
+            if ($(this).find('.dashboard__pin').hasClass('active')) return;
             let parent = $('#dashboard__full-view');
             let _ = $(this);
             let top = parseFloat(_.css('top').replace('px', ''));
@@ -726,6 +832,9 @@ $(function() {
                     text: 'Set Due Date',
                     close: false,
                     action: () => {
+                        let currentDate = new Date();
+                        let tomorrowsDate = new Date(currentDate);
+                        tomorrowsDate.setDate(currentDate.getDate() + 1);
                         notify.me({
                             header: 'Set a Due Date',
                             subheader: 'Enter a due date and time',
@@ -734,7 +843,7 @@ $(function() {
                             <div class="dashboard__due-date-container">
                                 <div class="dashboard__due-date-time">
                                     <div class="textbox">
-                                            <input type="time" name="time" autocomplete="off" required value="${time ? time : ""}">
+                                            <input type="time" name="time" autocomplete="off" required value="10:00">
                                             <label for="time">
                                                 <span>Time</span>
                                             </label>
@@ -742,7 +851,7 @@ $(function() {
                                     </div>
                                 <div class="dashboard__due-date-date">
                                     <div class="textbox">
-                                        <input type="date" name="date" autocomplete="off" required value="${date ? date : ""}">
+                                        <input type="date" name="date" autocomplete="off" required value="${tomorrowsDate.getFullYear()}-${tomorrowsDate.getMonth() + 1 < 10 ? '0' + (tomorrowsDate.getMonth() + 1) : tomorrowsDate.getMonth() + 1}-${tomorrowsDate.getDate() < 10 ? '0' + tomorrowsDate.getDate() : tomorrowsDate.getDate()}">
                                         <label for="date">
                                             <span>Date</span>
                                         </label>
@@ -754,9 +863,11 @@ $(function() {
                                 text: 'Done',
                                 close: true,
                                 action: () => {
-                                    if ($('.dashboard__due-date-date input').attr('value') && $('.dashboard__due-date-time input').attr('value')) {
+                                    if ($('.dashboard__due-date-date input').attr('value')) {
                                         date = $('.dashboard__due-date-date input').attr('value');
-                                        time = $('.dashboard__due-date-time input').attr('value');
+                                        if ($('.dashboard__due-date-time input').attr('value')) {
+                                            time = $('.dashboard__due-date-time input').attr('value');
+                                        }
                                     }
                                 }
                             }],
@@ -774,6 +885,7 @@ $(function() {
                         c.description = $('.dashboard__create-card-description .quill-wrapper .quill .ql-editor').html();
                         c.date = date;
                         c.time = time;
+                        addSneakPeekNode(id);
                         addFullViewNode('/files/svg/document.svg', 'dashboard__card', c.name, id, e.x, e.y);
                         registerCardClickEvent(c.id);
                     }
@@ -956,7 +1068,7 @@ window.dragMoveListener = dragMoveListener;
 
 network.on('dashboardLoadComplete', dashboard => {
     let setPos = ($e, pos) => {
-        if ($e.length) {
+        if ($e.length && pos) {
             $e.css({
                 left: pos.left,
                 top: pos.top,
@@ -979,6 +1091,7 @@ network.on('dashboardLoadComplete', dashboard => {
             setPos($(`#${c.id}`), c.pos);
             registerCardClickEvent(cRef.id);
         }
+        addSneakPeekNode(c.id);
         if (cRef.pinned)
             $(`#${cRef.id}`).find('.dashboard__card .dashboard__pin').addClass('active');
     }

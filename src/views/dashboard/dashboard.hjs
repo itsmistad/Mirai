@@ -5,7 +5,7 @@
         <h3 class="dashboard__view-title text-center">Sneak Peek</h3>
         <hr>
         <div id="dashboard__sneak-peek-wrapper">
-            <div id="dashboard__sneak-peek">
+            <div id="dashboard__sneak-peek" class="nothing-due">
                 <h5 id="dashboard__sneak-peek__nothing-due">
                     You currently have nothing coming up.
                 </h5>

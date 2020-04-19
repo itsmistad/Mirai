@@ -104,7 +104,7 @@ const contextly = new function() {
             if (o.href !== '')
                 ul.append(`<a href="${o.href}" ${o.tooltip !== '' ? 'title="' + o.tooltip + '"' : ''} style="text-decoration:none"><li id="${optionId}">${o.icon !== '' ? '<span class="icon ' + o.icon + '">' : ''}</span><span class="text">${o.text}</span></li></a>`);
             else {
-                ul.append(`${o.tooltip !== '' ? '<a href="#" title="' + o.tooltip + '">' : ''}<li id="${optionId}">${o.icon !== '' ? '<span class="icon ' + o.icon + '">' : ''}</span><span class="text">${o.text}</span></li>${o.tooltip !== '' ? '</a>' : ''}`);
+                ul.append(`${o.tooltip !== '' ? '<a href="#" title="' + o.tooltip + '" style="text-decoration:none;">' : ''}<li id="${optionId}">${o.icon !== '' ? '<span class="icon ' + o.icon + '">' : ''}</span><span class="text">${o.text}</span></li>${o.tooltip !== '' ? '</a>' : ''}`);
                 menuItem = $('#' + optionId);
                 menuItem.rightClick(() => {});
             }

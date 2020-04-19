@@ -104,6 +104,31 @@
             .banner {
                 margin-bottom: 3em;
             }
+
+            #profile__cards {
+                max-height: 21em;
+                overflow-y: scroll;
+                .profile__cards__node {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    flex-direction: row;
+                    margin: 0.8em;
+                    padding: 0.4em;
+                    border-radius: 6px;
+                    transition: $transition_200;
+
+                    .name {
+                        text-align: left;
+                        flex: 3;
+                    }
+                    .due-date-time {
+                        text-align: right;
+                        color: #aaa;
+                        flex: 2;
+                    }
+                }
+            }
         }
         
         #profile__user-data {

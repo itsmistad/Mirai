@@ -4,6 +4,7 @@
         <div class="row full-width full-center">
             <div id="preferences__switches" class="banner column">
                 <h4>Priorities:</h4>
+                <blockquote>Choose between two different prioritization visuals.</strong></blockquote>
                 <div class="switch" id="preferences__priority-switch">
                     <input id="preferences__priority-switch-checkbox" type="checkbox" />
                     <label for="preferences__priority-switch-checkbox">
@@ -13,6 +14,7 @@
                     </label>
                 </div>
                 <h4>Theme:</h4>
+                <blockquote>Join the dark side.</strong></blockquote>
                 <div class="switch" id="preferences__night-switch">
                     <input id="preferences__night-switch-checkbox" type="checkbox" />
                     <label for="preferences__night-switch-checkbox">
@@ -22,12 +24,23 @@
                     </label>
                 </div>
                 <h4>Sound:</h4>
+                <blockquote>Toggle sounds from Mirai.</strong></blockquote>
                 <div class="switch" id="preferences__sound-switch">
                     <input id="preferences__sound-switch-checkbox" type="checkbox" />
                     <label for="preferences__sound-switch-checkbox">
                         <div id="preferences__sound-switch__on">Off</div>
                         <span></span>
                         <div id="preferences__sound-switch__off">On</div>
+                    </label>
+                </div>
+                <h4>Cards in Profile:</h4>
+                <blockquote>Allow users to see cards from your <strong>personal dashboard.</strong></blockquote>
+                <div class="switch" id="preferences__profile-cards-switch">
+                    <input id="preferences__profile-cards-switch-checkbox" type="checkbox" />
+                    <label for="preferences__profile-cards-switch-checkbox">
+                        <div id="preferences__profile-cards-switch__on">Off</div>
+                        <span></span>
+                        <div id="preferences__profile-cards-switch__off">On</div>
                     </label>
                 </div>
             </div>
