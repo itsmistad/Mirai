@@ -151,10 +151,20 @@ function setSneakPeekNodeDateTime(cardId) {
                     </div>`);
                 $(`#dashboard__sneak-peek__node__${cardId}`).hover(function() {
                     $(this).addClass('banner'); 
-                    $('#' + $(this).attr('id').replace('dashboard__sneak-peek__node__', '') + ' .dashboard__card').addClass('hovered');
+                    let cardId = $(this).attr('id').replace('dashboard__sneak-peek__node__', '');
+                    let c = card.find(cardId);
+                    if (c.currentFolderId) {
+                        $('#' + c.currentFolderId + ' .dashboard__folder').addClass('hovered');
+                    }
+                    $('#' + cardId + ' .dashboard__card').addClass('hovered');
                 }, function() {
                     $(this).removeClass('banner');
-                    $('#' + $(this).attr('id').replace('dashboard__sneak-peek__node__', '') + ' .dashboard__card').removeClass('hovered');
+                    let cardId = $(this).attr('id').replace('dashboard__sneak-peek__node__', '');
+                    let c = card.find(cardId);
+                    if (c.currentFolderId) {
+                        $('#' + c.currentFolderId + ' .dashboard__folder').removeClass('hovered');
+                    }
+                    $('#' + cardId + ' .dashboard__card').removeClass('hovered');
                 });
                 registerCardClickEvent(cardId, `dashboard__sneak-peek__node__${cardId}`);
             }
