@@ -173,7 +173,7 @@ if (!config.theme.enableMobile && $(window).width() <= 800 && location.pathname 
 }
 
 if (user.googleId) {
-    overrideLoading();
+    overrideLoading('theme');
 }
 
 $(function() {
@@ -270,8 +270,8 @@ $(function() {
         }], {
             showOnLeftClick: true
         });
-        finishLoading();
     }
+    finishLoading('theme');
 });
 
 if (user.notifySound || user.notifySound == null) {

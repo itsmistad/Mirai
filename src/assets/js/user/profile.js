@@ -25,7 +25,10 @@ $(function() {
         $('#profile__display-name').text(paramUser.displayName);
     } else 
         $('#profile__display-name').addClass('full-hidden');
-    $('#profile__cards').html(`<p>${paramUser.googleId === user.googleId ? 'You aren\'t' : (paramUser.displayName || paramUser.firstName) + ' isn\'t'} currently working on any cards.</p>`);
+    if (paramUser.cardsInProfile) {$('#profile__cards').html(`<p>${paramUser.googleId === user.googleId ? 'You aren\'t' : (paramUser.displayName || paramUser.firstName) + ' isn\'t'} currently working on any cards.</p>`);
+    }
+    else
+        $('#profile__cards').html(`<p>${paramUser.googleId === user.googleId ? 'You have' : (paramUser.displayName || paramUser.firstName) + ' has'} hidden this section.</p>`);
     $('#profile__projects').html(`<p>${paramUser.googleId === user.googleId ? 'You aren\'t' : (paramUser.displayName || paramUser.firstName) + ' isn\'t'} currently working on any projects.</p>`);
     $('#profile__groups').html(`<p>${paramUser.googleId === user.googleId ? 'You aren\'t' : (paramUser.displayName || paramUser.firstName) + ' isn\'t'} currently in any groups.</p>`);
     if (paramUser.friends && paramUser.friends.length) { // If the paramUser has friends...
@@ -244,4 +247,78 @@ $(function() {
             }]
         });
     }
+});
+
+function getDateFromCardDateTime(c) {
+    let dateArray = c.date.split(/\D/);
+    let timeArray = c.time.split(':');
+    let date;
+    if (c.time)
+        date = new Date(dateArray[0], --dateArray[1], dateArray[2], timeArray[0], timeArray[1], 0);
+    else
+        date = new Date(dateArray[0], --dateArray[1], dateArray[2], 10, 0, 0);
+    return date;
+}
+
+function addCardsSectionNode(c) {
+    let date = getDateFromCardDateTime(c);
+    let tomorrowDate = new Date();
+    let todayDate = new Date(tomorrowDate);
+    tomorrowDate.setDate(tomorrowDate.getDate() + 1);
+    let isDueToday = date.getFullYear() === todayDate.getFullYear() &&
+        date.getMonth() === todayDate.getMonth() &&
+        date.getDate() === todayDate.getDate();
+    let isDueTomorrow = date.getFullYear() === tomorrowDate.getFullYear() &&
+        date.getMonth() === tomorrowDate.getMonth() &&
+        date.getDate() === tomorrowDate.getDate();
+    let time;
+    let minutes = date.getMinutes() + '';
+    if (date.getMinutes() < 10)
+        minutes = '0' + minutes;
+    if (date.getHours() === 0)
+        time = `12:${minutes} AM`;
+    else if (date.getHours() < 12 && date.getHours() > 0)
+        time = `${date.getHours()}:${minutes} AM`;
+    if (date.getHours() >= 12) 
+        time = `${date.getHours() - 12}:${minutes} PM`;
+    let addingDate = new Date(date);
+    let previousNode;
+    let children = $('#profile__cards').children('.profile__cards__node');
+    children.each(function() {
+        let targetDate = new Date($(this).attr('dateTime'));
+        if (addingDate >= targetDate) {
+            previousNode = $(this).attr('id');
+        }
+    });
+    let html = `
+        <div id="profile__cards__node__${c.id}" class="profile__cards__node banner" dateTime="${date}">
+            <span class="name">
+                ${c.name}
+            </span>
+            <span class="due-date-time">
+                ${isDueToday ? 'Today' : (isDueTomorrow ? 'Tomorrow' : (date.getMonth() + 1) + '/' + date.getDate() + '/' + date.getFullYear())}${c.time ? ' at ' + time : ''}
+            </span>
+        </div>`
+    if (!$('#profile__cards').children('.profile__cards__node').length) {
+        $('#profile__cards').empty();
+        $('#profile__cards').append(html);
+    } else if (previousNode) {
+        $('#' + previousNode).after(html);
+    } else {
+        $('#profile__cards').prepend(html);
+    }
+}
+
+$(function() {
+    network.on('profileLoadComplete', profile => {
+        console.log(profile);
+        for (let i = 0; i < profile.cards.length; i++) {
+            let c = profile.cards[i];
+            if (c.date)
+                addCardsSectionNode(c);
+        }
+        startSaving = true;
+    }).send('profileLoad', {
+        googleId: paramUser.googleId
+    });
 });

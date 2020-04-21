@@ -63,9 +63,11 @@ class SocketService {
                 handlers.push(handler);
             }
         }
-        this._io.on('connection', client => {
+        this._io.on('connection', function(client) {
             for (let h of handlers) {
-                client.on(h.event, data => h.handle(this._io, client, client.request.session.passport ? client.request.session.passport.user || {} : {}, data));
+                client.on(h.event, function(data) {
+                    h.handle(this._io, client, client.request.session.passport ? client.request.session.passport.user || {} : {}, data);
+                });
             }
         });
     }
