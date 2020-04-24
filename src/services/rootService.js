@@ -18,6 +18,7 @@ const AuthenticationService = require('./authenticationService');
 const NotificationService = require('./notificationService');
 const WebService = require('./webService');
 const SocketService = require('./socketService');
+const ReminderService = require('./reminderService');
 
 class RootService {
     constructor() {
@@ -29,10 +30,12 @@ class RootService {
         this.log = this.mongo._log = new LogService(this); // A bit hacky, but it works -- part 2.
         this.s3 = new S3Persister(this);
         this.email = new EmailService(this);
+        this.email.createClient();
         this.notification = new NotificationService(this);
         this.socket = new SocketService(this);
         this.auth = new AuthenticationService(this);
         this.web = new WebService(this);
+        this.reminder = new ReminderService(this);
     }
 }
 

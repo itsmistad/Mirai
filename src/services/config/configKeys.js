@@ -53,6 +53,9 @@ const configKeys = Object.freeze({
     theme: {
         slogan: new ConfigKey('Theme.Slogan', 'Plan it your way.'), // The html for the "slogan" partial; any string value
         enableMobile: new ConfigKey('Theme.EnableMobile', false) // Toggles devices that fit our "for-small-tablet-down" sizes; true/false
+    },
+    remind: {
+        time_interval: new ConfigKey('Remind.TimeInterval', 7200000)
     }
 });
 
