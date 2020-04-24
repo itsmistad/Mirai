@@ -46,7 +46,7 @@ describe('[UNIT] emailService', function() {
                     from: '"test" <email@test.com>',
                     to: 'to',
                     subject: 'subject',
-                    body: 'body'
+                    html: 'body'
                 });
                 done();
             }).catch(err => {
