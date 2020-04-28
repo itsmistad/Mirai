@@ -22,11 +22,11 @@
                     enableMobile: {{ themeEnableMobile }}
                 }
             });
-            const user = Object.freeze(JSON.parse("{{ userObj }}".replace(/&quot;/g,'"')));
+            let user = JSON.parse("{{ userObj }}".replace(/&quot;/g,'"'));
             const isProd = {{ isProd }};
             let paramUser;
             try {
-                paramUser = Object.freeze(JSON.parse("{{ paramUserObj }}".replace(/&quot;/g,'"')));
+                paramUser = JSON.parse("{{ paramUserObj }}".replace(/&quot;/g,'"'));
             } catch(ex) {}
         </script>
     </head>

@@ -278,4 +278,13 @@ if (user.notifySound || user.notifySound == null) {
     notify.initSound('default', '/files/notify.mp3');
 }
 
-notify.initNetwork();
+notify.initNetwork()
+.on('friendRequestAccepted', recipient => {
+    notify.me({
+        subheader: 'Friend Added',
+        body: `<strong>${recipient.fullName}</strong> accepted your friend request!`,
+        buttons: [],
+        timeout: 2000,
+        queue: true
+    });
+});
