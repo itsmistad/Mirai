@@ -58,9 +58,6 @@ function addFullViewNode(iconPath, nodeClass, text, id, x = mouse.x, y = mouse.y
                 action: () => {
                     let nodeWrapper = $(this).parent().parent();
                     nodeWrapper.fadeOut(200, 'swing', () => nodeWrapper.remove());
-                    $(`#dashboard__sneak-peek__node__${nodeWrapper.attr('id')}`).remove();
-                    if (!$('#dashboard__sneak-peek').children().not('#dashboard__sneak-peek__nothing-due').length)
-                        $('#dashboard__sneak-peek').addClass('nothing-due');
                     let f = folder.find(nodeWrapper.attr('id'));
                     let c = card.find(nodeWrapper.attr('id'));
                     if (f) { // If the node we're removing is a folder...
@@ -170,6 +167,8 @@ function setSneakPeekNodeDateTime(cardId) {
             }
         }
     }
+    $(`#dashboard__sneak-peek__node__${cardId} .name`).css('border-left', `3px solid ${c.color}`);
+    $(`#dashboard__sneak-peek__node__${cardId} .name .priority`).text(c.priorityNumber > 0 ? ' - ' + c.priorityNumber : '');
 }
 
 function addSneakPeekNode(cardId) {
@@ -179,8 +178,13 @@ function addSneakPeekNode(cardId) {
 
         $('#dashboard__sneak-peek').append(`
             <div id="dashboard__sneak-peek__node__${cardId}" class="dashboard__sneak-peek__node">
-                <span class="name">
-                    ${c.name}
+                <span class="name" style="border-left: 3px solid ${c.color}">
+                    <span class="inner">
+                        ${c.name}
+                    </span>
+                    <span class="priority">
+                        ${c.priorityNumber ? ' - ' + c.priorityNumber : ''}
+                    </span>
                 </span>
                 <span class="due-date-time">
                 </span>
@@ -212,7 +216,7 @@ function registerFolderClickEvent(folderId) {
                     </div>
                 </div>
                 <div class="dashboard__modify-folder-container">
-                    <div class="dashboard__modify-folder-name">
+                    <div class="dashboard__modify-folder-name banner">
                         <div class="textbox">
                             <input type="text" name="name" autocomplete="off" required value="${f.name}">
                             <label for="name">
@@ -220,7 +224,7 @@ function registerFolderClickEvent(folderId) {
                             </label>
                         </div>
                     </div>
-                    <div class="dashboard__modify-folder-description-with-cards">
+                    <div class="dashboard__modify-folder-description-with-cards banner">
                         <div class="quill-wrapper" id="${f.id}-description-wrapper">
                             <div class="toolbar" id="${f.id}-toolbar">
                                 <span class="ql-formats">
@@ -252,7 +256,7 @@ function registerFolderClickEvent(folderId) {
                         </div>
                     </div>
                 </div>
-                <div class="cards-container">
+                <div class="cards-container banner">
                     <h5>Cards<span style="color:#ccc;font-style:italic"> - click <i style="padding: 0 0.2em" class="fas fa-arrow-alt-circle-right"></i> to remove from the folder</span></h5>
                 </div>
                 `,
@@ -326,7 +330,7 @@ function registerFolderClickEvent(folderId) {
                     </div>
                 </div>
                 <div class="dashboard__modify-folder-container">
-                    <div class="dashboard__modify-folder-name">
+                    <div class="dashboard__modify-folder-name banner">
                         <div class="textbox">
                             <input type="text" name="name" autocomplete="off" required value="${f.name}">
                             <label for="name">
@@ -334,7 +338,7 @@ function registerFolderClickEvent(folderId) {
                             </label>
                         </div>
                     </div>
-                    <div class="dashboard__modify-folder-description">
+                    <div class="dashboard__modify-folder-description banner">
                         <div class="quill-wrapper" id="${f.id}-description-wrapper">
                             <div class="toolbar"id="${f.id}-toolbar">
                                 <span class="ql-formats">
@@ -405,7 +409,7 @@ function registerCardClickEvent(cardId, cardSelector, customTextSelector) {
                 </div>
             </div>
             <div class="dashboard__modify-card-container">
-                <div class="dashboard__modify-card-name">
+                <div class="dashboard__modify-card-name banner">
                     <div class="textbox">
                         <input type="text" name="name" autocomplete="off" required value="${c.name}">
                         <label for="name">
@@ -413,7 +417,7 @@ function registerCardClickEvent(cardId, cardSelector, customTextSelector) {
                         </label>
                     </div>
                 </div>
-                <div class="dashboard__modify-card-description">
+                <div class="dashboard__modify-card-description banner">
                     <div class="quill-wrapper" id="${c.id}-description-wrapper">
                         <div class="toolbar" id="${c.id}-toolbar">
                             <span class="ql-formats">
@@ -444,14 +448,38 @@ function registerCardClickEvent(cardId, cardSelector, customTextSelector) {
                         <div class="quill" id="${c.id}-description">${c.description}</div>
                     </div>
                 </div>
+                <div class="dashboard__modify-card-options-wrapper banner">
+                    <div class="dashboard__modify-card-priority-number">
+                        <h3>Priority</h3>
+                        <div class="dashboard__modify-card-priority-number-input-wrapper">
+                            <div class="textbox">
+                                <input type="number" id="dashboard__modify-card-priority-number-input" autocomplete="off" value="${c.priorityNumber}">
+                                <label for="dashboard__modify-card-priority-number">
+                                    <span>Priority</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="dashboard__modify-card-priority-shape" style="display:none;">
+                        <h3>Priority</h3>
+                        <div class="dashboard__modify-card-priority-shape-input-wrapper">
+                            <select id="dashboard__create-card-priority-shape-input">
+                            </select>
+                        </div>
+                    </div>
+                    <div class="dashboard__modify-card-color">
+                        <h3>Color</h3>
+                        <input type="text" id="dashboard__modify-card-color-input" />
+                    </div>
+                </div>
             </div>
             `,
             buttons: [ {
-                text: 'Change Due Date',
+                text: 'Due Date',
                 close: false,
                 action: () => {
                     notify.me({
-                        header: 'Modify the Due Date',
+                        header: 'Due Date',
                         subheader: 'Enter a new due date and time',
                         class: 'notify-popup dashboard__due-date-popup',
                         body: `
@@ -500,15 +528,27 @@ function registerCardClickEvent(cardId, cardSelector, customTextSelector) {
                 action: () => {
                     c.name = $('.dashboard__modify-card-name input').attr('value');
                     c.description = $('.dashboard__modify-card-description .quill-wrapper .quill .ql-editor').html();
+                    c.color = $('#dashboard__modify-card-color-input').spectrum('get').toHexString();
+                    $(`#${c.id}`).find('.dashboard__card').css('background-color', c.color);
+                    if (user.priorityStyle)
+                        c.priorityShape = $('#dashboard__modify-card-priority-shape-input').children("option:selected").val();
+                    else
+                        c.priorityNumber = $('#dashboard__modify-card-priority-number-input').val();
                     if (customTextSelector)
                         $(customTextSelector).text(c.name);
+                    addSneakPeekNode(c.id);
                     $('#' + c.id + ' .dashboard__text').text(limitText(c.name));
-                    $('#dashboard__sneak-peek__node__' + c.id + ' .name').text(limitText80(c.name));
+                    $('#dashboard__sneak-peek__node__' + c.id + ' .name .inner').text(limitText80(c.name));
                     if (startSaving) setFlagForChanges();
                 }
             }],
             closeButton: true
-        }, () => {
+        }, () => {  
+            $('#dashboard__modify-card-color-input').spectrum({
+                color: c.color || '#ddd0f1', 
+                showInput: true,
+                showInitial: true
+            });
             initializeTextboxes();
         });
     });
@@ -532,6 +572,9 @@ const card = Object.freeze(new function() {
     obj.delete = cardId => {
         let c = cards.findIndex(_ => _.id === cardId);
         if (c >= 0) {
+            $(`#dashboard__sneak-peek__node__${cardId}`).remove();
+            if (!$('#dashboard__sneak-peek').children().not('#dashboard__sneak-peek__nothing-due').length)
+                $('#dashboard__sneak-peek').addClass('nothing-due');
             cards.splice(c, 1);
             if (startSaving) setFlagForChanges();
         }
@@ -655,6 +698,9 @@ const folder = Object.freeze(new function() {
         if (fIndex >= 0) {
             let f = folders[fIndex];
             for (let innerCard of f.cards) {
+                $(`#dashboard__sneak-peek__node__${innerCard.id}`).remove();
+                if (!$('#dashboard__sneak-peek').children().not('#dashboard__sneak-peek__nothing-due').length)
+                    $('#dashboard__sneak-peek').addClass('nothing-due');
                 card.delete(innerCard.id);
             }
             f.cards.splice(0, f.cards.length);
@@ -797,7 +843,7 @@ $(function() {
                 class: 'notify-popup dashboard__create-card-popup',
                 body: `
                 <div class="dashboard__create-card-container">
-                    <div class="dashboard__create-card-name">
+                    <div class="dashboard__create-card-name banner">
                         <div class="textbox">
                             <input type="text" name="name" autocomplete="off" required value="New Card">
                             <label for="name">
@@ -805,7 +851,7 @@ $(function() {
                             </label>
                         </div>
                     </div>
-                    <div class="dashboard__create-card-description">
+                    <div class="dashboard__create-card-description banner">
                         <div class="quill-wrapper" id="${id}-description-wrapper">
                             <div class="toolbar"id="${id}-toolbar">
                                 <span class="ql-formats">
@@ -836,17 +882,41 @@ $(function() {
                             <div class="quill" id="${id}-description"></div>
                         </div>
                     </div>
+                    <div class="dashboard__create-card-options-wrapper banner">
+                        <div class="dashboard__create-card-priority-number">
+                            <h3>Priority</h3>
+                            <div class="dashboard__create-card-priority-number-input-wrapper">
+                                <div class="textbox">
+                                    <input type="number" id="dashboard__create-card-priority-number-input" autocomplete="off">
+                                    <label for="dashboard__create-card-priority-number">
+                                        <span>Priority</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="dashboard__create-card-priority-shape" style="display:none;">
+                            <h3>Priority</h3>
+                            <div class="dashboard__create-card-priority-shape-input-wrapper">
+                                <select id="dashboard__create-card-priority-shape-input">
+                                </select>
+                            </div>
+                        </div>
+                        <div class="dashboard__create-card-color">
+                            <h3>Color</h3>
+                            <input type="text" id="dashboard__create-card-color-input" />
+                        </div>
+                    </div>
                 </div>
                 `,
                 buttons: [ {
-                    text: 'Set Due Date',
+                    text: 'Due Date',
                     close: false,
                     action: () => {
                         let currentDate = new Date();
                         let tomorrowsDate = new Date(currentDate);
                         tomorrowsDate.setDate(currentDate.getDate() + 1);
                         notify.me({
-                            header: 'Set a Due Date',
+                            header: 'Due Date',
                             subheader: 'Enter a due date and time',
                             class: 'notify-popup dashboard__due-date-popup',
                             body: `
@@ -895,13 +965,24 @@ $(function() {
                         c.description = $('.dashboard__create-card-description .quill-wrapper .quill .ql-editor').html();
                         c.date = date;
                         c.time = time;
+                        c.color = $('#dashboard__create-card-color-input').spectrum('get').toHexString();
+                        if (user.priorityStyle)
+                            c.priorityShape = $('#dashboard__create-card-priority-shape-input').children("option:selected").val();
+                        else
+                            c.priorityNumber = $('#dashboard__create-card-priority-number-input').val();
                         addSneakPeekNode(id);
                         addFullViewNode('/files/svg/document.svg', 'dashboard__card', c.name, id, e.x, e.y);
+                        $(`#${c.id}`).find('.dashboard__card').css('background-color', c.color);
                         registerCardClickEvent(c.id);
                     }
                 }],
                 closeButton: false
             }, () => {
+                $('#dashboard__create-card-color-input').spectrum({
+                    color: '#ddd0f1', 
+                    showInput: true,
+                    showInitial: true
+                });
                 initializeTextboxes();
             });
         }
@@ -917,7 +998,7 @@ $(function() {
                 class: 'notify-popup dashboard__create-folder-popup',
                 body: `
                 <div class="dashboard__create-folder-container">
-                    <div class="dashboard__create-folder-name">
+                    <div class="dashboard__create-folder-name banner">
                         <div class="textbox">
                             <input type="text" name="name" autocomplete="off" required value="New Folder">
                             <label for="name">
@@ -925,7 +1006,7 @@ $(function() {
                             </label>
                         </div>
                     </div>
-                    <div class="dashboard__create-folder-description">
+                    <div class="dashboard__create-folder-description banner">
                         <div class="quill-wrapper" id="${folderId}-description-wrapper">
                             <div class="toolbar" id="${folderId}-toolbar">
                                 <span class="ql-formats">
@@ -1096,8 +1177,11 @@ network.on('dashboardLoadComplete', dashboard => {
         cRef.date = c.date;
         cRef.time = c.time;
         cRef.pinned = c.pinned;
+        cRef.color = c.color;
+        cRef.priorityNumber = c.priorityNumber;
         if (!c.currentFolderId) {
             addFullViewNode('/files/svg/document.svg', 'dashboard__card', c.name, c.id, c.left, c.top);
+            $(`#${c.id}`).find('.dashboard__card').css('background-color', c.color);
             setPos($(`#${c.id}`), c.pos);
             registerCardClickEvent(cRef.id);
         }

@@ -45,6 +45,12 @@
             .name {
                 text-align: left;
                 flex: 3;
+                padding-left: 0.4em;
+                .priority {
+                    font-style: italic;
+                    color: #aaa;
+                    font-weight: bold;
+                }
             }
             .due-date-time {
                 text-align: right;
@@ -136,6 +142,33 @@
                 height: 15em;
             }
         }
+        .dashboard__create-card-options-wrapper {
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+
+            .dashboard__create-card-priority-number {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                width: 40em;
+                max-width: 100%;
+                h3 {
+                    margin-bottom: 1.2em;
+                }
+            }
+
+            .dashboard__create-card-color {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                width: 40em;
+                max-width: 100%;
+                h3 {
+                    margin: 0;
+                }
+            }
+        }
     }
 }
 
@@ -200,6 +233,33 @@
         .dashboard__modify-card-description {
             .textarea textarea {
                 height: 25em;
+            }
+        }
+        .dashboard__modify-card-options-wrapper {
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+
+            .dashboard__modify-card-priority-number {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                width: 40em;
+                max-width: 100%;
+                h3 {
+                    margin-bottom: 1.2em;
+                }
+            }
+
+            .dashboard__modify-card-color {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                width: 40em;
+                max-width: 100%;
+                h3 {
+                    margin: 0;
+                }
             }
         }
     }
@@ -420,7 +480,7 @@
         user-select: none;
     }
     &.hovered {
-        background: $color_dark_accent;
+        transform: scale(1.1);
     }
 }
 
