@@ -74,7 +74,7 @@ class AuthenticationService {
     }
 
     async processCallback(req, res) {
-        passport.authenticate('google', { failureRedirect: '/?badLogin=1', session: true }, async function (err, user) {
+        passport.authenticate('google', { prompt: 'select_account', failureRedirect: '/?badLogin=1', session: true }, async function (err, user) {
             if (err) {
                 log.error(`Failed to authenticate user. Error: ${err}`);
                 return;

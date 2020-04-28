@@ -17,6 +17,7 @@ class View {
         if(this.response && this.template && locals) {
             let globals = {
                 themeEnableMobile: await config.get(configKeys.theme.enableMobile),
+                version: config.application.version,
                 isProd: env.isProd,
                 userObj: JSON.stringify('{}')
             };

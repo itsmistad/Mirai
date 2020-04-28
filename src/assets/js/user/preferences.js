@@ -20,20 +20,17 @@ function setTheme(mode) {
 
 function saveToDatabase() {
     network.post(`/user/upload/preferences`, {
-        priorityStyle: $('#preferences__priority-switch-checkbox').is(':checked'),
         nightMode: $('#preferences__night-switch-checkbox').is(':checked'),
         notifySound: $('#preferences__sound-switch-checkbox').is(':checked'),
-        backgroundTileName: $('#preferences__browse-label').text()
+        backgroundTileName: $('#preferences__browse-label').text(),
+        cardsInProfile: $('#preferences__profile-cards-switch-checkbox').is(':checked')
     }, () => {}, true);
 }
 
 $(function() {
-    $('#preferences__night-switch-checkbox').prop('checked', user.nightMode || false);
-    $('#preferences__priority-switch-checkbox').prop('checked', user.priorityStyle || false);
-    if (user.notifySound == null)
-        $('#preferences__sound-switch-checkbox').prop('checked', true);
-    else
-        $('#preferences__sound-switch-checkbox').prop('checked', user.notifySound);
+    $('#preferences__night-switch-checkbox').prop('checked', user.nightMode == null ? true : user.nightMode);
+    $('#preferences__profile-cards-switch-checkbox').prop('checked', user.cardsInProfile == null ? true : user.cardsInProfile);
+    $('#preferences__sound-switch-checkbox').prop('checked', user.notifySound == null ? true : user.notifySound);
     if (user.backgroundTile) {
         $('#preferences__background-browse-image').attr('src', user.backgroundTile);
         $('#preferences__browse-label').text(user.backgroundTileName);
@@ -76,16 +73,12 @@ $(function() {
         });
     });
 
-    $('#preference__priority-switch-checkbox').click(function() {
-        saveToDatabase();
-    });
-
     $('#preferences__night-switch-checkbox').click(function() {
         if ($(this).is(":checked")) {
             notify.me({
-                header: 'The time has come.',
+                header: 'The time has come...',
                 buttons: [{
-                    text: 'Execute Order 66',
+                    text: 'Execute Order 66.',
                     close: true
                 }],
                 onStartClose: () => setTheme(0)
@@ -94,7 +87,7 @@ $(function() {
             notify.me({
                 header: 'Hello there.',
                 buttons: [{
-                    text: 'General Kenobi',
+                    text: 'General Kenobi...',
                     close: true
                 }],
                 onStartClose: () => setTheme(1)
@@ -111,10 +104,14 @@ $(function() {
         saveToDatabase();
     });
 
+    $('#preferences__profile-cards-switch-checkbox').click(function() {
+        saveToDatabase();
+    });
+
     $('#preferences__reset-button').click(function() {
-        $('#preferences__priority-switch-checkbox').prop('checked', false);
         $('#preferences__night-switch-checkbox').prop('checked', false);
         $('#preferences__sound-switch-checkbox').prop('checked', true);
+        $('#preferences__profile-cards-switch-checkbox').prop('checked', true);
         $('#preferences__background-browse').val('');
         $('#preferences__background-browse-image').attr('src', '');
         $('#preferences__browse-label').text('');

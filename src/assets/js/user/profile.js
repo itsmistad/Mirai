@@ -1,5 +1,111 @@
 let editing = false, previousValues = [];
 
+function getMutuals(a, b,) {
+    let res = [], intersections = [];
+    for (let i = 0; i < a.length; i++) {
+        res.push(a[i]);
+    } 
+    for (let i = 0; i < b.length; i++) {
+        if (res.find(_ => _.googleId === b[i].googleId))
+            intersections.push(b[i].googleId);
+    }
+    for (let i = 0; i < res.length; i++) {
+        if (!intersections.includes(res[i].googleId))
+            res.splice(i, 1);
+    }
+    return res;
+}
+
+function setMutualsText() {
+    if (paramUser.friends &&
+        paramUser.friends.length &&
+        paramUser.googleId !== user.googleId &&
+        user.friends &&
+        user.friends.length) {
+        let mutuals = getMutuals(paramUser.friends, user.friends);
+        if (mutuals.length > 0)
+            $('#profile__friends-text').text(`You have ${mutuals.length} mutual${mutuals.length > 1 ? 's' : ''} with ${paramUser.displayName || paramUser.firstName}.`);
+        return mutuals;
+    }
+}
+
+function setFriendsText() {
+    if (paramUser.googleId === user.googleId &&
+        user.friends &&
+        user.friends.length) {
+            $('#profile__friends-text').text(`You have ${user.friends.length} friend${user.friends.length > 1 ? 's' : ''}.`);
+            let index = 0;
+            for (let friend of user.friends) {
+                if (index < 15) {
+                    addFriend(friend);
+                    index++;
+                } else break;
+            }
+            if (index >= 15) {
+                $('#profile__friends').append('<button id="profile__see-more" class="small">See More</button>');
+                $('#profile__see-more').click(function() {
+                    redirect('/user/friends');
+                });
+            }
+    } else if (paramUser.googleId === user.googleId && user.friends && user.friends.length === 0){
+        $('#profile__friends-text').text('You currently have no friends. 🙁');
+    }
+}
+
+function addFriend(friend) {
+    if (!$(`#profile__friend-${friend.googleId}`).length) {
+        $('#profile__friends-content').append(`
+            <div id="profile__friend-${friend.googleId}" class="profile__friend">
+                <div class="picture">
+                    <img src="${friend.picture}" />
+                </div>
+            </div>`);
+        contextly.init(`#profile__friend-${friend.googleId}`, 'body', [{
+            text: 'View Profile',
+            href: `/user/profile?googleId=${friend.googleId}`,
+            action: e => {
+                redirect(`/user/profile?googleId=${friend.googleId}`)
+            }
+        }, {
+            text: 'Remove Friend',
+            action: e => {
+                notify.me({
+                    header: 'Remove Friend',
+                    subheader: friend.fullName,
+                    body: `Would you like to remove <strong>${friend.fullName}</strong> from your friends list?`,
+                    buttons: [{
+                        text: 'Yes',
+                        class: 'medium',
+                        close: true,
+                        action: () => {
+                            network.send('friendRemove', {
+                                userId: friend.googleId
+                            });
+                            user.friends.splice(user.friends.findIndex(_ => _.googleId === friend.googleId), 1);
+                            $(`#profile__friend-${friend.googleId}`).remove();
+                            setFriendsText();
+                        }
+                    }, {
+                        text: 'No',
+                        class: 'medium',
+                        close: true,
+                        action: () => {}
+                    }]
+                })
+            }
+        }], {
+            minHeight: 100,
+            showOnLeftClick: true
+        });
+    }
+}
+
+function registerRequestsButtonClick() {
+    $('#profile__friends-requests').click(function() {
+        redirect('/user/friends');
+    });
+}
+
 if (!paramUser.googleId)
     redirect('/');
 
@@ -25,26 +131,31 @@ $(function() {
         $('#profile__display-name').text(paramUser.displayName);
     } else 
         $('#profile__display-name').addClass('full-hidden');
-    $('#profile__cards').html(`<p>${paramUser.googleId === user.googleId ? 'You aren\'t' : paramUser.firstName + ' isn\'t'} currently working on any cards.</p>`);
-    $('#profile__projects').html(`<p>${paramUser.googleId === user.googleId ? 'You aren\'t' : paramUser.firstName + ' isn\'t'} currently working on any projects.</p>`);
-    $('#profile__groups').html(`<p>${paramUser.googleId === user.googleId ? 'You aren\'t' : paramUser.firstName + ' isn\'t'} currently in any groups.</p>`);
+    if (paramUser.cardsInProfile) {
+        $('#profile__cards').html(`<p>${paramUser.googleId === user.googleId ? 'You aren\'t' : (paramUser.displayName || paramUser.firstName) + ' isn\'t'} currently working on any cards.</p>`);
+    }
+    else
+        $('#profile__cards').html(`<p>${paramUser.googleId === user.googleId ? 'You have' : (paramUser.displayName || paramUser.firstName) + ' has'} hidden this section.</p>`);
+    $('#profile__projects').html(`<p>${paramUser.googleId === user.googleId ? 'You aren\'t' : (paramUser.displayName || paramUser.firstName) + ' isn\'t'} currently working on any projects.</p>`);
+    $('#profile__groups').html(`<p>${paramUser.googleId === user.googleId ? 'You aren\'t' : (paramUser.displayName || paramUser.firstName) + ' isn\'t'} currently in any groups.</p>`);
     if (paramUser.friends && paramUser.friends.length) { // If the paramUser has friends...
         if (paramUser.googleId === user.googleId) { // If we are the paramUser...
             // Populate list of friends by picture icons.
             // Clicking each picture icon will bring up a notify.me of that person's info. Clicking the hyperlink will direct to their profile.
             // Clicking "See More" will open a notify.me of the entire list of friends.
+            registerRequestsButtonClick();
         } else { // If we are not the paramUser...
-            if (user.friends && user.friends.length) { // If we have friends...
-                // Populate list of mutuals between us and the paramUser.
-                // Icon functionality should be exactly the same as the normal friends list.
-            } else {
-                $('#profile__friends-text').text(`You have no mutuals with ${paramUser.firstName}.`);
-            }
+            if (!user.friends || !user.friends.length)
+                $('#profile__friends-text').text(`You have no mutuals with ${paramUser.displayName || paramUser.firstName}.`);
+            $('#profile__friends-requests').hide();
         }
-    } else if (paramUser.googleId === user.googleId)
+    } else if (paramUser.googleId === user.googleId) {
         $('#profile__friends-text').text('You currently have no friends. 🙁');
-    else 
-        $('#profile__friends-text').text(`You have no mutuals with ${paramUser.firstName}.`);
+        registerRequestsButtonClick();
+    } else {
+        $('#profile__friends-text').text(`You have no mutuals with ${paramUser.displayName || paramUser.firstName}.`);
+        $('#profile__friends-requests').hide();
+    }
 
     if (!user.googleId || paramUser.googleId !== user.googleId) {
         $('#profile__edit-button').attr('disabled', true);
@@ -245,3 +356,85 @@ $(function() {
         });
     }
 });
+
+function getDateFromCardDateTime(c) {
+    let dateArray = c.date.split(/\D/);
+    let timeArray = c.time.split(':');
+    let date;
+    if (c.time)
+        date = new Date(dateArray[0], --dateArray[1], dateArray[2], timeArray[0], timeArray[1], 0);
+    else
+        date = new Date(dateArray[0], --dateArray[1], dateArray[2], 10, 0, 0);
+    return date;
+}
+
+function addCardsSectionNode(c) {
+    let date = getDateFromCardDateTime(c);
+    let tomorrowDate = new Date();
+    let todayDate = new Date(tomorrowDate);
+    tomorrowDate.setDate(tomorrowDate.getDate() + 1);
+    let isDueToday = date.getFullYear() === todayDate.getFullYear() &&
+        date.getMonth() === todayDate.getMonth() &&
+        date.getDate() === todayDate.getDate();
+    let isDueTomorrow = date.getFullYear() === tomorrowDate.getFullYear() &&
+        date.getMonth() === tomorrowDate.getMonth() &&
+        date.getDate() === tomorrowDate.getDate();
+    let time;
+    let minutes = date.getMinutes() + '';
+    if (date.getMinutes() < 10)
+        minutes = '0' + minutes;
+    if (date.getHours() === 0)
+        time = `12:${minutes} AM`;
+    else if (date.getHours() < 12 && date.getHours() > 0)
+        time = `${date.getHours()}:${minutes} AM`;
+    if (date.getHours() >= 12) 
+        time = `${date.getHours() - 12}:${minutes} PM`;
+    let addingDate = new Date(date);
+    let previousNode;
+    let children = $('#profile__cards').children('.profile__cards__node');
+    children.each(function() {
+        let targetDate = new Date($(this).attr('dateTime'));
+        if (addingDate >= targetDate) {
+            previousNode = $(this).attr('id');
+        }
+    });
+    let html = `
+        <div id="profile__cards__node__${c.id}" class="profile__cards__node banner" dateTime="${date}">
+            <span class="name">
+                ${c.name}
+            </span>
+            <span class="due-date-time">
+                ${isDueToday ? 'Today' : (isDueTomorrow ? 'Tomorrow' : (date.getMonth() + 1) + '/' + date.getDate() + '/' + date.getFullYear())}${c.time ? ' at ' + time : ''}
+            </span>
+        </div>`
+    if (!$('#profile__cards').children('.profile__cards__node').length) {
+        $('#profile__cards').empty();
+        $('#profile__cards').append(html);
+    } else if (previousNode) {
+        $('#' + previousNode).after(html);
+    } else {
+        $('#profile__cards').prepend(html);
+    }
+}
+
+network.on('friendsLoadComplete', friends => {
+    user.friends = friends;
+    setMutualsText();
+    setFriendsText();
+}).on('profileLoadComplete', profile => {
+    for (let card of profile.cards)
+        if (card.date)
+            addCardsSectionNode(card);
+
+    if (profile.friends && profile.friends.length) {
+        paramUser.friends = profile.friends;
+        let mutuals = setMutualsText();
+    
+        if (mutuals)
+            for (let friend of mutuals)
+                addFriend(friend);
+    }
+    startSaving = true;
+}).send('profileLoad', {
+    googleId: paramUser.googleId
+}).send('friendsLoad');

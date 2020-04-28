@@ -63,9 +63,30 @@ class SocketService {
                 handlers.push(handler);
             }
         }
-        this._io.on('connection', client => {
+        let __io = this._io;
+        this._io.on('connection', function(c) {
             for (let h of handlers) {
-                client.on(h.event, data => h.handle(this._io, client, client.request.session.passport ? client.request.session.passport.user || {} : {}, data));
+                c.on(h.event, function(data) {
+                    let otherUsers = [];
+                    for (let socket in __io.sockets.sockets)
+                        if (__io.sockets.sockets[socket].request.session.passport &&
+                            __io.sockets.sockets[socket].request.session.passport.user &&
+                            __io.sockets.sockets[socket].request.session.passport.user.googleId &&
+                            this.request.session.passport &&
+                            this.request.session.passport.user &&
+                            this.request.session.passport.user.googleId &&
+                            __io.sockets.sockets[socket].request.session.passport.user.googleId !== this.request.session.passport.user.googleId)
+                            otherUsers.push({
+                                client: __io.sockets.sockets[socket],
+                                googleId: __io.sockets.sockets[socket].request.session.passport.user.googleId
+                            });
+                    let currentUser = {
+                        client: __io.sockets.sockets[this.conn.id],
+                        googleId: this.request.session.passport && 
+                            this.request.session.passport.user ? this.request.session.passport.user.googleId : ''
+                    };
+                    h.handle(__io, otherUsers, currentUser, data);
+                });
             }
         });
     }

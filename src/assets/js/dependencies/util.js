@@ -108,14 +108,14 @@ function toType(obj) {
 
 function storeScrollPosition() {
     if (localStorage) {
-        const varName = 'previousScrollPosition';
+        const varName = `previousScrollPosition[${window.location.pathname}]`;
         localStorage.setItem(varName, $(document).scrollTop());
     }
 }
 
 function restoreScrollPosition() {
     if (localStorage) {
-        const varName = 'previousScrollPosition';
+        const varName = `previousScrollPosition[${window.location.pathname}]`;
         const pos = localStorage.getItem(varName);
         if (pos) {
             $(document).scrollTop(pos);

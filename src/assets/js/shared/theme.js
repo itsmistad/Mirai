@@ -128,7 +128,7 @@ function htmlToPlainText(html) {
 
 // Set the "value" attributes and "required" formatting for any textbox on the page. Call this when you add any textbox through JS.
 function initializeTextboxes() {
-    const textBoxes = $('input[type="text"], input[type="email"], input[type="date"], input[type="time"], textarea');
+    const textBoxes = $('input[type="text"], input[type="number"], input[type="email"], input[type="date"], input[type="time"], textarea');
     textBoxes.off('change');
 
     // Observe all Quill containers.
@@ -173,7 +173,7 @@ if (!config.theme.enableMobile && $(window).width() <= 800 && location.pathname 
 }
 
 if (user.googleId) {
-    overrideLoading();
+    overrideLoading('theme');
 }
 
 $(function() {
@@ -237,28 +237,32 @@ $(function() {
         const phrases = ['Welcome', 'Howdy', 'Hi', 'Hey', 'Hello'];
         const index = getRandomInt(0, phrases.length - 1);
         phrase = phrases[index];
-        loginBtn.html(`<div>${phrase}, ${user.firstName}!</div><img src="${user.picture}">`);
+        loginBtn.html(`<div>${phrase}, ${user.displayName || user.firstName}!</div><img src="${user.picture}">`);
     
         contextly.init('#header__button-login', '#layout__main', [{
             text: 'Logout',
+            tooltip: 'Adios!',
             href: '/auth/logout',
             action: () => {
                 redirect('/auth/logout');
             }
         }, {
             text: 'Preferences',
+            tooltip: 'Lets sort things out.',
             href: '/user/preferences',
             action: () => {
                 redirect('/user/preferences');
             }
         }, {
             text: 'Profile',
+            tooltip: 'Identify Yourself!',
             href: `/user/profile?googleId=${user.googleId}`,
             action: () => {
                 redirect(`/user/profile?googleId=${user.googleId}`);
             }
         }, {
             text: 'Dashboard',
+            tooltip: 'Lets get to it!',
             href: '/dashboard',
             action: () => {
                 redirect('/dashboard');
@@ -266,12 +270,21 @@ $(function() {
         }], {
             showOnLeftClick: true
         });
-        finishLoading();
     }
+    finishLoading('theme');
 });
 
 if (user.notifySound || user.notifySound == null) {
     notify.initSound('default', '/files/notify.mp3');
 }
 
-notify.initNetwork();
+notify.initNetwork()
+.on('friendRequestAccepted', recipient => {
+    notify.me({
+        subheader: 'Friend Added',
+        body: `<strong>${recipient.fullName}</strong> accepted your friend request!`,
+        buttons: [],
+        timeout: 2000,
+        queue: true
+    });
+});
