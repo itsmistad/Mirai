@@ -162,6 +162,10 @@ button {
             transform: unset;
         }
     }
+
+    &.selected {
+        background-color: $color_accent;
+    }
 }
 
 .ql-syntax,

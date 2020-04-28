@@ -260,6 +260,35 @@
             #profile__friends-text {
                 text-align: center;
             }
+
+            #profile__friends-content {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+                
+                .profile__friend {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    justify-content: flex-start;
+                    margin: 0.1em;
+                    padding: 0.2em;
+                    transition: $transition_200;
+                    cursor: pointer;
+
+                    .picture {
+                        //margin-bottom: 0.25em; 
+                        img {
+                            border-radius: 50%;
+                            width: 2em;
+                        }
+                    }
+                    .name {
+                        font-weight: bold;
+                        text-align: center;
+                    }
+                }
+            }
         }
     }
 }

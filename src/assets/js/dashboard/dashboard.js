@@ -174,7 +174,7 @@ function setSneakPeekNodeDateTime(cardId) {
 
 function addSneakPeekNode(cardId) {
     let c = card.find(cardId);
-    if (c.date) {
+    if (c.date && !$(`#dashboard__sneak-peek__node__${cardId}`).length) {
         $('#dashboard__sneak-peek').removeClass('nothing-due');
 
         $('#dashboard__sneak-peek').append(`
@@ -186,8 +186,8 @@ function addSneakPeekNode(cardId) {
                 </span>
             </div>
         `);
-        setSneakPeekNodeDateTime(cardId, true);
     }
+    setSneakPeekNodeDateTime(cardId, true);
 }
 
 function registerFolderClickEvent(folderId) {
@@ -486,7 +486,7 @@ function registerCardClickEvent(cardId, cardSelector, customTextSelector) {
                                 c.date = $('.dashboard__due-date-date input').attr('value'); // Get the value of $('.dashboard__create-due-date-date input')
                                 c.time = $('.dashboard__due-date-time input').attr('value'); // Get the value of $('.dashboard__create-due-date-time input')
                                 if (startSaving) setFlagForChanges();
-                                setSneakPeekNodeDateTime(c.id);
+                                addSneakPeekNode(c.id);
                             }
                         }],
                         closeButton: false

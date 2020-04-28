@@ -10,8 +10,7 @@ class ProfileLoadHandler {
         log.debug('Loading');
     }
 
-    // eslint-disable-next-line no-unused-vars
-    async handle(io, client, user, data) {
+    async handle(io, otherUsers, currentUser, data) {
         if (!data.googleId) {
             console.log('failed');
             return;
@@ -21,18 +20,12 @@ class ProfileLoadHandler {
             googleId: data.googleId
         });
 
-        log.debug('Loading profile for user: ' + user.googleId);
+        log.debug('Loading profile for user: ' + currentUser.googleId);
 
-        if (!userObj.dashboardId) {
-            client.emit('profileLoadComplete', {
-                dashboard: {
-                    cards: []
-                }
-            });  
-        } else {
-            // Load the user's personal dashboard.
-            let dash = await mongo.get('dashboards', userObj.dashboardId);
-            let cards = [];
+        // Load the user's personal dashboard.
+        let dash = await mongo.get('dashboards', userObj.dashboardId || 0);
+        let cards = [];
+        if (dash)
             for (let card of dash.cards) {
                 cards.push({
                     id: card.id,
@@ -41,10 +34,25 @@ class ProfileLoadHandler {
                     time: card.time
                 });
             }
-            client.emit('profileLoadComplete', {
-                cards: cards
-            });  
+        let friends = [];
+        let userObjFriends = (await mongo.find('friends', {
+            userId: data.googleId
+        })).friendIds;
+        for (let friendId of userObjFriends) {
+            let friendUserObj = await mongo.find('users', {
+                googleId: friendId
+            });
+            friends.push({
+                googleId: friendUserObj.googleId,
+                picture: friendUserObj.picture,
+                fullName: friendUserObj.fullName,
+                displayName: friendUserObj.displayName
+            });
         }
+        currentUser.client.emit('profileLoadComplete', {
+            cards: cards,
+            friends: friends
+        });  
     }
 }
 
