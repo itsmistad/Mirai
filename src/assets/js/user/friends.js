@@ -12,6 +12,41 @@ function addFriend(friend) {
         }, function() {
             $(this).removeClass('banner');
         })
+        contextly.init(`#friends__friend-${friend.googleId}`, 'body', [{
+            text: 'View Profile',
+            href: `/user/profile?googleId=${friend.googleId}`,
+            action: e => {
+                redirect(`/user/profile?googleId=${friend.googleId}`)
+            }
+        }, {
+            text: 'Remove Friend',
+            action: e => {
+                notify.me({
+                    header: 'Remove Friend',
+                    subheader: friend.fullName,
+                    body: `Would you like to remove <strong>${friend.fullName}</strong> from your friends list?`,
+                    buttons: [{
+                        text: 'Yes',
+                        class: 'medium',
+                        close: true,
+                        action: () => {
+                            network.send('friendRemove', {
+                                userId: friend.googleId
+                            });
+                            $(`#friends__friend-${friend.googleId}`).remove();
+                        }
+                    }, {
+                        text: 'No',
+                        class: 'medium',
+                        close: true,
+                        action: () => {}
+                    }]
+                })
+            }
+        }], {
+            minHeight: 100,
+            showOnLeftClick: true
+        });
     }
 }
 

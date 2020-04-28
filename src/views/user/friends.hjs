@@ -2,11 +2,15 @@
     <h1 class="text-center hidden">{{ title }}</h1>
     <div id="friends__main" class="banner row">
         <div id="friends__menu" class="banner column">
-            <button id="friends__menu-requests" class="medium selected">Requests</button>
-            <button id="friends__menu-friends" class="medium">Friends</button>
+            <button id="friends__menu-friends" class="medium selected">Friends</button>
+            <button id="friends__menu-requests" class="medium">Requests</button>
         </div>
         <div id="friends__content" class="banner column" style="flex:1">
-            <div id="friends__content-requests">
+            <div id="friends__content-friends">
+                <h3>Friends</h3>
+                <div id="friends__current-friends"></div>
+            </div>
+            <div id="friends__content-requests" style="display:none;">
                 <h3>Outgoing Requests</h3>
                 <div id="friends__current-requests"></div>
                 <div id="friends__send-request-wrapper">
@@ -21,10 +25,6 @@
                         <button id="friends__send-request" class="small">Send Request</button>
                     </div>
                 </div>
-            </div>
-            <div id="friends__content-friends" style="display:none;">
-                <h3>Friends</h3>
-                <div id="friends__current-friends"></div>
             </div>
         </div>
     </div>

@@ -87,7 +87,6 @@ class UserController {
                 googleId: req.user.googleId
             }, {
                 $set: {
-                    priorityStyle: req.body.priorityStyle,
                     nightMode: req.body.nightMode,
                     notifySound: req.body.notifySound,
                     backgroundTileName: req.body.backgroundTileName,

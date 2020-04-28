@@ -3,16 +3,6 @@
     <div id="preferences__main" class="banner column full-center">
         <div class="row full-width full-center">
             <div id="preferences__switches" class="banner column">
-                <h4>Priorities:</h4>
-                <blockquote>Choose between two different prioritization visuals.</strong></blockquote>
-                <div class="switch" id="preferences__priority-switch">
-                    <input id="preferences__priority-switch-checkbox" type="checkbox" />
-                    <label for="preferences__priority-switch-checkbox">
-                        <div id="preferences__priority-switch__shapes">Shapes</div>
-                        <span></span>
-                        <div id="preferences__priority-switch__numbers">Numbers</div>
-                    </label>
-                </div>
                 <h4>Theme:</h4>
                 <blockquote>Join the dark side.</strong></blockquote>
                 <div class="switch" id="preferences__night-switch">

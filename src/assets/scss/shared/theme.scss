@@ -193,6 +193,7 @@ div.textbox {
     padding: 0 0 1.4em;
 
     input[type='date'],
+    input[type='number'],
     input[type='time'],
     input[type='text'],
     input[type='email'] {
@@ -249,6 +250,7 @@ div.textbox {
     input[type='date'],
     input[type='time'],
     input[type='text'],
+    input[type='number'],
     input[type='email'] {
         &:hover {
             background-color: rgba(0,0,0,0.05);
@@ -279,13 +281,9 @@ div.textbox {
         }
     }
 
+    
+    input[type='time'][value=''],
     input[type='date'][value=''] {
-        & + label span {
-            transform: translateY(150%) !important;
-        }
-    }
-
-    input[type='time'][value=''] {
         & + label span {
             transform: translateY(150%) !important;
         }
@@ -1107,6 +1105,20 @@ $header_height: 4em;
     height: 1em;
 }
 
+.sp-replacer {
+    border-radius: 4px !important;
+    border-color: black !important;
+}
+
+.sp-container {
+    border-radius: 4px !important;
+    border-color: black !important;
+}
+
+.sp-picker-container {
+    border-left: unset !important;
+}
+
 body.dark {
     background-color: $color_dark_background !important;
 
@@ -1223,6 +1235,7 @@ body.dark {
     }
 
     div.textbox {
+        input[type='number'],
         input[type='date'],
         input[type='time'],
         input[type='text'],
@@ -1270,6 +1283,14 @@ body.dark {
         .toolbar {
             background-color: rgba(0,0,0,0.1);
         }
+    }
+
+    .sp-replacer {
+        background-color: $color_dark_background;
+    }
+
+    .sp-container {
+        background-color: $color_dark_background;
     }
 }
 
