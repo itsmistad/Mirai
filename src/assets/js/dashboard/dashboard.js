@@ -169,6 +169,18 @@ function setSneakPeekNodeDateTime(cardId) {
     }
     $(`#dashboard__sneak-peek__node__${cardId} .name`).css('border-left', `3px solid ${c.color}`);
     $(`#dashboard__sneak-peek__node__${cardId} .name .priority`).text(c.priorityNumber > 0 ? ' - ' + c.priorityNumber : '');
+    let flags = '';
+    if (c.priorityFlags.includes('star'))
+        flags += '<i class="fas fa-star"></i> ';
+    if (c.priorityFlags.includes('flag'))
+        flags += '<i class="fas fa-flag"></i> ';
+    if (c.priorityFlags.includes('exclamation'))
+        flags += '<i class="fas fa-exclamation-triangle"></i> ';
+    if (c.priorityFlags.includes('question'))
+        flags += '<i class="fas fa-question-circle"></i> ';
+    if (c.priorityFlags.includes('info'))
+        flags += '<i class="fas fa-info-circle"></i> ';
+    $(`#dashboard__sneak-peek__node__${cardId} .name .flags`).html(flags);
 }
 
 function addSneakPeekNode(cardId) {
@@ -184,6 +196,8 @@ function addSneakPeekNode(cardId) {
                     </span>
                     <span class="priority">
                         ${c.priorityNumber ? ' - ' + c.priorityNumber : ''}
+                    </span>
+                    <span class="flags">
                     </span>
                 </span>
                 <span class="due-date-time">
@@ -449,7 +463,7 @@ function registerCardClickEvent(cardId, cardSelector, customTextSelector) {
                     </div>
                 </div>
                 <div class="dashboard__modify-card-options-wrapper banner">
-                    <div class="dashboard__modify-card-priority-number">
+                    <div class="dashboard__modify-card-priority-number dashboard__modify-card-option">
                         <h3>Priority</h3>
                         <div class="dashboard__modify-card-priority-number-input-wrapper">
                             <div class="textbox">
@@ -460,14 +474,17 @@ function registerCardClickEvent(cardId, cardSelector, customTextSelector) {
                             </div>
                         </div>
                     </div>
-                    <div class="dashboard__modify-card-priority-shape" style="display:none;">
-                        <h3>Priority</h3>
-                        <div class="dashboard__modify-card-priority-shape-input-wrapper">
-                            <select id="dashboard__create-card-priority-shape-input">
-                            </select>
+                    <div class="dashboard__modify-card-flag dashboard__modify-card-option">
+                        <h3>Flags</h3>
+                        <div class="dashboard__modify-card-flag-input-wrapper">
+                            <button id="dashboard__modify-card-flag-star" class="medium"><i class="fas fa-star"></i></button>
+                            <button id="dashboard__modify-card-flag-flag" class="medium"><i class="fas fa-flag"></i></button>
+                            <button id="dashboard__modify-card-flag-exclamation" class="medium"><i class="fas fa-exclamation-triangle"></i> </button>
+                            <button id="dashboard__modify-card-flag-question" class="medium"><i class="fas fa-question-circle"></i></button>
+                            <button id="dashboard__modify-card-flag-info" class="medium"><i class="fas fa-info-circle"></i></button>
                         </div>
                     </div>
-                    <div class="dashboard__modify-card-color">
+                    <div class="dashboard__modify-card-color dashboard__modify-card-option">
                         <h3>Color</h3>
                         <input type="text" id="dashboard__modify-card-color-input" />
                     </div>
@@ -478,6 +495,9 @@ function registerCardClickEvent(cardId, cardSelector, customTextSelector) {
                 text: 'Due Date',
                 close: false,
                 action: () => {
+                    let currentDate = new Date();
+                    let tomorrowsDate = new Date(currentDate);
+                    tomorrowsDate.setDate(currentDate.getDate() + 1);
                     notify.me({
                         header: 'Due Date',
                         subheader: 'Enter a new due date and time',
@@ -491,7 +511,7 @@ function registerCardClickEvent(cardId, cardSelector, customTextSelector) {
                         <div class="dashboard__due-date-container">
                             <div class="dashboard__due-date-time">
                                 <div class="textbox">
-                                        <input type="time" name="time" autocomplete="off" required value="${c.time ? c.time : ""}">
+                                        <input type="time" name="time" autocomplete="off" required value="${c.time ? c.time : "10:00"}">
                                         <label for="time">
                                             <span>Time</span>
                                         </label>
@@ -499,7 +519,7 @@ function registerCardClickEvent(cardId, cardSelector, customTextSelector) {
                                 </div>
                             <div class="dashboard__due-date-date">
                                 <div class="textbox">
-                                    <input type="date" name="date" autocomplete="off" required value="${c.date ? c.date : ""}">
+                                    <input type="date" name="date" autocomplete="off" required value="${c.date ? c.date : `${tomorrowsDate.getFullYear()}-${tomorrowsDate.getMonth() + 1 < 10 ? '0' + (tomorrowsDate.getMonth() + 1) : tomorrowsDate.getMonth() + 1}-${tomorrowsDate.getDate() < 10 ? '0' + tomorrowsDate.getDate() : tomorrowsDate.getDate()}`}">
                                     <label for="date">
                                         <span>Date</span>
                                     </label>
@@ -530,10 +550,11 @@ function registerCardClickEvent(cardId, cardSelector, customTextSelector) {
                     c.description = $('.dashboard__modify-card-description .quill-wrapper .quill .ql-editor').html();
                     c.color = $('#dashboard__modify-card-color-input').spectrum('get').toHexString();
                     $(`#${c.id}`).find('.dashboard__card').css('background-color', c.color);
-                    if (user.priorityStyle)
-                        c.priorityShape = $('#dashboard__modify-card-priority-shape-input').children("option:selected").val();
-                    else
-                        c.priorityNumber = $('#dashboard__modify-card-priority-number-input').val();
+                    let priorityFlags = [];
+                    for (let flagBtn of $('.dashboard__modify-card-flag-input-wrapper').children('.selected'))
+                        priorityFlags.push($(flagBtn).attr('id').replace('dashboard__modify-card-flag-', ''));
+                    c.priorityFlags = priorityFlags;
+                    c.priorityNumber = $('#dashboard__modify-card-priority-number-input').val();
                     if (customTextSelector)
                         $(customTextSelector).text(c.name);
                     addSneakPeekNode(c.id);
@@ -544,11 +565,17 @@ function registerCardClickEvent(cardId, cardSelector, customTextSelector) {
             }],
             closeButton: true
         }, () => {  
+            for (let flag of c.priorityFlags)
+                $('.dashboard__modify-card-flag-input-wrapper').find(`#dashboard__modify-card-flag-${flag}`).addClass('selected');
             $('#dashboard__modify-card-color-input').spectrum({
                 color: c.color || '#ddd0f1', 
                 showInput: true,
                 showInitial: true
             });
+            $('#dashboard__modify-card-flag-star, #dashboard__modify-card-flag-flag, #dashboard__modify-card-flag-exclamation, #dashboard__modify-card-flag-question, #dashboard__modify-card-flag-info')
+                .click(function() {
+                    $(this).toggleClass('selected');
+                });
             initializeTextboxes();
         });
     });
@@ -883,7 +910,7 @@ $(function() {
                         </div>
                     </div>
                     <div class="dashboard__create-card-options-wrapper banner">
-                        <div class="dashboard__create-card-priority-number">
+                        <div class="dashboard__create-card-priority-number dashboard__create-card-option">
                             <h3>Priority</h3>
                             <div class="dashboard__create-card-priority-number-input-wrapper">
                                 <div class="textbox">
@@ -894,14 +921,17 @@ $(function() {
                                 </div>
                             </div>
                         </div>
-                        <div class="dashboard__create-card-priority-shape" style="display:none;">
-                            <h3>Priority</h3>
-                            <div class="dashboard__create-card-priority-shape-input-wrapper">
-                                <select id="dashboard__create-card-priority-shape-input">
-                                </select>
+                        <div class="dashboard__create-card-flag dashboard__create-card-option">
+                            <h3>Flags</h3>
+                            <div class="dashboard__create-card-flag-input-wrapper">
+                                <button id="dashboard__create-card-flag-star" class="medium"><i class="fas fa-star"></i></button>
+                                <button id="dashboard__create-card-flag-flag" class="medium"><i class="fas fa-flag"></i></button>
+                                <button id="dashboard__create-card-flag-exclamation" class="medium"><i class="fas fa-exclamation-triangle"></i></button>
+                                <button id="dashboard__create-card-flag-question" class="medium"><i class="fas fa-question-circle"></i></button>
+                                <button id="dashboard__create-card-flag-info" class="medium"><i class="fas fa-info-circle"></i></button>
                             </div>
                         </div>
-                        <div class="dashboard__create-card-color">
+                        <div class="dashboard__create-card-color dashboard__create-card-option">
                             <h3>Color</h3>
                             <input type="text" id="dashboard__create-card-color-input" />
                         </div>
@@ -966,10 +996,11 @@ $(function() {
                         c.date = date;
                         c.time = time;
                         c.color = $('#dashboard__create-card-color-input').spectrum('get').toHexString();
-                        if (user.priorityStyle)
-                            c.priorityShape = $('#dashboard__create-card-priority-shape-input').children("option:selected").val();
-                        else
-                            c.priorityNumber = $('#dashboard__create-card-priority-number-input').val();
+                        let priorityFlags = [];
+                        for (let flagBtn of $('.dashboard__create-card-flag-input-wrapper').children('.selected'))
+                            priorityFlags.push($(flagBtn).attr('id').replace('dashboard__create-card-flag-', ''));
+                        c.priorityFlags = priorityFlags;
+                        c.priorityNumber = $('#dashboard__create-card-priority-number-input').val();
                         addSneakPeekNode(id);
                         addFullViewNode('/files/svg/document.svg', 'dashboard__card', c.name, id, e.x, e.y);
                         $(`#${c.id}`).find('.dashboard__card').css('background-color', c.color);
@@ -983,6 +1014,10 @@ $(function() {
                     showInput: true,
                     showInitial: true
                 });
+                $('#dashboard__create-card-flag-star, #dashboard__create-card-flag-flag, #dashboard__create-card-flag-exclamation, #dashboard__create-card-flag-question, #dashboard__create-card-flag-info')
+                    .click(function() {
+                        $(this).toggleClass('selected');
+                    });
                 initializeTextboxes();
             });
         }
@@ -1178,6 +1213,7 @@ network.on('dashboardLoadComplete', dashboard => {
         cRef.time = c.time;
         cRef.pinned = c.pinned;
         cRef.color = c.color;
+        cRef.priorityFlags = c.priorityFlags;
         cRef.priorityNumber = c.priorityNumber;
         if (!c.currentFolderId) {
             addFullViewNode('/files/svg/document.svg', 'dashboard__card', c.name, c.id, c.left, c.top);

@@ -51,6 +51,12 @@
                     color: #aaa;
                     font-weight: bold;
                 }
+                .flags {
+                    color: gold;
+                    font-weight: bold;
+                    margin-left: 0.4em;
+                    text-shadow: 1px 0 2px #000, 0 -1px 2px #000, 0 1px 2px #000, -1px 0 2px #000;
+                }
             }
             .due-date-time {
                 text-align: right;
@@ -147,18 +153,7 @@
             align-items: center;
             flex-direction: column;
 
-            .dashboard__create-card-priority-number {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                width: 40em;
-                max-width: 100%;
-                h3 {
-                    margin-bottom: 1.2em;
-                }
-            }
-
-            .dashboard__create-card-color {
+            .dashboard__create-card-option {
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
@@ -166,6 +161,26 @@
                 max-width: 100%;
                 h3 {
                     margin: 0;
+                }
+            }
+
+            .dashboard__create-card-priority-number {
+                h3 {
+                    margin-bottom: 1.2em;
+                }
+            }
+
+            .dashboard__create-card-flag {
+                .dashboard__create-card-flag-input-wrapper {
+                    width: 30em;
+                    max-width: 100%;
+                    display: flex;
+                    flex-wrap: wrap;
+                    justify-content: flex-end;
+                    button {
+                        margin-left: 0.3em;
+                        font-size: 1.1em;
+                    }
                 }
             }
         }
@@ -240,18 +255,7 @@
             align-items: center;
             flex-direction: column;
 
-            .dashboard__modify-card-priority-number {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                width: 40em;
-                max-width: 100%;
-                h3 {
-                    margin-bottom: 1.2em;
-                }
-            }
-
-            .dashboard__modify-card-color {
+            .dashboard__modify-card-option {
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
@@ -259,6 +263,26 @@
                 max-width: 100%;
                 h3 {
                     margin: 0;
+                }
+            }
+
+            .dashboard__modify-card-priority-number {
+                h3 {
+                    margin-bottom: 1.2em;
+                }
+            }
+
+            .dashboard__modify-card-flag {
+                .dashboard__modify-card-flag-input-wrapper {
+                    width: 30em;
+                    max-width: 100%;
+                    display: flex;
+                    flex-wrap: wrap;
+                    justify-content: flex-end;
+                    button {
+                        margin-left: 0.3em;
+                        font-size: 1.1em;
+                    }
                 }
             }
         }

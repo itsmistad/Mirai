@@ -36,10 +36,16 @@ function setFriendsText() {
             $('#profile__friends-text').text(`You have ${user.friends.length} friend${user.friends.length > 1 ? 's' : ''}.`);
             let index = 0;
             for (let friend of user.friends) {
-                if (index <= 14) {
+                if (index < 15) {
                     addFriend(friend);
                     index++;
                 } else break;
+            }
+            if (index >= 15) {
+                $('#profile__friends').append('<button id="profile__see-more" class="small">See More</button>');
+                $('#profile__see-more').click(function() {
+                    redirect('/user/friends');
+                });
             }
     } else if (paramUser.googleId === user.googleId && user.friends && user.friends.length === 0){
         $('#profile__friends-text').text('You currently have no friends. 🙁');
