@@ -115,7 +115,6 @@ $(function() {
         $('#preferences__background-browse').val('');
         $('#preferences__background-browse-image').attr('src', '');
         $('#preferences__browse-label').text('');
-        upload.form('/user/upload/preferences/bg', '#preferences__background-form');
         if (!user.nightMode) {
             $('#preferences__background-browse-image').attr('src', '/files/svg/grid.svg');
             $('#preferences__browse-label').text('Grid');
@@ -123,6 +122,7 @@ $(function() {
             $('#preferences__background-browse-image').attr('src', '/files/svg/grid-black.svg');
             $('#preferences__browse-label').text('Grid');
         }
+        upload.form('/user/upload/preferences/bg', '#preferences__background-form');
         saveToDatabase();
     });
 });

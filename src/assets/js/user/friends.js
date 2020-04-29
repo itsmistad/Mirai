@@ -138,7 +138,7 @@ $(function() {
                     }]
                 });
             }).send('friendRequestSend', {
-                email: $('#friends__request-email-input').val()
+                email: $('#friends__request-email-input').val().toLowerCase()
             });
         }, 100);
     });
