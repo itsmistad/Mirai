@@ -1,3 +1,5 @@
+
+
 <div id="home__background">
     <img id="home__blob" src="/files/svg/blob.svg">
     <img id="home__wave1" src="/files/svg/wave1.svg">
@@ -22,93 +24,138 @@
             </h4>
         </div>
     </div>
-    <div id="home__theme-examples" class="banner row stack-when-large-tablet stretch">
-        <div class="banner column left" style="flex:3">
-            <h1>Header 1</h1>
-            <h2>Header 2</h2>
-            <h3>Header 3</h3>
-            <h4>Header 4</h4>
-            <h5>Header 5</h5>
-            <h6>Header 6</h6>
-            <p>Here is an example of some body text.</p>
-            <p><i>Here is an example of some italic text.</i></p>
-            <p style="font-weight:bold;">Here is an example of some bold text.</p>
-            <blockquote>Here is a block quote.</blockquote>
-        </div>
-        <div class="banner column text-center full-center stretch" style="flex:2">
-            <h4>Here are some examples of the theme's elements.</h4>
-            <div class="textbox">
-                <input type="email" id="textbox" autocomplete="off" required>
-                <label for="textbox">
-                    <span>Email</span>
-                </label>
+
+<div class="pset">
+    <div class="container">
+        <div class="row items">
+            <div class="col-xs-12 col-sm-6 col-md-4 item-wrapper  " data-aos="fade-zoom-in" data-aos-group="features" data-line-height="25.2px">
+                <div class="item has-link">
+                    <div class="item-inner">
+                        <div class="right-border"></div>
+                            <div class="block-content-wrapper">
+                                <div class="icon-wrapper">
+                                    <div class="icon-inner">                                 
+                                        <div>
+                                            <img alt="Create" src="https://s4.gifyu.com/images/tools-and-utensils.png">
+                                        </div>
+                                    </div>
+                                 </div>                               
+                                        <div class="content-wrapper" style="padding-top: 0px;">                                  
+                                        <div class="item-title counter-added">
+                                            <span><span>01</span>
+                                            Create Tasks </span>
+                                        </div>
+                                        <div class="item-excerpt">
+                                        Easily add and prioritize cards with your own personal tasks. 
+                                        </div>
+                                    </div>           
+                            </div>
+                    </div>
+                </div>
+                <div class="fix-bottom-padding"></div>
+            </div>
+      
+            <div class="col-xs-12 col-sm-6 col-md-4 item-wrapper with-image listar-height-changed" data-aos="fade-zoom-in" data-aos-group="features" data-line-height="25.2px">
+                <img class="gif" src = "https://s4.gifyu.com/images/GIF19ff21a35060f720f.gif">
+            </div>
+            
+            <div class="col-xs-12 col-sm-6 col-md-4 item-wrapper with-image listar-height-changed" data-aos="fade-zoom-in" data-aos-group="features" data-line-height="25.2px">
+                <img class="gif" src = "https://s4.gifyu.com/images/ezgif.com-crop-2417f8e6556d22ad9.gif">
             </div>
 
-            <div class="textarea">
-                <textarea id="textarea"></textarea>
-                <label for="textarea">
-                    <span>Text</span>
-                </label>
+            <div class="col-xs-12 col-sm-6 col-md-4 item-wrapper with-image listar-height-changed" data-aos="fade-zoom-in" data-aos-group="features" data-line-height="25.2px">
+                <div class="item has-link">
+                    <div class="item-inner">
+                        <div class="right-border"></div>
+                            <div class="block-content-wrapper">
+                                <div class="icon-wrapper">
+                                    <div class="icon-inner">
+                                        <div>
+                                            <img alt="DragnDrop" src="https://s4.gifyu.com/images/gestures.png">
+                                            </div>
+                                    </div>
+                                </div>
+                                <div class="content-wrapper" style="padding-top: 0px;">
+                                    <div class="item-title counter-added">
+                                        <span><span>02</span>
+                                        Drag and Drop </span>
+                                    </div>
+                                    <div class="item-excerpt">          
+                                        Set up your own personal desktop with folders full of tasks with our drag and drop feature.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                </div>
+                    <div class="fix-bottom-padding"></div>
             </div>
 
-            <div class="quill-wrapper" id="quill-wrapper">
-                <div class="toolbar" id="quill-toolbar">
-                    <span class="ql-formats">
-                        <button class="ql-bold"></button>
-                        <button class="ql-italic"></button>
-                        <button class="ql-underline"></button>
-                        <button class="ql-strike"></button>
-                        <button class="ql-link"></button>
-                    </span>
-                    <span class="ql-formats">
-                        <button class="ql-script" value="sub"></button>
-                        <button class="ql-script" value="super"></button>
-                        <button class="ql-header" value="1"></button>
-                        <button class="ql-header" value="2"></button>
-                    </span>
-                    <span class="ql-formats">
-                        <button class="ql-blockquote"></button>
-                        <button class="ql-code-block"></button>
-                    </span>
-                    <span class="ql-formats">
-                        <button class="ql-list" value="ordered"></button>
-                        <button class="ql-list" value="bullet"></button>
-                        <button class="ql-indent" value="-1"></button>
-                        <button class="ql-indent" value="+1"></button>
-                    </span>
-                    <span class="ql-formats">
-                        <button class="ql-clean"></button>
-                    </span>
+            <div class="col-xs-12 col-sm-6 col-md-4 item-wrapper" data-aos="fade-zoom-in" data-aos-group="features" data-line-height="25.2px">
+                <div class="item has-link">
+                    <div class="item-inner">
+                        <div class="right-border"></div>
+                            <div class="block-content-wrapper">
+                                <div class="icon-wrapper">
+                                    <div class="icon-inner">
+                                        <div>
+                                            <img alt="Customize" src="https://s4.gifyu.com/images/edit-tools.png">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="content-wrapper" style="padding-top: 0px;">
+                                    <div class="item-title counter-added">
+                                        <span><span>03</span>
+                                        Customize </span>
+                                    </div>
+                                    <div class="item-excerpt">
+                                        Customize your dashboard to fit you. 
+                                    </div>
+                                </div>
+                            </div>
+                    </div>
                 </div>
-                <div class="quill" id="quill"></div>
+                <div class="fix-bottom-padding"></div>
             </div>
 
-            <div>
-                <div class="switch">
-                    <input id="switch" type="checkbox" />
-                    <label for="switch">
-                        <span></span>
-                        Here is a switch.
-                    </label>
-                </div>
-                <div class="checkbox">
-                    <input id="checkbox" type="checkbox" />
-                    <label for="checkbox">
-                        <span></span>
-                        Here is a checkbox.
-                    </label>
-                </div>
+            <div class="col-xs-12 col-sm-6 col-md-4 item-wrapper with-image listar-height-changed" data-aos="fade-zoom-in" data-aos-group="features" data-line-height="25.2px">
+                <img class="gif" src = "https://s4.gifyu.com/images/ezgif.com-resize475f059af763cb60.gif">
             </div>
-            <h4>Here are some buttons.</h4>
-            <button>Large</button>
-            <button class="medium">Medium</button>
-            <button class="small">Small</button>
-            <h6>This button is disabled.</h6>
-            <button class="medium" disabled>Disabled</button>
-            <p><a href="/">Refresh</a></p>
+        
+            <div class="col-xs-12 col-sm-6 col-md-4 item-wrapper with-image listar-height-changed" data-aos="fade-zoom-in" data-aos-group="features" data-line-height="25.2px">
+                <img class="gif" src = "https://s4.gifyu.com/images/ezgif.com-crop-45111702a8707b23d.gif">
+            </div>
+            
+            <div class="col-xs-12 col-sm-6 col-md-4 item-wrapper" data-aos="fade-zoom-in" data-aos-group="features" data-line-height="25.2px">
+                <div class="item has-link">
+                    <div class="item-inner">
+                        <div class="right-border"></div>
+                            <div class="block-content-wrapper">
+                                <div class="icon-wrapper">
+                                    <div class="icon-inner">
+                                        <div>
+                                            <img alt="Share" src="https://s4.gifyu.com/images/collaboration-1.png">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="content-wrapper" style="padding-top: 0px;">
+                                    <div class="item-title counter-added">
+                                        <span><span>04</span>
+                                        Share With Friends </span>
+                                    </div>
+                                    <div class="item-excerpt">
+                                        Connect and see what your friends are up to.  
+                                    </div>
+                                </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="fix-bottom-padding"></div>
+            </div>     
         </div>
     </div>
 </div>
+
+
 
 {{#yield-styles}}
     <link rel='stylesheet' href='/css/home.css' />
