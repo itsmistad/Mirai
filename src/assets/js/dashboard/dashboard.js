@@ -167,8 +167,11 @@ function setSneakPeekNodeDateTime(cardId) {
             }
         }
     }
-    $(`#dashboard__sneak-peek__node__${cardId} .name`).css('border-left', `3px solid ${c.color}`);
-    $(`#dashboard__sneak-peek__node__${cardId} .name .priority`).text(c.priorityNumber > 0 ? ' - ' + c.priorityNumber : '');
+    setSneakPeekNodeName(cardId);
+}
+
+function setSneakPeekNodeName(cardId) {
+    let c = card.find(cardId);
     let flags = '';
     if (c.priorityFlags.includes('star'))
         flags += '<i class="fas fa-star"></i> ';
@@ -181,6 +184,9 @@ function setSneakPeekNodeDateTime(cardId) {
     if (c.priorityFlags.includes('info'))
         flags += '<i class="fas fa-info-circle"></i> ';
     $(`#dashboard__sneak-peek__node__${cardId} .name .flags`).html(flags);
+    $(`#dashboard__sneak-peek__node__${cardId} .name`).css('border-left', `3px solid ${c.color}`);
+    $(`#dashboard__sneak-peek__node__${cardId} .name .priority`).text(c.priorityNumber > 0 ? ' - ' + c.priorityNumber : '');
+    $(`#dashboard__sneak-peek__node__${cardId} .name .folder`).text(c.currentFolderId ? `${limitText80(folder.find(c.currentFolderId).name)} ⮞` : '');
 }
 
 function addSneakPeekNode(cardId) {
@@ -191,6 +197,13 @@ function addSneakPeekNode(cardId) {
         $('#dashboard__sneak-peek').append(`
             <div id="dashboard__sneak-peek__node__${cardId}" class="dashboard__sneak-peek__node">
                 <span class="name" style="border-left: 3px solid ${c.color}">
+                    <span class="folder">
+                        ${
+                            c.currentFolderId ? 
+                            `${limitText80(folder.find(c.currentFolderId).name)} ⮞`
+                            : ''
+                        }
+                    </span>
                     <span class="inner">
                         ${c.name}
                     </span>
@@ -309,6 +322,8 @@ function registerFolderClickEvent(folderId) {
                         let x = $('#' + folderId).offset().left + (axis >= 50 ? Math.floor(Math.random() * 241): 0) - 70 + (axis < 50 && flipped >= 50 ? 240 : 0);
                         let y = $('#' + folderId).offset().top + (axis < 50 ? Math.floor(Math.random() * 241): 0) - 70 + (axis >= 50 && flipped < 50 ? 240 : 0);
                         addFullViewNode('/files/svg/document.svg', 'dashboard__card', c.name, c.id, x, y);
+                        $(`#${c.id}`).find('.dashboard__card').css('background-color', c.color);
+                        setSneakPeekNodeName(c.id);
                         registerCardClickEvent(c.id);
                         let cardParent = cardItem.parent();
                         cardItem.nextAll().css({
@@ -1135,6 +1150,7 @@ interact('.dashboard__folder-wrapper').dropzone({
 
         _folder.classList.remove('selected-dropzone');
         folder.find(folderId).addCard(cardId);
+        setSneakPeekNodeName(cardId);
         $(card).fadeOut(200, function() {
             card.classList.remove('can-drop');
             $(this).remove();
@@ -1215,13 +1231,14 @@ network.on('dashboardLoadComplete', dashboard => {
         cRef.color = c.color;
         cRef.priorityFlags = c.priorityFlags;
         cRef.priorityNumber = c.priorityNumber;
+        cRef.currentFolderId = c.currentFolderId;
         if (!c.currentFolderId) {
             addFullViewNode('/files/svg/document.svg', 'dashboard__card', c.name, c.id, c.left, c.top);
             $(`#${c.id}`).find('.dashboard__card').css('background-color', c.color);
             setPos($(`#${c.id}`), c.pos);
             registerCardClickEvent(cRef.id);
+            addSneakPeekNode(c.id);
         }
-        addSneakPeekNode(c.id);
         if (cRef.pinned)
             $(`#${cRef.id}`).find('.dashboard__card .dashboard__pin').addClass('active');
     }
@@ -1241,6 +1258,7 @@ network.on('dashboardLoadComplete', dashboard => {
             let $folder = $(`#${f.id}`);
             for (let c of f.cards) {
                 fRef.addCard(c.id);
+                addSneakPeekNode(c.id);
             }
         }
     }
