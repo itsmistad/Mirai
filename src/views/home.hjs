@@ -24,6 +24,7 @@
             </h4>
         </div>
     </div>
+   
 
 <div class="pset">
     <div class="container">
@@ -59,9 +60,7 @@
                 <img class="gif" src = "https://s4.gifyu.com/images/GIF19ff21a35060f720f.gif">
             </div>
             
-            <div class="col-xs-12 col-sm-6 col-md-4 item-wrapper with-image listar-height-changed" data-aos="fade-zoom-in" data-aos-group="features" data-line-height="25.2px">
-                <img class="gif" src = "https://s4.gifyu.com/images/ezgif.com-crop-2417f8e6556d22ad9.gif">
-            </div>
+
 
             <div class="col-xs-12 col-sm-6 col-md-4 item-wrapper with-image listar-height-changed" data-aos="fade-zoom-in" data-aos-group="features" data-line-height="25.2px">
                 <div class="item has-link">
@@ -88,6 +87,10 @@
                         </div>
                 </div>
                     <div class="fix-bottom-padding"></div>
+            </div>
+
+            <div class="col-xs-12 col-sm-6 col-md-4 item-wrapper with-image listar-height-changed" data-aos="fade-zoom-in" data-aos-group="features" data-line-height="25.2px">
+                <img class="gif" src = "https://s4.gifyu.com/images/ezgif.com-crop-2417f8e6556d22ad9.gif">
             </div>
 
             <div class="col-xs-12 col-sm-6 col-md-4 item-wrapper" data-aos="fade-zoom-in" data-aos-group="features" data-line-height="25.2px">
@@ -121,9 +124,7 @@
                 <img class="gif" src = "https://s4.gifyu.com/images/ezgif.com-resize475f059af763cb60.gif">
             </div>
         
-            <div class="col-xs-12 col-sm-6 col-md-4 item-wrapper with-image listar-height-changed" data-aos="fade-zoom-in" data-aos-group="features" data-line-height="25.2px">
-                <img class="gif" src = "https://s4.gifyu.com/images/ezgif.com-crop-45111702a8707b23d.gif">
-            </div>
+       
             
             <div class="col-xs-12 col-sm-6 col-md-4 item-wrapper" data-aos="fade-zoom-in" data-aos-group="features" data-line-height="25.2px">
                 <div class="item has-link">
@@ -150,7 +151,10 @@
                     </div>
                 </div>
                 <div class="fix-bottom-padding"></div>
-            </div>     
+            </div>  
+                 <div class="col-xs-12 col-sm-6 col-md-4 item-wrapper with-image listar-height-changed" data-aos="fade-zoom-in" data-aos-group="features" data-line-height="25.2px">
+                <img class="gif" src = "https://s4.gifyu.com/images/ezgif.com-crop-45111702a8707b23d.gif">
+            </div>   
         </div>
     </div>
 </div>
