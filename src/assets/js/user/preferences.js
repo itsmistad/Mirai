@@ -20,7 +20,6 @@ function setTheme(mode) {
 
 function saveToDatabase() {
     network.post(`/user/upload/preferences`, {
-        priorityStyle: $('#preferences__priority-switch-checkbox').is(':checked'),
         nightMode: $('#preferences__night-switch-checkbox').is(':checked'),
         notifySound: $('#preferences__sound-switch-checkbox').is(':checked'),
         backgroundTileName: $('#preferences__browse-label').text(),
@@ -30,7 +29,6 @@ function saveToDatabase() {
 
 $(function() {
     $('#preferences__night-switch-checkbox').prop('checked', user.nightMode == null ? true : user.nightMode);
-    $('#preferences__priority-switch-checkbox').prop('checked', user.priorityStyle == null ? true : user.priorityStyle);
     $('#preferences__profile-cards-switch-checkbox').prop('checked', user.cardsInProfile == null ? true : user.cardsInProfile);
     $('#preferences__sound-switch-checkbox').prop('checked', user.notifySound == null ? true : user.notifySound);
     if (user.backgroundTile) {
@@ -75,10 +73,6 @@ $(function() {
         });
     });
 
-    $('#preferences__priority-switch-checkbox').click(function() {
-        saveToDatabase();
-    });
-
     $('#preferences__night-switch-checkbox').click(function() {
         if ($(this).is(":checked")) {
             notify.me({
@@ -115,14 +109,12 @@ $(function() {
     });
 
     $('#preferences__reset-button').click(function() {
-        $('#preferences__priority-switch-checkbox').prop('checked', false);
         $('#preferences__night-switch-checkbox').prop('checked', false);
         $('#preferences__sound-switch-checkbox').prop('checked', true);
         $('#preferences__profile-cards-switch-checkbox').prop('checked', true);
         $('#preferences__background-browse').val('');
         $('#preferences__background-browse-image').attr('src', '');
         $('#preferences__browse-label').text('');
-        upload.form('/user/upload/preferences/bg', '#preferences__background-form');
         if (!user.nightMode) {
             $('#preferences__background-browse-image').attr('src', '/files/svg/grid.svg');
             $('#preferences__browse-label').text('Grid');
@@ -130,6 +122,7 @@ $(function() {
             $('#preferences__background-browse-image').attr('src', '/files/svg/grid-black.svg');
             $('#preferences__browse-label').text('Grid');
         }
+        upload.form('/user/upload/preferences/bg', '#preferences__background-form');
         saveToDatabase();
     });
 });

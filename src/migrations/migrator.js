@@ -133,7 +133,8 @@ async function runMigrations(currentTimestamp, timestampId) {
                     process.exit(0);
                 })
                 .catch(() => log.error('Failed to store new currentTimestamp to migrator collection.', true));
-        }
+        } else 
+            process.exit(0);
     } catch (ex) {
         log.error(`Failed to find migrations. Error: ${ex}`, true);
     }

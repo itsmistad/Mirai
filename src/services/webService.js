@@ -21,6 +21,7 @@ let routes = [
     ['/auth/logout', '/authentication/authenticationController', 'GET'],
     ['/user/profile', '/user/userController', 'GET'],
     ['/user/preferences', '/user/userController', 'GET'],
+    ['/user/friends', '/user/userController', 'GET'],
     ['/user/upload/picture', '/user/userController', 'POST'],
     ['/user/upload/banner', '/user/userController', 'POST'],
     ['/user/upload/about', '/user/userController', 'POST'],

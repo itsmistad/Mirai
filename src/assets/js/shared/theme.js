@@ -128,7 +128,7 @@ function htmlToPlainText(html) {
 
 // Set the "value" attributes and "required" formatting for any textbox on the page. Call this when you add any textbox through JS.
 function initializeTextboxes() {
-    const textBoxes = $('input[type="text"], input[type="email"], input[type="date"], input[type="time"], textarea');
+    const textBoxes = $('input[type="text"], input[type="number"], input[type="email"], input[type="date"], input[type="time"], textarea');
     textBoxes.off('change');
 
     // Observe all Quill containers.
@@ -278,4 +278,13 @@ if (user.notifySound || user.notifySound == null) {
     notify.initSound('default', '/files/notify.mp3');
 }
 
-notify.initNetwork();
+notify.initNetwork()
+.on('friendRequestAccepted', recipient => {
+    notify.me({
+        subheader: 'Friend Added',
+        body: `<strong>${recipient.fullName}</strong> accepted your friend request!`,
+        buttons: [],
+        timeout: 2000,
+        queue: true
+    });
+});

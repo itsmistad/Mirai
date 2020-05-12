@@ -66,6 +66,16 @@ class UserController {
                 response: 'ok'
             });
             break;
+        case '/user/friends':
+            if (!req.user) { // Prevent the page from loading if the user is not logged in.
+                res.redirect('/');
+                return;
+            }
+            v = new View(root, res, 'user/friends');
+            await v.render({
+                title: 'Friends'
+            }, req.user);
+            break;
         case '/user/upload/preferences':
             if (!req.isAuthenticated()) { // Don't do anything if the user is not logged in
                 res.send({
@@ -77,7 +87,6 @@ class UserController {
                 googleId: req.user.googleId
             }, {
                 $set: {
-                    priorityStyle: req.body.priorityStyle,
                     nightMode: req.body.nightMode,
                     notifySound: req.body.notifySound,
                     backgroundTileName: req.body.backgroundTileName,
