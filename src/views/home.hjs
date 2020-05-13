@@ -7,7 +7,9 @@
     <div class="row stack-when-laptop" style="justify-content:space-between">
         <div id="home__main" class="column full-view-height full-center full-width">
             <div id="home__welcome" class="full-center">
-                <a id="home__banner-anchor" href="https://www.freepik.com/free-photos-vectors/business"><img id="home__banner-img" src="/files/svg/thinking.svg" alt="Girl thinking of what to plan" style="filter: drop-shadow( 3px 3px 2px rgba(0, 0, 0, .7));"></a>
+                <a id="home__banner-anchor" href="https://www.freepik.com/free-photos-vectors/business"><img
+                        id="home__banner-img" src="/files/svg/thinking.svg" alt="Girl thinking of what to plan"
+                        style="filter: drop-shadow( 3px 3px 2px rgba(0, 0, 0, .7));"></a>
                 <div class="column">
                     <span>
                         <h3 id="home__superscript">Plan with</h3>
@@ -20,6 +22,96 @@
             <h4 id="home__slogan" class="text-center">
                 {{ slogan }}
             </h4>
+        </div>
+    </div>
+    <div id="home__info">
+        <div class="home__info-banner">
+            <div class="item-wrapper">
+                <div class="icon-wrapper">
+                    <div class="icon-inner">
+                        <img alt="Create" src="https://s4.gifyu.com/images/tools-and-utensils.png">
+                    </div>
+                </div>
+                <div class="content-wrapper">
+                    <div class="item-title">
+                        <span>
+                            Create
+                        </span>
+                    </div>
+                    <div class="item-excerpt">
+
+                    </div>
+                </div>
+            </div>
+            <div class="item-wrapper">
+                <img class="gif" src="https://s4.gifyu.com/images/GIF19ff21a35060f720f.gif">
+            </div>
+        </div>
+        <div class="home__info-banner">
+            <div class="item-wrapper">
+                <img class="gif" src="https://s4.gifyu.com/images/ezgif.com-crop-2417f8e6556d22ad9.gif">
+            </div>
+            <div class="item-wrapper">
+                <div class="icon-wrapper">
+                    <div class="icon-inner">
+                        <img alt="DragnDrop" src="https://s4.gifyu.com/images/gestures.png">
+                    </div>
+                </div>
+                <div class="content-wrapper">
+                    <div class="item-title">
+                        <span>
+                            Drag
+                        </span>
+                    </div>
+                    <div class="item-excerpt">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="home__info-banner">
+            <div class="item-wrapper">
+                <div class="icon-wrapper">
+                    <div class="icon-inner">
+                        <img alt="Customize" src="https://s4.gifyu.com/images/edit-tools.png">
+                    </div>
+                </div>
+                <div class="content-wrapper">
+                    <div class="item-title">
+                        <span>
+                            Customize
+                        </span>
+                    </div>
+                    <div class="item-excerpt">
+
+                    </div>
+                </div>
+            </div>
+            <div class="item-wrapper">
+                <img class="gif" src="https://s4.gifyu.com/images/ezgif.com-resize475f059af763cb60.gif">
+            </div>
+        </div>
+        <div class="home__info-banner">
+            <div class="item-wrapper">
+                <img class="gif" src="https://s4.gifyu.com/images/ezgif.com-crop-45111702a8707b23d.gif">
+            </div>
+            <div class="item-wrapper">
+                <div class="icon-wrapper">
+                    <div class="icon-inner">
+                        <img alt="Share" src="https://s4.gifyu.com/images/collaboration-1.png">
+                    </div>
+                </div>
+                <div class="content-wrapper">
+                    <div class="item-title">
+                        <span>
+                            Share
+                        </span>
+                    </div>
+                    <div class="item-excerpt">
+
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
     <div id="home__theme-examples" class="banner row stack-when-large-tablet stretch">
@@ -113,7 +205,7 @@
 {{#yield-styles}}
     <link rel='stylesheet' href='/css/home.css' />
 {{/yield-styles}}
- 
+
 {{#yield-scripts}}
     <script type="text/javascript">
         const badLogin = {{ badLogin }};

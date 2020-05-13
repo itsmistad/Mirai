@@ -19,14 +19,16 @@
     left: 0;
     transform: rotate(22deg) translate(3em, -18em);
     animation: shrink-grow 12s infinite ease-in-out;
-    
+
     @keyframes shrink-grow {
         0% {
             transform: rotate(20deg) translate(3em, -18em) scale(1);
         }
-        50% {    
+
+        50% {
             transform: rotate(25deg) translate(3em, -18em) scale(1.08);
         }
+
         100% {
             transform: rotate(20deg) translate(3em, -18em) scale(1);
         }
@@ -39,14 +41,16 @@
     left: 0;
     transform: scale(1.1) translate(-8em, -8em) rotate(118deg);
     animation: shrink-grow3 8s infinite ease-in-out;
-    
+
     @keyframes shrink-grow3 {
         0% {
             transform: scale(1.1) translate(-4em, -12em) rotate(118deg);
         }
-        50% {    
+
+        50% {
             transform: scale(1.18) translate(-4em, -12em) rotate(123deg);
         }
+
         100% {
             transform: scale(1.1) translate(-4em, -12em) rotate(118deg);
         }
@@ -59,14 +63,16 @@
     left: 0;
     transform: scale(1.3) translate(-5em, -5em) rotate(140deg);
     animation: shrink-grow2 15s infinite ease-in-out;
-    
+
     @keyframes shrink-grow2 {
         0% {
             transform: scale(1.3) translate(-5em, -5em) rotate(140deg);
         }
-        50% {    
+
+        50% {
             transform: scale(1.26) translate(-5em, -5em) rotate(138deg);
         }
+
         100% {
             transform: scale(1.3) translate(-5em, -5em) rotate(140deg);
         }
@@ -82,20 +88,21 @@
 
     #home__welcome {
         flex-direction: row;
+
         @include for-large-tablet-down {
             flex-direction: column;
             flex: unset;
         }
-    
+
         #home__banner-img {
             transition: $transition_350;
             cursor: pointer;
-    
+
             @include for-small-tablet-down {
                 width: 100%;
             }
         }
-    
+
         #home__superscript {
             position: absolute;
             transform: translate(-.8em, -.7em);
@@ -103,38 +110,166 @@
             margin: 0;
             color: $color_body;
         }
-    
+
         #home__tryit {
             background-color: $color_accent;
+
             &:hover {
                 background-color: $color_dark_accent;
             }
         }
-    
+
         #home__github {
-            border: solid 3px $color_accent;
+            border: solid 0.188em $color_accent;
+
             &:hover {
-                border: solid 3px $color_dark_accent;
+                border: solid 0.188em $color_dark_accent;
             }
         }
     }
 }
 
 #home__theme-examples {
-    display: none; 
+    display: none;
 }
+
+#home__info {
+    width: 90em;
+    max-width: 90%;
+    margin: 0 auto;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+
+    .home__info-banner {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-around;
+        align-items: center;
+        margin-bottom: 6em;
+        width: 100%;
+
+        &:nth-of-type(2), &:nth-of-type(4) {
+            flex-wrap: wrap-reverse;
+        }
+
+        .item-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 4em;
+            width: 40em;
+
+            .gif {
+                border-radius: 2em;
+                width: 30em;
+                max-width: 80%;
+            }
+
+            .icon-wrapper {
+                width: 9.25em;
+                height: 9.25em;
+                border-radius: 50%;
+                background-color: #fff;
+                box-shadow: 0.5em 0.5em 1.875em rgba(0, 0, 0, 0.06);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                margin-bottom: 2em;
+                
+                .icon-inner {
+                    width: 7.5em;
+                    height: 7.5em;
+                    border-radius: 50%;
+                    box-shadow: 0.625em 0.625em 1.25em rgba(0, 0, 0, 0.14);
+                    background: #fff;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                
+                    img {
+                        height: 3.438em;
+                    }
+                }
+            }
+
+            .content-wrapper {
+                .item-excerpt {
+                    padding: 0 1.25em;
+                    color: #252525;
+                    position: relative;
+                    top: 0;
+                    width: 35.938em;
+                    text-align: center;
+                }
+
+                .item-title {
+                    text-align: center;
+                    line-height: 1.5;
+                
+                    >span {
+                        box-shadow: 0.938em 1.25em 1.875em rgba(80, 80, 80, 0.12), 0.313em 0em 2.5em rgba(80, 80, 80, 0.1);
+                        padding: 0.625em 1.25em;
+                        display: inline-block;
+                        position: relative;
+                        background-color: #fff;
+                        font-size: 0.875em;
+                        line-height: normal;
+                        font-weight: 400;
+                        text-shadow: none;
+                        border-radius: 3.125em;
+                        color: $color_body;
+                        font-size: 1.125em;
+                    }
+                }
+            }
+        }
+    }
+}
+
 
 body.dark {
     #home__background {
         background-image: radial-gradient(circle at top left, $color_dark_light_accent 0%, $color_dark_background 40%, $color_dark_background 100%) !important;
     }
+
     #home__superscript {
         color: $color_dark_body_text !important;
     }
+
     #home__github {
-        border: solid 3px $color_accent !important;
+        border: solid 0.188em $color_accent !important;
+
         &:hover {
-            border: solid 3px $color_dark_accent !important;
+            border: solid 0.188em $color_dark_accent !important;
+        }
+    }
+
+    #home__info {
+        .home__info-banner {
+            .item-wrapper {
+                .icon-wrapper {
+                    background-color: $color_dark_background;
+                    box-shadow: 3px 3px 4px rgba(0,0,0,0.2);
+                    .icon-inner {
+                        background: $color_dark_background;
+                        box-shadow: 3px 3px 4px rgba(0,0,0,0.2);
+                    }
+                }
+
+                .content-wrapper {
+                    .item-title {
+                        >span {
+                            background: $color_dark_background;
+                            color: $color_dark_body_text;
+                            box-shadow: 3px 3px 4px rgba(0,0,0,0.2);
+                        }
+                    }
+                }
+            }
         }
     }
 }
