@@ -295,6 +295,9 @@ function registerFolderClickEvent(folderId) {
                         f.description = $('.dashboard__modify-folder-description-with-cards .quill-wrapper .quill .ql-editor').html();
                         $('#' + f.id + ' .dashboard__text').text(limitText(f.name));
                         if (startSaving) setFlagForChanges();
+                        for (let c of f.cards) {
+                            setSneakPeekNodeName(c.id);
+                        }
                     }
                 }],
                 closeButton: true
@@ -1229,7 +1232,7 @@ network.on('dashboardLoadComplete', dashboard => {
         cRef.time = c.time;
         cRef.pinned = c.pinned;
         cRef.color = c.color;
-        cRef.priorityFlags = c.priorityFlags;
+        cRef.priorityFlags = c.priorityFlags || [];
         cRef.priorityNumber = c.priorityNumber;
         cRef.currentFolderId = c.currentFolderId;
         if (!c.currentFolderId) {
