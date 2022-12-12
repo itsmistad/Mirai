@@ -28,7 +28,7 @@
     "connect-mongo": "^3.2.0",
     "cookie-parser": "^1.4.5",
     "deasync": "^0.1.19",
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "express-session": "^1.17.0",
     "hogan-express": "^0.5.2",
     "mongodb": "^3.5.2",
